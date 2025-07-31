@@ -93,6 +93,11 @@ self.addEventListener('fetch', (event) => {
 
 // Cache strategies implementation
 async function cacheFirst(request) {
+    // Skip caching for chrome-extension URLs
+    if (request.url.startsWith('chrome-extension://')) {
+        return fetch(request);
+    }
+    
     const cache = await caches.open(STATIC_CACHE);
     const cachedResponse = await cache.match(request);
     
@@ -114,6 +119,11 @@ async function cacheFirst(request) {
 }
 
 async function networkFirst(request) {
+    // Skip caching for chrome-extension URLs
+    if (request.url.startsWith('chrome-extension://')) {
+        return fetch(request);
+    }
+    
     const cache = await caches.open(API_CACHE);
     
     try {
@@ -136,6 +146,11 @@ async function networkFirst(request) {
 }
 
 async function staleWhileRevalidate(request) {
+    // Skip caching for chrome-extension URLs
+    if (request.url.startsWith('chrome-extension://')) {
+        return fetch(request);
+    }
+    
     const cache = await caches.open(DYNAMIC_CACHE);
     const cachedResponse = await cache.match(request);
     
