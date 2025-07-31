@@ -94,10 +94,12 @@
                 
                 <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Note: For production, consider installing Tailwind CSS as a PostCSS plugin -->
                     <!-- Preload critical resources -->
                 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style">
                 <link rel="preload" href="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js" as="script">
-                <link rel="preload" href="https://images.pexels.com/photos/10988021/pexels-photo-10988021.jpeg" as="image">
+                <!-- Preload hero image for better performance -->
+                <link rel="preload" href="https://images.pexels.com/photos/10988021/pexels-photo-10988021.jpeg" as="image" fetchpriority="high">
                 
                 <!-- Service Worker for caching -->
                 <script>
@@ -1352,7 +1354,7 @@
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="press-release.html">Press Release</a></li>
             </ul>
-            <a href="app.html" class="cta-button">Launch App</a>
+            <a href="Operator_Uplift_Complete.html" class="cta-button">Launch App</a>
             <div class="mobile-menu-toggle">
                 <span></span>
                 <span></span>
@@ -1387,7 +1389,7 @@
                     Operator Uplift uses AI to build the execution plan for your most ambitious goals.
                 </p>
                 <div class="hero-buttons">
-                    <a href="app.html" class="cta-button accent-glow-button" id="launch-app-btn">Launch App Now</a>
+                    <a href="Operator_Uplift_Complete.html" class="cta-button accent-glow-button" id="launch-app-btn">Launch App Now</a>
                     <a href="#features" class="btn-secondary" id="learn-more-btn">Learn More</a>
                 </div>
             </div>
@@ -1698,7 +1700,7 @@
             <div class="glass-card">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Life?</h2>
                 <p class="text-lg text-gray-400 mb-6 max-w-2xl mx-auto">Join thousands of operators who've already started their epic journey. Your future self will thank you.</p>
-                <a href="app.html" class="cta-button accent-glow-button text-lg px-8 py-4">Launch Operator Uplift</a>
+                <a href="Operator_Uplift_Complete.html" class="cta-button accent-glow-button text-lg px-8 py-4">Launch Operator Uplift</a>
             </div>
         </div>
     </section>
@@ -2353,7 +2355,7 @@
                 launchAppBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     console.log('Launch App button clicked');
-                    window.location.href = 'app.html';
+                    window.location.href = 'Operator_Uplift_Complete.html';
                 });
             }
             
@@ -2370,11 +2372,11 @@
             }
 
             // Fix for all CTA buttons
-            document.querySelectorAll('a[href="app.html"]').forEach(btn => {
+            document.querySelectorAll('a[href="Operator_Uplift_Complete.html"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     console.log('CTA button clicked');
-                    window.location.href = 'app.html';
+                    window.location.href = 'Operator_Uplift_Complete.html';
                 });
             });
             
