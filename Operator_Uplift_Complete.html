@@ -1549,8 +1549,7 @@
             writeBatch,
             serverTimestamp,
             arrayUnion,
-            increment,
-            enableIndexedDbPersistence
+            increment
         } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
         // --- GLOBAL FIREBASE VARIABLES ---
@@ -1864,19 +1863,6 @@
                         const firebaseApp = initializeApp(config.firebaseConfig);
                         auth = getAuth(firebaseApp);
                         db = getFirestore(firebaseApp);
-                        
-                        // Enable offline persistence for better offline experience
-                        try {
-                            await enableIndexedDbPersistence(db);
-                            console.log('Firebase offline persistence enabled');
-                        } catch (error) {
-                            if (error.code === 'failed-precondition') {
-                                console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time');
-                            } else if (error.code === 'unimplemented') {
-                                console.warn('Browser doesn\'t support offline persistence');
-                            }
-                        }
-                        
                         this.state.firebaseReady = true;
 
                     } catch (error) {
