@@ -2788,6 +2788,56 @@
                 min-height: 44px !important;
             }
                     }
+
+        /* Additional animations */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientScan {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Enhanced glass card hover effects */
+        .glass-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(249, 115, 22, 0.3);
+        }
     </style>
 </head>
         <body>
@@ -2966,7 +3016,7 @@
                 <p class="text-lg text-gray-400 max-w-2xl mx-auto">A systematic approach to achieving the impossible.</p>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-8 text-center">
+            <div class="features-grid grid md:grid-cols-3 gap-8 text-center">
                 <div class="glass-card p-8 rounded-xl">
                     <div class="flex items-center justify-center h-16 w-16 mx-auto mb-6">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3287,17 +3337,17 @@
             updateNavbar();
         });
 
-        // Initialize Particles - Ultra-optimized for performance
+        // Initialize Particles - Restored for proper visibility
         function initParticles() {
             if (typeof tsParticles !== 'undefined') {
                 tsParticles.load('tsparticles', {
-                    fpsLimit: 15, // Ultra-low for maximum performance
+                    fpsLimit: 60, // Restored to normal performance
                     particles: {
                         number: {
-                            value: 15, // Minimal particles for performance
+                            value: 80, // Restored to proper density
                             density: {
                                 enable: true,
-                                value_area: 1000
+                                value_area: 800
                             }
                         },
                         color: {
@@ -3307,49 +3357,87 @@
                             type: 'circle'
                         },
                         opacity: {
-                            value: 0.2, // Very low opacity
-                            random: false,
+                            value: 0.6, // Restored to proper visibility
+                            random: true,
                             anim: {
-                                enable: false
+                                enable: true,
+                                speed: 1,
+                                opacity_min: 0.1,
+                                sync: false
                             }
                         },
                         size: {
-                            value: 1.5, // Very small particles
-                            random: false,
+                            value: 3, // Restored to proper size
+                            random: true,
                             anim: {
-                                enable: false
+                                enable: true,
+                                speed: 2,
+                                size_min: 0.1,
+                                sync: false
                             }
                         },
                         line_linked: {
                             enable: true,
-                            distance: 200,
+                            distance: 150,
                             color: '#f97316',
-                            opacity: 0.1, // Very low opacity
-                            width: 0.5
+                            opacity: 0.4, // Restored to proper visibility
+                            width: 1
                         },
                         move: {
                             enable: true,
-                            speed: 0.3, // Very slow movement
+                            speed: 2, // Restored to proper speed
                             direction: 'none',
                             random: false,
                             straight: false,
                             out_mode: 'out',
-                            bounce: false
+                            bounce: false,
+                            attract: {
+                                enable: false,
+                                rotateX: 600,
+                                rotateY: 1200
+                            }
                         }
                     },
                     interactivity: {
                         detect_on: 'canvas',
                         events: {
                             onhover: {
-                                enable: false
+                                enable: true,
+                                mode: 'repulse'
                             },
                             onclick: {
-                                enable: false
+                                enable: true,
+                                mode: 'push'
                             },
                             resize: true
+                        },
+                        modes: {
+                            grab: {
+                                distance: 400,
+                                line_linked: {
+                                    opacity: 1
+                                }
+                            },
+                            bubble: {
+                                distance: 400,
+                                size: 40,
+                                duration: 2,
+                                opacity: 8,
+                                speed: 3
+                            },
+                            repulse: {
+                                distance: 200,
+                                duration: 0.4
+                            },
+                            push: {
+                                particles_nb: 4
+                            },
+                            remove: {
+                                particles_nb: 2
+                            }
                         }
                     },
-                    retina_detect: false // Disable for better performance
+                    retina_detect: true
                 }).then(container => {
                     window.particlesContainer = container;
                     window.particlesInstance = container;
@@ -3580,11 +3668,53 @@
             }
         }
 
-        // Simplified hover effects for better performance
+        // Enhanced hover effects with gradient scan animations
         function initHoverEffects() {
-            // Use CSS transitions instead of GSAP for better performance
+            // Add gradient scan effect to glass cards
             document.querySelectorAll('.glass-card').forEach(card => {
-                card.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+                card.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                
+                // Add gradient scan effect
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                    this.style.boxShadow = '0 20px 40px rgba(249, 115, 22, 0.3)';
+                    
+                    // Add gradient scan animation
+                    this.style.background = `
+                        linear-gradient(45deg, 
+                            rgba(249, 115, 22, 0.1) 0%, 
+                            rgba(249, 115, 22, 0.2) 50%, 
+                            rgba(249, 115, 22, 0.1) 100%
+                        ),
+                        rgba(15, 23, 42, 0.8)
+                    `;
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+                    this.style.background = 'rgba(15, 23, 42, 0.8)';
+                });
+            });
+            
+            // Add special hover effects for feature cards
+            document.querySelectorAll('.features-grid .glass-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.background = `
+                        linear-gradient(135deg, 
+                            rgba(249, 115, 22, 0.15) 0%, 
+                            rgba(249, 115, 22, 0.25) 50%, 
+                            rgba(249, 115, 22, 0.15) 100%
+                        ),
+                        rgba(15, 23, 42, 0.9)
+                    `;
+                    this.style.border = '1px solid rgba(249, 115, 22, 0.3)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.background = 'rgba(15, 23, 42, 0.8)';
+                    this.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                });
             });
         }
 
@@ -4374,5 +4504,161 @@
             overflow: hidden;
         }
     </style>
+
+    <!-- Enhanced mobile menu with animations -->
+    <script>
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger-icon');
+            
+            if (mobileMenu.classList.contains('active')) {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                mobileMenu.classList.add('active');
+                hamburger.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Add entrance animation for menu items
+                const menuItems = mobileMenu.querySelectorAll('a');
+                menuItems.forEach((item, index) => {
+                    item.style.animation = `slideInRight 0.3s ease forwards ${index * 0.1}s`;
+                });
+            }
+        }
+
+        // Add header click animations
+        function initHeaderAnimations() {
+            const header = document.querySelector('nav');
+            const logo = document.querySelector('.logo');
+            
+            // Logo click animation
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            }
+            
+            // Nav links click animations
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+            
+            // CTA button click animation
+            const ctaButton = document.querySelector('.cta-button');
+            if (ctaButton) {
+                ctaButton.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            }
+        }
+    </script>
+
+    <!-- Cookie Consent Popup -->
+    <div id="cookieConsent" class="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-700 p-4 z-50 transform translate-y-full transition-transform duration-300">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-slate-300">
+                <p>We use cookies to enhance your experience and analyze site traffic. By continuing to use this site, you consent to our use of cookies.</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="acceptCookies()" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors">
+                    Accept
+                </button>
+                <button onclick="declineCookies()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+                    Decline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 404 Error Page (hidden by default) -->
+    <div id="error404" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50 hidden">
+        <div class="text-center">
+            <h1 class="text-6xl font-bold text-orange-500 mb-4">404</h1>
+            <p class="text-xl text-slate-300 mb-8">Page not found</p>
+            <a href="index.html" class="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors">
+                Return Home
+            </a>
+        </div>
+    </div>
+
+    <!-- 500 Error Page (hidden by default) -->
+    <div id="error500" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50 hidden">
+        <div class="text-center">
+            <h1 class="text-6xl font-bold text-red-500 mb-4">500</h1>
+            <p class="text-xl text-slate-300 mb-8">Server error</p>
+            <button onclick="location.reload()" class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
+                Try Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Cookie consent functions
+        function showCookieConsent() {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                const consent = document.getElementById('cookieConsent');
+                setTimeout(() => {
+                    consent.style.transform = 'translateY(0)';
+                }, 2000);
+            }
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookieConsent').style.transform = 'translateY(100%)';
+        }
+
+        function declineCookies() {
+            localStorage.setItem('cookiesAccepted', 'false');
+            document.getElementById('cookieConsent').style.transform = 'translateY(100%)';
+        }
+
+        // Error handling functions
+        function showError404() {
+            document.getElementById('error404').classList.remove('hidden');
+        }
+
+        function showError500() {
+            document.getElementById('error500').classList.remove('hidden');
+        }
+
+        function hideErrors() {
+            document.getElementById('error404').classList.add('hidden');
+            document.getElementById('error500').classList.add('hidden');
+        }
+
+        // Initialize all features
+        document.addEventListener('DOMContentLoaded', function() {
+            initParticles();
+            initHoverEffects();
+            initHeaderAnimations();
+            initFAQ();
+            initGSAP();
+            showCookieConsent();
+            
+            // Add error handling
+            window.addEventListener('error', function(e) {
+                console.error('Page error:', e.error);
+                if (e.error && e.error.message.includes('404')) {
+                    showError404();
+                } else if (e.error && e.error.message.includes('500')) {
+                    showError500();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
