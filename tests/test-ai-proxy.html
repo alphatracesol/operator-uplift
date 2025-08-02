@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Proxy Test</title>
+</head>
+<body>
+    <h1>AI Proxy Test</h1>
+    <button onclick="testAIProxy()">Test AI Proxy</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAIProxy() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing AI Proxy...';
+            
+            try {
+                const response = await fetch('/.netlify/functions/ai-proxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        provider: 'claude',
+                        prompt: 'Hello, this is a test message.',
+                        model: 'claude-3-sonnet-20240229',
+                        maxTokens: 100,
+                        temperature: 0.7
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `<h3>Success!</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.innerHTML = `<h3>Error ${response.status}</h3><pre>${errorText}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<h3>Network Error</h3><pre>${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html> 

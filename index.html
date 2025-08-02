@@ -41,6 +41,12 @@
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tailwindcss.com https://connect.facebook.net https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: https://images.pexels.com https://www.facebook.com blob:; connect-src 'self' https://www.google-analytics.com https://api.openai.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://connect.facebook.net wss://api.operatoruplift.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <title>Operator Uplift - AI-Powered Self-Progression</title>
     <meta name="description" content="Join 10,000+ operators who transformed their goals into epic quests. Earn Essence, unlock achievements, and level up your life with the ultimate gamified productivity platform.">
     <meta name="keywords" content="gamified goals, productivity app, goal setting, task management, achievements, AI mentor, habit tracking">
@@ -55,7 +61,7 @@
                 <meta name="robots" content="index, follow">
                 <meta name="theme-color" content="#f97316">
                 <meta name="msapplication-TileColor" content="#f97316">
-                <meta name="apple-mobile-web-app-capable" content="yes">
+                <meta name="mobile-web-app-capable" content="yes">
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
                 <meta name="apple-mobile-web-app-title" content="Operator Uplift">
                 <link rel="manifest" href="/manifest.json">
@@ -92,14 +98,46 @@
                 }
                 </script>
                 
+                <!-- Analytics & Tracking -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EWV7VG9M61"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EWV7VG9M61');
+    </script>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1462196764930097');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1462196764930097&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+                
                 <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Note: For production, consider installing Tailwind CSS as a PostCSS plugin -->
                     <!-- Preload critical resources -->
                 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style">
                 <link rel="preload" href="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js" as="script">
-                <!-- Preload hero image for better performance -->
+                                <!-- Preload hero image for better performance -->
                 <link rel="preload" href="https://images.pexels.com/photos/10988021/pexels-photo-10988021.jpeg" as="image" fetchpriority="high">
+                
+                <!-- Security & Accessibility Utilities -->
+                <script src="security-utils.js"></script>
+                <script src="accessibility-audit.js"></script>
+                <script src="pwa-enhancer.js"></script>
                 
                 <!-- Service Worker for caching -->
                 <script>
@@ -108,6 +146,98 @@
                             navigator.serviceWorker.register('/sw.js').catch(console.error);
                         });
                     }
+                </script>
+
+                <!-- Initialize Security & Accessibility -->
+                <script>
+                    // Initialize security utilities
+                    const securityUtils = new SecurityUtils();
+                    
+                    // Initialize accessibility audit
+                    const accessibilityAudit = new AccessibilityAudit();
+                    
+                    // Initialize PWA enhancer
+                    const pwaEnhancer = new PWAEnhancer();
+                    
+                    // Run accessibility audit on page load
+                    document.addEventListener('DOMContentLoaded', async () => {
+                        try {
+                            const auditResults = await accessibilityAudit.runFullAudit();
+                            console.log('🔍 Accessibility Audit Results:', auditResults);
+                            
+                            // Auto-fix common issues
+                            const fixes = accessibilityAudit.autoFixIssues();
+                            console.log('🔧 Auto-fixes applied:', fixes);
+                            
+                            // Get PWA status
+                            const pwaStatus = pwaEnhancer.getPWAStatus();
+                            console.log('📱 PWA Status:', pwaStatus);
+                            
+                            // Get performance metrics
+                            const performanceMetrics = pwaEnhancer.getPerformanceMetrics();
+                            console.log('⚡ Performance Metrics:', performanceMetrics);
+                            
+                        } catch (error) {
+                            console.error('❌ Accessibility audit failed:', error);
+                        }
+                    });
+                    
+                    // GDPR compliance
+                    if (typeof securityUtils !== 'undefined' && securityUtils.gdpr) {
+                        const consent = securityUtils.gdpr.getCookieConsent();
+                        if (!consent) {
+                            // Show cookie consent banner
+                            setTimeout(() => {
+                                showCookieConsentBanner();
+                            }, 1000);
+                        }
+                    }
+                    
+                    // Enhanced security for forms
+                    document.addEventListener('submit', (event) => {
+                        const form = event.target;
+                        const inputs = form.querySelectorAll('input, textarea, select');
+                        
+                        inputs.forEach(input => {
+                            const validation = securityUtils.validateInput(input.value, input.type);
+                            if (!validation.isValid) {
+                                event.preventDefault();
+                                input.setAttribute('aria-invalid', 'true');
+                                input.setAttribute('aria-describedby', 'error-message');
+                                
+                                // Show error message
+                                const errorDiv = document.createElement('div');
+                                errorDiv.id = 'error-message';
+                                errorDiv.className = 'error-message';
+                                errorDiv.textContent = `Invalid ${input.type} input`;
+                                input.parentNode.appendChild(errorDiv);
+                            }
+                        });
+                    });
+                    
+                    // Enhanced accessibility for interactive elements
+                    document.addEventListener('DOMContentLoaded', () => {
+                        // Add ARIA labels to interactive elements
+                        const buttons = document.querySelectorAll('button:not([aria-label])');
+                        buttons.forEach(button => {
+                            if (button.textContent.trim()) {
+                                securityUtils.accessibility.addAriaLabel(button, button.textContent.trim());
+                            }
+                        });
+                        
+                        // Add keyboard navigation support
+                        const interactiveElements = document.querySelectorAll('button, a, [role="button"]');
+                        interactiveElements.forEach(element => {
+                            securityUtils.accessibility.makeFocusable(element);
+                            securityUtils.accessibility.addKeyboardSupport(element, 
+                                () => element.click(), 
+                                () => element.click()
+                            );
+                        });
+                        
+                        // Announce page load to screen readers
+                        securityUtils.accessibility.announce('Operator Uplift landing page loaded successfully');
+                    });
                 </script>
     
     <!-- Load libraries asynchronously with performance optimizations -->
@@ -141,6 +271,168 @@
             --gradient-hero: linear-gradient(135deg, #0a0a0a 0%, #1f2937 50%, #374151 100%);
         }
 
+        /* Accessibility Enhancements */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+        
+        /* Focus indicators for better accessibility */
+        button:focus,
+        a:focus,
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
+        /* Error message styling */
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Online/Offline status indicator */
+        .online-status {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 1000;
+        }
+        
+        .online-status.online {
+            background: #10b981;
+            color: white;
+        }
+        
+        .online-status.offline {
+            background: #ef4444;
+            color: white;
+        }
+        
+        /* Offline indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ef4444;
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            z-index: 1001;
+        }
+        
+        .offline-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .offline-content button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        
+        /* PWA Install button */
+        .pwa-install-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+        
+        /* PWA Update notification */
+        .pwa-update-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            z-index: 1002;
+            backdrop-filter: blur(10px);
+        }
+        
+        .update-content {
+            text-align: center;
+        }
+        
+        .update-content h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .update-content p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        
+        .update-content button {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-color: #ffffff;
+                --text-color: #ffffff;
+                --bg-color: #000000;
+                --border-color: #ffffff;
+            }
+        }
+        
         /* Hero gradient wrapper for dynamic background */
         .hero-gradient-wrapper {
             position: relative;
@@ -205,9 +497,33 @@
             pointer-events: none;
         }
 
-        /* Removed custom cursor for better performance */
+        /* Removed custom cursor for better performance and mobile compatibility */
         
-        /* Optimized animations - reduced complexity */
+        /* Enhanced accent glow effects */
+        .accent-glow-text {
+            color: var(--accent-color);
+            text-shadow: 0 0 8px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.4);
+            animation: flicker 3s infinite alternate;
+        }
+        
+        .accent-glow-button {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+        }
+        
+        .accent-glow-button:hover {
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.6);
+        }
+        
+        @keyframes flicker {
+            0%, 100% {
+                text-shadow: 0 0 8px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.4);
+            }
+            50% {
+                text-shadow: 0 0 12px rgba(249, 115, 22, 0.8), 0 0 30px rgba(249, 115, 22, 0.6);
+            }
+        }
+        
+        /* Optimized animations - enhanced complexity */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -498,8 +814,11 @@
                         opacity: 0;
                         visibility: hidden;
                         transition: all 0.3s ease;
-                        z-index: 1000;
+                        z-index: 50; /* Much lower than navbar (1000) */
                         box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
                     
                     .scroll-to-top.visible {
@@ -836,17 +1155,97 @@
 
         .mobile-menu-toggle {
             display: none;
-            flex-direction: column;
             cursor: pointer;
-            gap: 4px;
+            padding: 0.5rem;
+            z-index: 1001; /* Above navbar */
         }
 
-        .mobile-menu-toggle span {
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .hamburger-icon span {
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            margin: 2px 0;
+            transition: 0.3s ease;
+            border-radius: 1px;
             display: block;
-            width: 25px;
-            height: 3px;
-            background: var(--text-light);
+        }
+
+        .mobile-menu-toggle.active .hamburger-icon span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-toggle.active .hamburger-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active .hamburger-icon span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .desktop-only {
+            display: block;
+        }
+
+        /* Mobile menu functionality */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 8px;
             transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--accent-color);
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-close:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* Enhanced Hero Section */
@@ -854,9 +1253,11 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 6rem 2rem 4rem;
+            padding: 8rem 2rem 4rem 2rem; /* Increased top padding to avoid header overlap */
             position: relative;
             overflow: hidden;
+            z-index: 1; /* Ensure hero is below navbar */
+            margin-top: 0; /* Reset any margin */
         }
 
         .hero::before {
@@ -879,12 +1280,27 @@
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
             align-items: center;
+            justify-items: center;
             position: relative;
             z-index: 2;
         }
 
+        /* Hero Content Scaling and Centering */
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Left align on desktop */
+            justify-content: center;
+            height: 100%;
+            max-width: 600px;
+            text-align: left; /* Left align text on desktop */
+            grid-column: 1;
+            justify-self: start;
+            align-self: center;
+        }
+
         .hero-content h1 {
-            font-size: 3.5rem;
+            font-size: 3rem; /* Reduced font size to prevent wrapping */
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 1.5rem;
@@ -895,6 +1311,8 @@
             background-clip: text;
             animation: gradient-shift 8s ease-in-out infinite;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            text-align: left; /* Left align the header text */
+            white-space: nowrap; /* Prevent wrapping */
         }
 
         @keyframes gradient-shift {
@@ -907,12 +1325,69 @@
             color: var(--text-muted);
             margin-bottom: 2rem;
             line-height: 1.7;
+            text-align: left; /* Left align the subheader text */
+        }
+
+        /* Enhanced Trust Badges - Top Row */
+        .hero-content .flex.flex-wrap.gap-3 {
+            margin-bottom: 2rem;
+            width: 100%;
+            justify-content: flex-start; /* Left align trust badges on desktop */
+        }
+
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .trust-badge:hover {
+            background: rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Stats Badges - Middle Row */
+        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
+            margin-bottom: 2.5rem;
+            width: 100%;
+            justify-content: flex-start; /* Left align stats badges on desktop */
+            gap: 2rem;
+        }
+
+        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 0.75rem 1.25rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(249, 115, 22, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex span {
+            font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .hero-buttons {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            margin-bottom: 2rem;
+            width: 100%;
         }
 
         .btn-secondary {
@@ -941,7 +1416,7 @@
             box-shadow: none;
         }
 
-        /* 3D Cube Styles - Fixed to prevent warping */
+        /* 3D Cube Styles - Enhanced Positioning */
         .scene {
             width: 350px;
             height: 350px;
@@ -950,6 +1425,13 @@
             position: relative;
             z-index: 10;
             cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            grid-column: 2;
+            justify-self: center;
+            align-self: center;
         }
         
         .scene:active {
@@ -961,7 +1443,7 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transform: translateZ(-150px);
+            transform: translateZ(-175px) rotateX(0deg) rotateY(0deg);
             will-change: transform;
         }
 
@@ -977,6 +1459,17 @@
             backface-visibility: hidden;
             transform-style: preserve-3d;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            box-shadow: 0 0 6px rgba(249, 115, 22, 0.1);
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .cube-face:hover {
+            background: rgba(249, 115, 22, 0.15);
+            border-color: rgba(249, 115, 22, 0.8);
+            box-shadow: 0 0 12px rgba(249, 115, 22, 0.2);
         }
 
         .cube-face-front { transform: rotateY(0deg) translateZ(175px); }
@@ -990,6 +1483,12 @@
             width: 80px;
             height: 80px;
             filter: drop-shadow(0 0 10px var(--accent-color));
+            transition: all 0.3s ease;
+        }
+
+        .cube-face:hover .cube-logo {
+            filter: drop-shadow(0 0 15px var(--accent-color));
+            transform: scale(1.1);
         }
 
         .trust-badge {
@@ -1002,6 +1501,37 @@
             border-radius: 2rem;
             font-size: 0.875rem;
             color: var(--accent-color);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trust-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.2), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+
+        .trust-badge:hover::before {
+            left: 100%;
+        }
+
+        .trust-badge:hover {
+            background: rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .trust-badge > * {
+            position: relative;
+            z-index: 2;
         }
 
         /* Cube rotation will be handled by JavaScript for user interaction */
@@ -1048,6 +1578,22 @@
             background: rgba(249, 115, 22, 0.2);
             border-color: rgba(249, 115, 22, 0.5);
             transform: translateY(-1px);
+        }
+
+        /* Bottom trust badges (10,000+ Operators, Proven Results, Secure & Private) */
+        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
+            gap: 0.5rem !important;
+        }
+
+        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex {
+            padding: 0.5rem 1rem !important;
+            font-size: 0.8rem !important;
+            transform: scale(0.9) !important;
+        }
+
+        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex svg {
+            width: 1.125rem !important;
+            height: 1.125rem !important;
         }
 
         /* Animations */
@@ -1257,60 +1803,998 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            /* Hero section improvements */
             .hero-container {
-                grid-template-columns: 1fr;
-                text-align: center;
+                grid-template-columns: 1fr !important;
+                grid-template-rows: auto auto !important;
+                text-align: center !important;
+                padding: 1rem !important;
+                gap: 1.5rem !important;
+                margin-top: 2rem !important;
             }
 
-            .hero-content h1 {
-                font-size: 2.5rem;
+            .hero-content {
+                order: 1 !important;
+                grid-column: 1 !important;
             }
 
             .scene {
-                width: 250px;
-                height: 250px;
+                order: 2 !important;
+                grid-column: 1 !important;
+                justify-self: center !important;
+                margin: 4rem auto !important;
+                align-self: center !important;
+            }
+
+            .hero-content h1 {
+                font-size: 1.75rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 1rem !important;
+                white-space: normal !important;
+                text-align: center !important;
+                padding: 0 0.5rem !important;
+            }
+
+            .hero-content p {
+                font-size: 0.95rem !important;
+                margin: 0.75rem 0 !important;
+                line-height: 1.5 !important;
+                padding: 0 0.5rem !important;
+            }
+
+            /* 3D scene improvements */
+            .scene {
+                width: 180px !important;
+                height: 180px !important;
+                margin: 4rem auto !important;
+                justify-self: center !important;
+                align-self: center !important;
             }
 
             .cube-face {
-                width: 250px;
-                height: 250px;
+                width: 180px !important;
+                height: 180px !important;
             }
 
             .cube-logo {
-                width: 80px;
-                height: 80px;
+                width: 50px !important;
+                height: 50px !important;
             }
 
+            /* Navigation improvements */
             .nav-links {
-                display: none;
+                display: none !important;
+            }
+
+            .nav-links.active {
+                display: flex !important;
+                flex-direction: column !important;
+                position: absolute !important;
+                top: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+                background: rgba(10, 10, 10, 0.98) !important;
+                padding: 1rem !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                z-index: 1000 !important;
             }
 
             .mobile-menu-toggle {
+                display: flex !important;
+                margin-left: auto !important;
+            }
+
+            .desktop-only {
+                display: none !important;
+            }
+
+            .cta-button.desktop-only {
+                display: none !important;
+            }
+
+            .nav-container {
+                gap: 0.75rem !important;
+                padding: 0 0.75rem !important;
+                justify-content: space-between !important;
+            }
+
+            .logo {
+                font-size: 0.85rem !important;
+                flex-shrink: 0 !important;
+            }
+
+            /* Trust badges improvements */
+            .trust-badge {
+                font-size: 0.75rem !important;
+                padding: 0.25rem 0.5rem !important;
+                gap: 0.25rem !important;
+            }
+
+            .trust-badge svg {
+                width: 0.875rem !important;
+                height: 0.875rem !important;
+            }
+
+            /* Hero buttons improvements */
+            .hero-buttons {
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+                width: 100% !important;
+                padding: 0 0.5rem !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                width: 100% !important;
+                padding: 0.75rem 1rem !important;
+                font-size: 0.9rem !important;
+                text-align: center !important;
+            }
+
+            /* Section improvements */
+            .section-spacing {
+                margin-bottom: 2rem !important;
+            }
+
+            .py-20 {
+                padding: 3rem 0.75rem !important;
+            }
+
+            .py-12 {
+                padding: 1.5rem 0.75rem !important;
+            }
+
+            .py-16 {
+                padding: 2rem 0.75rem !important;
+            }
+
+            .py-8 {
+                padding: 1.5rem 0.75rem !important;
+            }
+
+            /* Container improvements */
+            .container {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+
+            /* Card improvements */
+            .glass-card {
+                padding: 1rem !important;
+                margin: 0.5rem 0 !important;
+            }
+
+            /* Grid improvements */
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            /* Text improvements */
+            .text-4xl {
+                font-size: 1.5rem !important;
+            }
+
+            .text-3xl {
+                font-size: 1.25rem !important;
+            }
+
+            .text-2xl {
+                font-size: 1.125rem !important;
+            }
+
+            .text-xl {
+                font-size: 1rem !important;
+            }
+
+            .text-lg {
+                font-size: 0.9rem !important;
+            }
+
+            /* Spacing improvements */
+            .mb-8 {
+                margin-bottom: 1.5rem !important;
+            }
+
+            .mb-6 {
+                margin-bottom: 1rem !important;
+            }
+
+            .mb-4 {
+                margin-bottom: 0.75rem !important;
+            }
+
+            .mt-8 {
+                margin-top: 1.5rem !important;
+            }
+
+            .mt-6 {
+                margin-top: 1rem !important;
+            }
+
+            .mt-4 {
+                margin-top: 0.75rem !important;
+            }
+
+            /* Gap improvements */
+            .gap-6 {
+                gap: 1rem !important;
+            }
+
+            .gap-4 {
+                gap: 0.75rem !important;
+            }
+
+            .gap-3 {
+                gap: 0.5rem !important;
+            }
+
+            /* Hero bottom section improvements */
+            .hero-bottom-section {
+                margin-top: 1rem !important;
+            }
+
+            /* Countdown badge mobile improvements */
+            #countdown-badge {
+                font-size: 0.65rem !important;
+                padding: 0.4rem 0.6rem !important;
+                margin-top: 0.75rem !important;
+                max-width: 200px !important;
+            }
+
+            .hero-bottom-section .flex {
+                justify-content: center !important;
+                gap: 0.5rem !important;
+            }
+
+            .hero-bottom-section .flex > div {
+                font-size: 0.75rem !important;
+                gap: 0.25rem !important;
+            }
+
+            .hero-bottom-section .flex svg {
+                width: 0.875rem !important;
+                height: 0.875rem !important;
+            }
+
+            /* Countdown badge improvements */
+            #countdown-badge {
+                font-size: 0.75rem !important;
+                padding: 0.5rem 0.75rem !important;
+                margin-top: 1rem !important;
+            }
+
+            /* Scroll to top button improvements */
+            .scroll-to-top {
+                bottom: 1rem !important;
+                right: 1rem !important;
+                width: 3rem !important;
+                height: 3rem !important;
+                font-size: 1.25rem !important;
+            }
+
+            /* Cookie consent improvements */
+            .cookie-consent-banner {
+                padding: 1rem 0.75rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            .cookie-consent-banner .btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.8rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.5rem !important;
+            }
+
+            .hero-content p {
+                font-size: 0.875rem !important;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr !important;
+                grid-template-rows: auto auto !important;
+                gap: 1rem !important;
+            }
+
+            .hero-content {
+                order: 1 !important;
+                grid-column: 1 !important;
+            }
+
+            .scene {
+                order: 2 !important;
+                grid-column: 1 !important;
+                width: 150px !important;
+                height: 150px !important;
+                justify-self: center !important;
+                margin: 4rem auto !important;
+                align-self: center !important;
+            }
+
+            .cube-face {
+                width: 150px !important;
+                height: 150px !important;
+            }
+
+            .cube-logo {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            .logo {
+                font-size: 0.8rem !important;
+            }
+
+            .nav-container {
+                padding: 0 0.5rem !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                padding: 0.625rem 0.875rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            .trust-badge {
+                font-size: 0.7rem !important;
+                padding: 0.2rem 0.4rem !important;
+            }
+
+            .trust-badge svg {
+                width: 0.75rem !important;
+                height: 0.75rem !important;
+            }
+        }
+
+            /* Spacing improvements */
+            .space-y-8 > * + * { margin-top: 2rem; }
+            .space-y-12 > * + * { margin-top: 3rem; }
+
+            /* Footer improvements */
+            footer {
+                padding: 2rem 1rem;
+            }
+
+            footer .flex.flex-col.sm\:flex-row {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            footer .flex.flex-wrap {
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+
+        /* --- LEGAL PAGES STYLING --- */
+        .overlay-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: none;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .overlay-page.active {
                 display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .modal-content-wrapper {
+            background: rgba(24, 24, 27, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .close-overlay-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted-color);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-overlay-btn:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .legal-content {
+            color: var(--text-color);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .legal-content h2 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .legal-content h3 {
+            color: var(--text-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            padding-top: 1rem;
+        }
+
+        .legal-content p {
+            margin-bottom: 1rem;
+            color: var(--text-muted-color);
+        }
+
+        .legal-content ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        /* Hero Bottom Section Layout */
+        .hero-bottom-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .desktop-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 2rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .mobile-layout {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-layout {
+                display: none;
+            }
+            
+            .mobile-layout {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+
+        .legal-content li {
+            margin-bottom: 0.5rem;
+            color: var(--text-muted-color);
+        }
+
+        .legal-content strong {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .legal-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .legal-content a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        /* Mobile responsive legal pages */
+        @media (max-width: 768px) {
+            .overlay-page {
+                padding: 1rem 0.5rem;
+            }
+
+            .modal-content-wrapper {
+                padding: 1.5rem;
+                margin: 1rem;
+                max-height: 85vh;
+            }
+
+            .legal-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .legal-content h3 {
+                font-size: 1.125rem;
+            }
+
+            .close-overlay-btn {
+                top: 0.5rem;
+                right: 1rem;
+                font-size: 1.5rem;
             }
         }
         
         @media (min-width: 768px) {
-            .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            .md\:text-5xl { font-size: 3rem; }
+            .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .md\\:text-5xl { font-size: 3rem; }
         }
         
         @media (min-width: 1024px) {
-            .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .lg\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         }
 
-                            /* Section spacing improvements */
-                    .section-spacing {
-                        margin-bottom: 4rem;
+        /* --- CUSTOM SCROLLBAR STYLING --- */
+        /* Hide default scrollbar and create custom one */
+        ::-webkit-scrollbar {
+            width: 8px;
+            z-index: 1; /* Ensure scrollbar is below header */
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 1; /* Ensure scrollbar is below header */
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-color), #ea580c);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+            z-index: 1; /* Ensure scrollbar is below header */
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ea580c, var(--accent-color));
+        }
+        
+        /* Firefox scrollbar styling */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- ENHANCED MOBILE RESPONSIVE FIXES --- */
+        @media (max-width: 768px) {
+            /* Hero section improvements */
+            .hero {
+                padding: 6rem 1rem 2rem 1rem !important; /* Reduced top padding for mobile */
+                min-height: auto !important;
+            }
+
+            .hero-content {
+                align-items: center !important;
+                text-align: center !important;
+                max-width: 100% !important;
+            }
+
+            .hero-content h1 {
+                font-size: 1.75rem !important; /* Smaller font size */
+                line-height: 1.2 !important;
+                margin-bottom: 1rem !important;
+                text-align: center !important;
+                white-space: normal !important; /* Allow wrapping on mobile */
+            }
+
+            .hero-content p {
+                font-size: 0.9rem !important; /* Smaller font size */
+                margin-bottom: 1.5rem !important;
+                text-align: center !important;
+            }
+
+            /* Mobile menu visibility */
+            .mobile-menu-toggle {
+                display: flex !important;
+            }
+
+            .nav-links {
+                display: none !important;
+            }
+
+            /* Enhanced trust badges and stats centering */
+            .hero-content .flex.flex-wrap.gap-3 {
+                justify-content: center !important;
+                gap: 0.75rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
+                justify-content: center !important;
+                gap: 1rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex {
+                padding: 0.5rem 1rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex span {
+                font-size: 0.8rem !important;
+            }
+
+            /* Hero buttons - improved spacing and layout */
+            .hero-buttons {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+                width: 100% !important;
+                max-width: 300px !important;
+                margin: 0 auto !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                width: 100% !important;
+                padding: 1rem 1.5rem !important;
+                font-size: 1rem !important;
+                text-align: center !important;
+                margin: 0 !important;
+                min-height: 48px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            /* Trust badges - better mobile layout */
+            .trust-badge {
+                font-size: 0.75rem !important;
+                padding: 0.375rem 0.75rem !important;
+                margin: 0.25rem !important;
+            }
+
+            /* Countdown timer - better positioning */
+            #countdown-badge {
+                margin-top: 1.5rem !important;
+                padding: 0.75rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* Scroll to top button - prevent header overlap */
+            .scroll-to-top {
+                bottom: 5rem !important; /* Move up to avoid header overlap */
+                right: 1rem !important;
+                width: 2.5rem !important;
+                height: 2.5rem !important;
+                font-size: 1rem !important;
+                z-index: 999 !important; /* Lower than cookie banner */
+            }
+
+            /* Navigation improvements */
+            .navbar {
+                padding: 0.75rem 1rem !important;
+            }
+
+            .nav-container {
+                gap: 0.5rem !important;
+            }
+
+            .nav-links {
+                display: none !important; /* Hide on mobile, use hamburger */
+            }
+
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+
+            /* Container improvements */
+            .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            /* Grid improvements */
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+
+            .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Card improvements */
+            .feature-card, .testimonial-card, .glass-card {
+                padding: 1.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Text sizing */
+            .text-4xl { font-size: 1.75rem !important; }
+            .text-5xl { font-size: 2rem !important; }
+            .text-6xl { font-size: 2.5rem !important; }
+            .text-3xl { font-size: 1.5rem !important; }
+            .text-2xl { font-size: 1.25rem !important; }
+            .text-xl { font-size: 1.125rem !important; }
+            .text-lg { font-size: 1rem !important; }
+
+            /* Spacing improvements */
+            .space-y-8 > * + * {
+                margin-top: 2rem !important;
+            }
+
+            .space-y-12 > * + * {
+                margin-top: 3rem !important;
+            }
+
+            .space-y-16 > * + * {
+                margin-top: 4rem !important;
+            }
+
+            /* Footer improvements */
+            footer {
+                padding: 2rem 1rem !important;
+            }
+
+            footer .flex {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            /* Touch-friendly improvements */
+            .cta-button, .btn-secondary, footer a, .nav-links a {
+                min-height: 44px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra small devices - further refinements */
+            .hero {
+                padding: 5rem 0.75rem 1.5rem 0.75rem !important; /* Further reduced padding for small screens */
+                min-height: auto !important;
+            }
+
+            .hero-content {
+                align-items: center !important;
+                text-align: center !important;
+                max-width: 100% !important;
+            }
+
+            .hero-content h1 {
+                font-size: 1.5rem !important; /* Even smaller font size */
+                line-height: 1.1 !important;
+                text-align: center !important;
+                white-space: normal !important;
+            }
+
+            .hero-content p {
+                font-size: 0.8rem !important; /* Even smaller font size */
+                text-align: center !important;
+            }
+
+            /* Scale down CTA button */
+            .hero-buttons .cta-button {
+                font-size: 0.875rem !important;
+                padding: 0.75rem 1.25rem !important;
+            }
+
+            /* Enhanced trust badges and stats for very small screens */
+            .hero-content .flex.flex-wrap.gap-3 {
+                justify-content: center !important;
+                gap: 0.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
+                justify-content: center !important;
+                gap: 0.75rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex {
+                padding: 0.25rem 0.5rem !important;
+                transform: scale(0.4) !important; /* Slightly larger scale */
+                font-size: 0.7rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Ensure badges stay in single line */
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
+                flex-wrap: nowrap !important;
+                gap: 0.2rem !important;
+                max-width: 75% !important;
+                justify-content: center !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex span {
+                font-size: 0.75rem !important;
+            }
+
+            /* Hero buttons - even better spacing for very small screens */
+            .hero-buttons {
+                max-width: 280px !important;
+                gap: 0.75rem !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                padding: 0.875rem 1.25rem !important;
+                font-size: 0.875rem !important;
+                min-height: 44px !important;
+            }
+
+            /* Trust badges - compact layout */
+            .flex.flex-wrap.gap-3 {
+                gap: 0.5rem !important;
+                justify-content: center !important;
+            }
+
+            .trust-badge {
+                font-size: 0.7rem !important;
+                padding: 0.25rem 0.5rem !important;
+            }
+
+            /* Countdown timer - compact */
+            #countdown-badge {
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.75rem !important;
+            }
+
+            /* Scroll to top button - even more space from header */
+            .scroll-to-top {
+                bottom: 6rem !important;
+                right: 0.75rem !important;
+                width: 2.25rem !important;
+                height: 2.25rem !important;
+            }
+
+            .scene {
+                width: 150px !important;
+                height: 150px !important;
+            }
+
+            .cube-face {
+                width: 150px !important;
+                height: 150px !important;
+            }
+
+            .cube-logo {
+                width: 45px !important;
+                height: 45px !important;
                     }
             
                     .py-20 {
-                        padding: 6rem 0;
+                padding: 3rem 0.75rem !important;
                     }
             
                     .py-12 {
-                        padding: 3rem 0;
+                padding: 1.5rem 0.75rem !important;
+            }
+
+            .container {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+
+            .feature-card, .testimonial-card, .glass-card {
+                padding: 1rem !important;
+            }
+        }
+
+        /* --- VERTICAL SCREEN ORIENTATION FIXES --- */
+        @media (max-height: 600px) and (orientation: landscape) {
+            /* For very short screens in landscape mode */
+            .hero {
+                padding: 3rem 1rem 1rem 1rem !important; /* Adjusted padding for landscape */
+                min-height: auto !important;
+            }
+
+            .hero-content {
+                align-items: center !important;
+                text-align: center !important;
+                max-width: 100% !important;
+            }
+
+            .hero-content h1 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+                text-align: center !important;
+            }
+
+            .hero-content p {
+                font-size: 0.875rem !important;
+                margin-bottom: 1rem !important;
+                text-align: center !important;
+            }
+
+            /* Compact trust badges and stats for landscape */
+            .hero-content .flex.flex-wrap.gap-3 {
+                justify-content: center !important;
+                gap: 0.5rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
+                justify-content: center !important;
+                gap: 0.75rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex {
+                padding: 0.5rem 1rem !important;
+            }
+
+            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex span {
+                font-size: 0.8rem !important;
+            }
+
+            .hero-buttons {
+                flex-direction: row !important;
+                gap: 0.75rem !important;
+                max-width: none !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                width: auto !important;
+                padding: 0.75rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* Hide countdown on very short screens */
+            #countdown-badge {
+                display: none !important;
+            }
+
+            /* Adjust scroll to top position for short screens */
+            .scroll-to-top {
+                bottom: 1rem !important;
+                right: 1rem !important;
+            }
+        }
+
+        /* --- TOUCH DEVICE OPTIMIZATIONS --- */
+        @media (hover: none) and (pointer: coarse) {
+            .cta-button, .btn-secondary, .nav-links a, footer a {
+                min-height: 44px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .scroll-to-top {
+                min-height: 44px !important;
+                min-width: 44px !important;
+            }
+
+            /* Increase touch targets */
+            .nav-links a {
+                padding: 0.75rem !important;
+                min-height: 44px !important;
+            }
                     }
     </style>
 </head>
@@ -1328,7 +2812,6 @@
         </svg>
     </div>
 
-    <!-- Custom cursor removed for performance -->
     <div class="progress-bar"></div>
     <div id="tsparticles"></div>
     <div id="three-container"></div>
@@ -1346,7 +2829,7 @@
                         <path d="M16 18.2857L16 8M16 18.2857L22.9282 22.1429M16 18.2857L9.0718 22.1429" stroke="var(--accent-color)" stroke-width="1.5"/>
                     </g>
                 </svg>
-                <span>Operator Uplift</span>
+                <span style="color: white; white-space: nowrap; position: relative; overflow: hidden; cursor: pointer;" class="ripple-effect">Operator Uplift</span>
             </div>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
@@ -1354,19 +2837,33 @@
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="press-release.html">Press Release</a></li>
             </ul>
-            <a href="Operator_Uplift_Complete.html" class="cta-button">Launch App</a>
+            <a href="app.html" class="cta-button desktop-only">Launch App</a>
             <div class="mobile-menu-toggle">
+                <div class="hamburger-icon">
                 <span></span>
                 <span></span>
                 <span></span>
+                </div>
             </div>
         </div>
     </nav>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#features">Features</a>
+        <a href="#success-stories">Success Stories</a>
+        <a href="#faq">FAQ</a>
+        <a href="press-release.html">Press Release</a>
+        <a href="app.html">Launch App</a>
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
+    </div>
+
     <!-- Hero Section -->
-    <section id="main-content" class="hero">
+    <section id="main-content" class="hero" role="main" aria-labelledby="hero-title">
         <div class="hero-container">
             <div class="hero-content">
+                <!-- Skip to main content link for accessibility -->
+                <a href="#features" class="skip-link" tabindex="0">Skip to main content</a>
                 <div class="flex flex-wrap gap-3 justify-start mb-8">
                     <span class="trust-badge">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -1381,16 +2878,39 @@
                         Real-time Progress
                     </span>
                 </div>
-                <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6">
+                <h1 id="hero-title" class="text-4xl md:text-6xl font-black leading-tight mb-6">
                     Deconstruct Your Ambition.<br>
                     <span class="accent-glow-text" style="color: #f97316 !important; text-shadow: 0 0 20px rgba(249, 115, 22, 0.8);">Engineer Your Ascent.</span>
                 </h1>
                 <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8 leading-relaxed">
                     Operator Uplift uses AI to build the execution plan for your most ambitious goals.
                 </p>
-                <div class="hero-buttons">
-                    <a href="Operator_Uplift_Complete.html" class="cta-button accent-glow-button" id="launch-app-btn">Launch App Now</a>
-                    <a href="#features" class="btn-secondary" id="learn-more-btn">Learn More</a>
+                
+                <div class="hero-buttons" role="group" aria-labelledby="hero-title">
+                    <a href="app.html" class="cta-button accent-glow-button" id="launch-app-btn" aria-label="Launch Operator Uplift application" role="button">Launch App Now</a>
+                    <a href="#features" class="btn-secondary" id="learn-more-btn" aria-label="Learn more about Operator Uplift features" role="button">Learn More</a>
+                </div>
+                
+                <!-- Trust Badges -->
+                <div class="flex flex-wrap justify-center items-center gap-6 mb-4">
+                    <div class="flex items-center gap-2 text-sm text-slate-400 trust-badge">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>10,000+ Operators</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-400 trust-badge">
+                        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Proven Results</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-400 trust-badge">
+                        <svg class="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Secure & Private</span>
+                    </div>
                 </div>
             </div>
             <div class="scene">
@@ -1700,7 +3220,7 @@
             <div class="glass-card">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Life?</h2>
                 <p class="text-lg text-gray-400 mb-6 max-w-2xl mx-auto">Join thousands of operators who've already started their epic journey. Your future self will thank you.</p>
-                <a href="Operator_Uplift_Complete.html" class="cta-button accent-glow-button text-lg px-8 py-4">Launch Operator Uplift</a>
+                <a href="app.html" class="cta-button accent-glow-button text-lg px-8 py-4">Launch Operator Uplift</a>
             </div>
         </div>
     </section>
@@ -1928,12 +3448,17 @@
                         velocityY *= friction; 
                         rotationX += velocityX; 
                         rotationY += velocityY;
-                    } else if (window.autoRotateEnabled) {
+                    } else if (autoRotateEnabled) {
                         rotationY += autoRotateSpeed;
                     }
                 }
+                
+                // Add subtle floating animation
+                const time = Date.now() * 0.001;
+                const floatY = Math.sin(time * 0.5) * 5;
+                
                 if(cube) { 
-                    cube.style.transform = `translateZ(-175px) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`; 
+                    cube.style.transform = `translateZ(-175px) translateY(${floatY}px) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`; 
                 }
                 requestAnimationFrame(animateCube);
             }
@@ -1995,16 +3520,24 @@
         }
 
         // Mobile Menu Toggle
-        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-        
-        if (mobileMenuToggle && navLinks) {
-            mobileMenuToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-                mobileMenuToggle.classList.toggle('active');
-                console.log('Mobile menu toggled');
-            });
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            
+            mobileMenu.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
         }
+
+        // Add click event to mobile menu toggle
+        document.querySelector('.mobile-menu-toggle').addEventListener('click', toggleMobileMenu);
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.remove('active');
+                document.querySelector('.mobile-menu-toggle').classList.remove('active');
+            });
+        });
 
         // Simplified mobile menu styles
         const mobileStyle = document.createElement('style');
@@ -2311,6 +3844,47 @@
             const legalLinks = document.querySelectorAll('.legal-link');
             const overlayPages = document.querySelectorAll('.overlay-page');
             const closeButtons = document.querySelectorAll('.close-overlay-btn');
+
+            legalLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').replace('#', '').replace('-modal', '');
+                    const targetPage = document.getElementById(targetId);
+                    if (targetPage) {
+                        targetPage.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    overlayPages.forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // Close overlay when clicking outside content
+            overlayPages.forEach(page => {
+                page.addEventListener('click', (e) => {
+                    if (e.target === page) {
+                        page.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+
+            // Close overlay with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    overlayPages.forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    document.body.style.overflow = '';
+                }
+            });
             
             const showPage = (pageId) => {
                 const page = document.getElementById(pageId);
@@ -2355,7 +3929,7 @@
                 launchAppBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     console.log('Launch App button clicked');
-                    window.location.href = 'Operator_Uplift_Complete.html';
+                    window.location.href = 'app.html';
                 });
             }
             
@@ -2372,11 +3946,11 @@
             }
 
             // Fix for all CTA buttons
-            document.querySelectorAll('a[href="Operator_Uplift_Complete.html"]').forEach(btn => {
+            document.querySelectorAll('a[href="app.html"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     console.log('CTA button clicked');
-                    window.location.href = 'Operator_Uplift_Complete.html';
+                    window.location.href = 'app.html';
                 });
             });
             
@@ -2540,24 +4114,70 @@
         <div class="modal-content-wrapper">
             <button class="close-overlay-btn" onclick="hideAllPages()" aria-label="Close modal">×</button>
             <h2>Terms of Service</h2>
-            <p>By using Operator Uplift, you agree to these terms of service. We provide AI-powered goal achievement tools and expect users to use the platform responsibly.</p>
+            <p><strong>Last updated: July 28, 2025</strong></p>
             
-            <h3>Acceptance of Terms</h3>
-            <p>By accessing or using Operator Uplift, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
+            <p>Welcome to Operator Uplift. These Terms of Service ("Terms") govern your access to and use of the Operator Uplift website and services (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these Terms.</p>
             
-            <h3>Use License</h3>
-            <p>We grant you a limited, non-exclusive, non-transferable license to use Operator Uplift for personal, non-commercial purposes.</p>
+            <h3>1. Acceptance of Terms</h3>
+            <p>By accessing or using Operator Uplift, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this service.</p>
             
-            <h3>User Responsibilities</h3>
+            <h3>2. Description of Service</h3>
+            <p>Operator Uplift is an AI-powered self-progression platform that helps users set, track, and achieve their goals through gamification, community features, and personalized AI assistance. The service includes goal setting, progress tracking, achievement systems, and community interactions.</p>
+            
+            <h3>3. User Accounts and Registration</h3>
+            <p>To access certain features of the Service, you must create an account. You agree to:</p>
             <ul>
-                <li>Provide accurate and complete information</li>
-                <li>Maintain the security of your account</li>
-                <li>Use the service in compliance with applicable laws</li>
-                <li>Respect the rights of other users</li>
+                <li>Provide accurate, current, and complete information during registration</li>
+                <li>Maintain and update your account information to keep it accurate and current</li>
+                <li>Maintain the security of your account credentials</li>
+                <li>Accept responsibility for all activities that occur under your account</li>
+                <li>Notify us immediately of any unauthorized use of your account</li>
             </ul>
             
-            <h3>Contact Us</h3>
-            <p>For questions about these Terms of Service, contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a></p>
+            <h3>4. Acceptable Use</h3>
+            <p>You agree to use the Service only for lawful purposes and in accordance with these Terms. You agree not to:</p>
+            <ul>
+                <li>Use the Service for any illegal or unauthorized purpose</li>
+                <li>Violate any applicable laws or regulations</li>
+                <li>Infringe upon the rights of others</li>
+                <li>Attempt to gain unauthorized access to the Service or its systems</li>
+                <li>Interfere with or disrupt the Service or servers</li>
+                <li>Use the Service to transmit harmful, offensive, or inappropriate content</li>
+                <li>Attempt to reverse engineer or copy the Service</li>
+            </ul>
+            
+            <h3>5. User Content</h3>
+            <p>You retain ownership of content you create and share on the Service. By posting content, you grant us a license to use, display, and distribute your content in connection with the Service. You are responsible for ensuring you have the right to share any content you post.</p>
+            
+            <h3>6. Privacy and Data Protection</h3>
+            <p>Your privacy is important to us. Our collection and use of personal information is governed by our Privacy Policy, which is incorporated into these Terms by reference.</p>
+            
+            <h3>7. AI Features and Limitations</h3>
+            <p>The Service includes AI-powered features that provide suggestions and assistance. While we strive for accuracy, AI-generated content may not always be perfect or suitable for your specific situation. You should use your judgment and verify any important information.</p>
+            
+            <h3>8. Community Guidelines</h3>
+            <p>When participating in community features, you agree to:</p>
+            <ul>
+                <li>Be respectful and supportive of other users</li>
+                <li>Share constructive and helpful content</li>
+                <li>Respect diverse perspectives and experiences</li>
+                <li>Report inappropriate behavior or content</li>
+            </ul>
+            
+            <h3>9. Intellectual Property</h3>
+            <p>The Service and its original content, features, and functionality are owned by Operator Uplift and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.</p>
+            
+            <h3>10. Termination</h3>
+            <p>We may terminate or suspend your account and access to the Service at any time, with or without cause, with or without notice. Upon termination, your right to use the Service will cease immediately.</p>
+            
+            <h3>11. Limitation of Liability</h3>
+            <p>To the maximum extent permitted by law, Operator Uplift shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or use, arising out of or relating to your use of the Service.</p>
+            
+            <h3>12. Changes to Terms</h3>
+            <p>We reserve the right to modify these Terms at any time. We will notify users of significant changes by posting the new Terms on this page. Your continued use of the Service after such modifications constitutes acceptance of the updated Terms.</p>
+            
+            <h3>13. Contact Information</h3>
+            <p>For questions about these Terms of Service, please contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a></p>
         </div>
     </div>
 
@@ -2587,10 +4207,11 @@
     </div> <!-- Close hero-gradient-wrapper -->
 
     <!-- Footer -->
-    <footer class="w-full px-6 text-center py-10 border-t border-zinc-800 fade-in">
+    <footer class="w-full text-center py-10 border-t border-zinc-800 fade-in" style="background: rgba(0, 0, 0, 0.3); width: 100%; margin: 0; position: relative;">
+        <div class="max-w-4xl mx-auto px-6 sm:px-8 md:px-12">
         <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
             <p class="text-slate-500">&copy; 2025 Operator Uplift. All rights reserved.</p>
-            <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-4">
+            <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-4" style="flex-direction: row;">
                 <a href="mailto:operatoruplift@gmail.com" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">Contact</a>
                 <a href="https://twitter.com/OperatorUplift" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors" aria-label="Operator Uplift on X/Twitter">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
@@ -2615,17 +4236,18 @@
             <div class="flex items-center gap-3"><label for="toggle-particles" class="cursor-pointer">Background Particles</label><label class="toggle-switch"><input type="checkbox" id="toggle-particles" checked><span class="slider"></span></label></div>
             <div class="flex items-center gap-3"><label for="toggle-cube-rotation" class="cursor-pointer">Cube Rotation</label><label class="toggle-switch"><input type="checkbox" id="toggle-cube-rotation" checked><span class="slider"></span></label></div>
         </div>
+        </div>
     </footer>
 
     <!-- Legal Pages & Success Modal -->
     <div id="terms" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Terms of Service" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Terms of Service</h2><p>Last updated: July 28, 2025</p><p>Welcome to Operator Uplift. These Terms of Service ("Terms") govern your access to and use of the Operator Uplift website and any services offered (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these Terms.</p><h3>1. The Service</h3><p>Operator Uplift is a pre-launch project. The Service is provided on an "as is" and "as available" basis. We provide information about our upcoming product and collect email addresses for a waitlist. We do not make any warranties about the completeness, reliability, or accuracy of this information. The features and functionality of the final product are subject to change.</p><h3>2. Waitlist</h3><p>By submitting your email address to our waitlist, you consent to receive email communications from us regarding updates, news, and marketing for Operator Uplift. You can opt-out of these communications at any time by following the unsubscribe link in the emails.</p><h3>3. User Conduct</h3><p>You agree not to use the Service for any unlawful purpose or to engage in any activity that would disrupt the Service or its servers and networks.</p><h3>4. Intellectual Property</h3><p>The Service and all of its original content, including text, graphics, logos, and software, are the property of the creators of Operator Uplift and are protected by copyright and other intellectual property laws. You may not use our trademarks or content without our prior written consent.</p><h3>5. Limitation of Liability</h3><p>To the fullest extent permitted by applicable law, Operator Uplift shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p><h3>6. Changes to Terms</h3><p>We reserve the right to modify these Terms at any time. We will notify you of any changes by posting the new Terms on this page. Your continued use of the Service after any such changes constitutes your acceptance of the new Terms.</p><h3>7. Contact Us</h3><p>If you have any questions about these Terms, please contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p></div></div></div>
-    <div id="privacy" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Privacy Policy" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Privacy Policy</h2><p>Last updated: July 28, 2025</p><p>This Privacy Policy describes how Operator Uplift ("we," "us," or "our") collects, uses, and discloses your information when you use our website (the "Service").</p><h3>1. Information We Collect</h3><p>We collect information you provide directly to us. The only personal information we currently collect is your email address when you voluntarily sign up for our waitlist.</p><h3>2. How We Use Your Information</h3><p>We use the email address you provide to:</p><ul><li>Send you updates, news, and other information related to Operator Uplift.</li><li>Notify you when the product is ready for launch or beta testing.</li><li>Respond to your comments or inquiries if you contact us.</li></ul><p>Your email address is processed through our form provider, Netlify, which has its own privacy policy and security measures.</p><h3>3. Data Sharing and Disclosure</h3><p>We do not sell, trade, or rent your personal information to others. We may share your information with third-party service providers (like Netlify) only to the extent necessary for them to provide their services to us. We will not share your information for any other purpose without your consent, unless required by law.</p><h3>4. Data Security</h3><p>The security of your data is important to us. We rely on the security infrastructure of our service providers to protect your information. However, no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security.</p><h3>5. Your Rights</h3><p>You have the right to opt-out of our email communications at any time by clicking the "unsubscribe" link provided in every email. You may also contact us to request access to, correction of, or deletion of your personal information at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p><h3>6. Changes to This Policy</h3><p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p></div></div></div>
+    <div id="privacy" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Privacy Policy" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Privacy Policy</h2><p><strong>Last updated: July 28, 2025</strong></p><p>This Privacy Policy describes how Operator Uplift ("we," "us," or "our") collects, uses, and discloses your information when you use our website and services (collectively, the "Service").</p><h3>1. Information We Collect</h3><p><strong>Personal Information:</strong> When you create an account, we collect your email address, display name, and any other information you choose to provide.</p><p><strong>Usage Data:</strong> We collect information about how you use our Service, including your goals, progress, achievements, and interactions with AI features.</p><p><strong>Technical Data:</strong> We automatically collect certain technical information, including your IP address, browser type, device information, and usage patterns.</p><h3>2. How We Use Your Information</h3><p>We use the information we collect to:</p><ul><li>Provide, maintain, and improve our Service</li><li>Personalize your experience and provide AI-powered recommendations</li><li>Process your goals, track progress, and manage achievements</li><li>Send you important updates about the Service</li><li>Respond to your comments, questions, and support requests</li><li>Analyze usage patterns to improve our Service</li><li>Ensure the security and integrity of our Service</li></ul><h3>3. Data Sharing and Disclosure</h3><p>We do not sell, trade, or rent your personal information to third parties. We may share your information in the following circumstances:</p><ul><li><strong>Service Providers:</strong> We use trusted third-party services (Firebase, Netlify, AI providers) to operate our Service</li><li><strong>Legal Requirements:</strong> We may disclose information if required by law or to protect our rights</li><li><strong>Business Transfers:</strong> In the event of a merger or acquisition, your information may be transferred</li><li><strong>Community Features:</strong> Some information may be visible to other users in community features (with your consent)</li></ul><h3>4. Data Security</h3><p>We implement appropriate security measures to protect your personal information:</p><ul><li>Encryption of data in transit and at rest</li><li>Secure authentication and authorization</li><li>Regular security assessments and updates</li><li>Access controls and monitoring</li></ul><p>However, no method of transmission over the Internet is 100% secure. We cannot guarantee absolute security.</p><h3>5. Your Rights and Choices</h3><p>You have the following rights regarding your personal information:</p><ul><li><strong>Access:</strong> Request a copy of your personal information</li><li><strong>Correction:</strong> Update or correct inaccurate information</li><li><strong>Deletion:</strong> Request deletion of your account and data</li><li><strong>Portability:</strong> Export your data in a machine-readable format</li><li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li></ul><p>To exercise these rights, contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p><h3>6. AI and Data Processing</h3><p>Our Service uses AI to provide personalized recommendations and assistance. Your goals, progress, and interactions may be processed by AI systems to improve your experience. We ensure AI processing complies with our privacy standards.</p><h3>7. Cookies and Tracking</h3><p>We use essential cookies to make our Service work properly. We do not use tracking cookies for advertising purposes. You can control cookie settings through your browser.</p><h3>8. Children's Privacy</h3><p>Our Service is not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected such information, please contact us immediately.</p><h3>9. International Data Transfers</h3><p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers.</p><h3>10. Changes to This Policy</h3><p>We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the new policy on this page or sending you an email.</p><h3>11. Contact Us</h3><p>If you have questions about this Privacy Policy or our data practices, please contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p></div></div></div>
     <div id="cookies" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Cookie Policy" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Cookie Policy</h2><p>Last updated: July 28, 2025</p><p>This Cookie Policy explains what cookies are and how we use them on the Operator Uplift website.</p><h3>What Are Cookies?</h3><p>Cookies are small text files that are placed on your computer or mobile device when you visit a website. They are widely used to make websites work, or work more efficiently, as well as to provide information to the owners of the site.</p><h3>How We Use Cookies</h3><p>We use cookies for a very limited and specific purpose:</p><ul><li><strong>Essential Cookies:</strong> We use one essential cookie to remember your choice regarding our cookie consent banner. This is a functional cookie that allows us to know whether you have accepted or declined our cookie policy, so we don't have to ask you on every visit.</li></ul><p>At this time, we do not use any cookies for analytics, advertising, or tracking purposes.</p><h3>Your Choices Regarding Cookies</h3><p>When you first visit our site, you are presented with a banner allowing you to accept or decline our use of cookies. If you decline, the functional cookie to remember your choice will still be set. Most web browsers allow some control of most cookies through the browser settings. To find out more about cookies, including how to see what cookies have been set, visit <a href="https://www.aboutcookies.org" target="_blank" rel="noopener noreferrer">www.aboutcookies.org</a> or <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer">www.allaboutcookies.org</a>.</p><h3>Changes to This Cookie Policy</h3><p>We may update this Cookie Policy in the future if we introduce new cookies or change how we use them. Any changes will be posted on this page.</p></div></div></div>
 
 
 
     <!-- Cookie Consent Banner -->
-    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 p-4 z-50 hidden">
+    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 p-4 z-[9999] hidden">
         <div class="glass-card container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-lg">
             <p class="text-sm text-slate-300">We use essential cookies to make our site work. For more details, see our <a href="#privacy-modal" class="legal-link text-[var(--accent-color)] hover:underline">Privacy Policy</a> and <a href="#terms-modal" class="legal-link text-[var(--accent-color)] hover:underline">Terms of Service</a>.</p>
             <div class="flex gap-3 flex-shrink-0">
@@ -2642,9 +4264,131 @@
         </svg>
     </button>
     
-    <!-- Performance monitoring -->
+    <!-- Enhanced JavaScript Functionality -->
     <script>
-        // Web Vitals monitoring
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Loading Screen ---
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => loadingScreen.style.display = 'none', 500);
+                }
+            }, 500);
+
+            // --- Custom cursor removed for better performance and mobile compatibility ---
+
+            // --- Countdown Timer ---
+            const countdownBadge = document.getElementById('countdown-badge');
+            const countdownBadgeMobile = document.getElementById('countdown-badge-mobile');
+            const countdownEndDate = new Date('2025-08-12T23:59:59'); // August 12th, 2025
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = countdownEndDate - now;
+                const countdownSpan = countdownBadge?.querySelector('span');
+                const countdownSpanMobile = countdownBadgeMobile?.querySelector('span');
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    if(countdownSpan) countdownSpan.innerHTML = "Beta Access Closed";
+                    if(countdownSpanMobile) countdownSpanMobile.innerHTML = "Beta Access Closed";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                const countdownText = `Limited Beta Spots End In: <b>${days}d ${hours}h ${minutes}m ${seconds}s</b>`;
+                
+                if (countdownSpan) {
+                    countdownSpan.innerHTML = countdownText;
+                }
+                if (countdownSpanMobile) {
+                    countdownSpanMobile.innerHTML = countdownText;
+                }
+            }
+            const countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            // --- Scroll Depth Analytics ---
+            const scrollDepthMarkers = { 25: false, 50: false, 75: false, 100: false };
+            window.addEventListener('scroll', () => {
+                const scrollHeight = document.documentElement.scrollHeight;
+                const clientHeight = document.documentElement.clientHeight;
+                const scrollTop = window.scrollY;
+                const totalScroll = scrollTop + clientHeight;
+                const scrollPercentage = Math.round((totalScroll / scrollHeight) * 100);
+
+                for (const marker in scrollDepthMarkers) {
+                    if (scrollPercentage >= marker && !scrollDepthMarkers[marker]) {
+                        scrollDepthMarkers[marker] = true;
+                        if (typeof gtag === 'function') {
+                            gtag('event', 'scroll_depth', {
+                                'event_category': 'Engagement',
+                                'event_label': `${marker}%`,
+                                'value': marker,
+                                'non_interaction': true
+                            });
+                        }
+                    }
+                }
+            }, { passive: true });
+
+            // --- Enhanced Button Interactions ---
+            document.querySelectorAll('.cta-button, .btn-secondary').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // --- Header Logo Ripple Effect ---
+            document.querySelectorAll('.ripple-effect').forEach(element => {
+                element.addEventListener('click', function(e) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // --- Enhanced Accessibility ---
+            // Distinguish mouse vs. keyboard interaction
+            document.body.addEventListener('mousedown', () => document.body.dataset.input = 'mouse');
+            document.body.addEventListener('keydown', () => document.body.dataset.input = 'keyboard');
+
+            // --- Performance monitoring ---
         if ('PerformanceObserver' in window) {
             const observer = new PerformanceObserver((list) => {
                 for (const entry of list.getEntries()) {
@@ -2659,15 +4403,43 @@
         // Error tracking
         window.addEventListener('error', (e) => {
             console.error('Page error:', e.error);
-            // Prevent error from breaking the page
             e.preventDefault();
         });
         
         window.addEventListener('unhandledrejection', (e) => {
             console.error('Unhandled promise rejection:', e.reason);
-            // Prevent rejection from breaking the page
             e.preventDefault();
+            });
         });
+
+        // Initialize 100% Enhancement Suite
+        if (window.HundredPercentEnhancement) {
+            HundredPercentEnhancement.init();
+        }
     </script>
+
+    <!-- Ripple effect styles -->
+    <style>
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .cta-button, .btn-secondary {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
 </body>
 </html>

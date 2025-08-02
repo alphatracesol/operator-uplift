@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operator Uplift - App Functionality Test</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #e5e7eb;
+            margin: 0;
+            padding: 2rem;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: rgba(24, 24, 27, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .test-section h2 {
+            color: #f97316;
+            margin-bottom: 1rem;
+        }
+        .test-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .test-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .status-pass { background: #22c55e; color: black; }
+        .status-fail { background: #ef4444; color: white; }
+        .status-warning { background: #f59e0b; color: black; }
+        .status-info { background: #3b82f6; color: white; }
+        .test-details {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+        .error-details {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+        .run-tests-btn {
+            background: #f97316;
+            color: black;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+        .run-tests-btn:hover {
+            background: #ea580c;
+        }
+        .summary {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔍 Operator Uplift - Comprehensive Functionality Test</h1>
+        
+        <button class="run-tests-btn" onclick="runAllTests()">🚀 Run All Tests</button>
+        
+        <div id="test-summary" class="summary" style="display: none;">
+            <h3>Test Summary</h3>
+            <div id="summary-content"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Core App Functions</h2>
+            <div id="core-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔐 Authentication & Security</h2>
+            <div id="auth-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Goals & Tasks</h2>
+            <div id="goals-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🤖 AI Integration</h2>
+            <div id="ai-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎮 Gamification</h2>
+            <div id="gamification-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Analytics & Data</h2>
+            <div id="analytics-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🌐 Community Features</h2>
+            <div id="community-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>⚡ Performance & Error Handling</h2>
+            <div id="performance-tests"></div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            warnings: 0
+        };
+
+        function addTestResult(sectionId, testName, status, details = '', error = null) {
+            const section = document.getElementById(sectionId);
+            const testItem = document.createElement('div');
+            testItem.className = 'test-item';
+            
+            const statusClass = {
+                'pass': 'status-pass',
+                'fail': 'status-fail',
+                'warning': 'status-warning',
+                'info': 'status-info'
+            }[status] || 'status-info';
+            
+            testItem.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>${testName}</strong>
+                    <span class="test-status ${statusClass}">${status.toUpperCase()}</span>
+                </div>
+                ${details ? `<div class="test-details">${details}</div>` : ''}
+                ${error ? `<div class="error-details">${error}</div>` : ''}
+            `;
+            
+            section.appendChild(testItem);
+            
+            // Update counters
+            testResults.total++;
+            if (status === 'pass') testResults.passed++;
+            else if (status === 'fail') testResults.failed++;
+            else if (status === 'warning') testResults.warnings++;
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('test-summary');
+            const content = document.getElementById('summary-content');
+            
+            content.innerHTML = `
+                <p><strong>Total Tests:</strong> ${testResults.total}</p>
+                <p><strong>Passed:</strong> ${testResults.passed} ✅</p>
+                <p><strong>Failed:</strong> ${testResults.failed} ❌</p>
+                <p><strong>Warnings:</strong> ${testResults.warnings} ⚠️</p>
+                <p><strong>Success Rate:</strong> ${((testResults.passed / testResults.total) * 100).toFixed(1)}%</p>
+            `;
+            
+            summary.style.display = 'block';
+        }
+
+        // Test Functions
+        async function testCoreFunctions() {
+            addTestResult('core-tests', 'App Object Structure', 'info', 'Checking if app object is properly defined');
+            
+            try {
+                // Check if app object exists
+                if (typeof app === 'undefined') {
+                    addTestResult('core-tests', 'App Object Definition', 'fail', 'App object is not defined');
+                    return;
+                }
+                addTestResult('core-tests', 'App Object Definition', 'pass', 'App object is properly defined');
+                
+                // Check required modules
+                const requiredModules = ['auth', 'firestore', 'goals', 'ai', 'gamification', 'ui', 'router'];
+                for (const module of requiredModules) {
+                    if (app[module]) {
+                        addTestResult('core-tests', `${module} Module`, 'pass', `${module} module is available`);
+                    } else {
+                        addTestResult('core-tests', `${module} Module`, 'fail', `${module} module is missing`);
+                    }
+                }
+                
+                // Check state management
+                if (app.state) {
+                    addTestResult('core-tests', 'State Management', 'pass', 'State object is available');
+                } else {
+                    addTestResult('core-tests', 'State Management', 'fail', 'State object is missing');
+                }
+                
+            } catch (error) {
+                addTestResult('core-tests', 'Core Functions Test', 'fail', 'Error during core functions test', error.message);
+            }
+        }
+
+        async function testAuthentication() {
+            addTestResult('auth-tests', 'Authentication System', 'info', 'Testing authentication functions');
+            
+            try {
+                // Check if Firebase auth is available
+                if (typeof auth === 'undefined') {
+                    addTestResult('auth-tests', 'Firebase Auth', 'warning', 'Firebase auth not initialized (may be normal in test environment)');
+                } else {
+                    addTestResult('auth-tests', 'Firebase Auth', 'pass', 'Firebase auth is available');
+                }
+                
+                // Check auth methods
+                if (app.auth && typeof app.auth.login === 'function') {
+                    addTestResult('auth-tests', 'Login Method', 'pass', 'Login method is available');
+                } else {
+                    addTestResult('auth-tests', 'Login Method', 'fail', 'Login method is missing');
+                }
+                
+                if (app.auth && typeof app.auth.register === 'function') {
+                    addTestResult('auth-tests', 'Register Method', 'pass', 'Register method is available');
+                } else {
+                    addTestResult('auth-tests', 'Register Method', 'fail', 'Register method is missing');
+                }
+                
+                if (app.auth && typeof app.auth.logout === 'function') {
+                    addTestResult('auth-tests', 'Logout Method', 'pass', 'Logout method is available');
+                } else {
+                    addTestResult('auth-tests', 'Logout Method', 'fail', 'Logout method is missing');
+                }
+                
+            } catch (error) {
+                addTestResult('auth-tests', 'Authentication Test', 'fail', 'Error during authentication test', error.message);
+            }
+        }
+
+        async function testGoalsSystem() {
+            addTestResult('goals-tests', 'Goals System', 'info', 'Testing goals and tasks functionality');
+            
+            try {
+                // Check goals methods
+                if (app.goals && typeof app.goals.save === 'function') {
+                    addTestResult('goals-tests', 'Save Goal Method', 'pass', 'Save goal method is available');
+                } else {
+                    addTestResult('goals-tests', 'Save Goal Method', 'fail', 'Save goal method is missing');
+                }
+                
+                if (app.goals && typeof app.goals.addTask === 'function') {
+                    addTestResult('goals-tests', 'Add Task Method', 'pass', 'Add task method is available');
+                } else {
+                    addTestResult('goals-tests', 'Add Task Method', 'fail', 'Add task method is missing');
+                }
+                
+                if (app.goals && typeof app.goals.toggleTask === 'function') {
+                    addTestResult('goals-tests', 'Toggle Task Method', 'pass', 'Toggle task method is available');
+                } else {
+                    addTestResult('goals-tests', 'Toggle Task Method', 'fail', 'Toggle task method is missing');
+                }
+                
+            } catch (error) {
+                addTestResult('goals-tests', 'Goals System Test', 'fail', 'Error during goals system test', error.message);
+            }
+        }
+
+        async function testAISystem() {
+            addTestResult('ai-tests', 'AI System', 'info', 'Testing AI integration');
+            
+            try {
+                // Check AI methods
+                if (app.ai && typeof app.ai.call === 'function') {
+                    addTestResult('ai-tests', 'AI Call Method', 'pass', 'AI call method is available');
+                } else {
+                    addTestResult('ai-tests', 'AI Call Method', 'fail', 'AI call method is missing');
+                }
+                
+                if (app.ai && typeof app.ai.validateMessages === 'function') {
+                    addTestResult('ai-tests', 'Message Validation', 'pass', 'Message validation is available');
+                } else {
+                    addTestResult('ai-tests', 'Message Validation', 'fail', 'Message validation is missing');
+                }
+                
+                if (app.ai && typeof app.ai.checkRateLimit === 'function') {
+                    addTestResult('ai-tests', 'Rate Limiting', 'pass', 'Rate limiting is available');
+                } else {
+                    addTestResult('ai-tests', 'Rate Limiting', 'fail', 'Rate limiting is missing');
+                }
+                
+            } catch (error) {
+                addTestResult('ai-tests', 'AI System Test', 'fail', 'Error during AI system test', error.message);
+            }
+        }
+
+        async function testGamification() {
+            addTestResult('gamification-tests', 'Gamification System', 'info', 'Testing gamification features');
+            
+            try {
+                // Check gamification methods
+                if (app.gamification && typeof app.gamification.addPoints === 'function') {
+                    addTestResult('gamification-tests', 'Add Points Method', 'pass', 'Add points method is available');
+                } else {
+                    addTestResult('gamification-tests', 'Add Points Method', 'fail', 'Add points method is missing');
+                }
+                
+                if (app.gamification && typeof app.gamification.checkLevelUp === 'function') {
+                    addTestResult('gamification-tests', 'Level Up Check', 'pass', 'Level up check is available');
+                } else {
+                    addTestResult('gamification-tests', 'Level Up Check', 'fail', 'Level up check is missing');
+                }
+                
+                if (app.gamification && typeof app.gamification.checkAchievement === 'function') {
+                    addTestResult('gamification-tests', 'Achievement Check', 'pass', 'Achievement check is available');
+                } else {
+                    addTestResult('gamification-tests', 'Achievement Check', 'fail', 'Achievement check is missing');
+                }
+                
+            } catch (error) {
+                addTestResult('gamification-tests', 'Gamification Test', 'fail', 'Error during gamification test', error.message);
+            }
+        }
+
+        async function testAnalytics() {
+            addTestResult('analytics-tests', 'Analytics System', 'info', 'Testing analytics and data management');
+            
+            try {
+                // Check analytics methods
+                if (app.analytics && typeof app.analytics.loadAnalyticsData === 'function') {
+                    addTestResult('analytics-tests', 'Load Analytics Data', 'pass', 'Load analytics data method is available');
+                } else {
+                    addTestResult('analytics-tests', 'Load Analytics Data', 'fail', 'Load analytics data method is missing');
+                }
+                
+                if (app.firestore && typeof app.firestore.updateUserData === 'function') {
+                    addTestResult('analytics-tests', 'Update User Data', 'pass', 'Update user data method is available');
+                } else {
+                    addTestResult('analytics-tests', 'Update User Data', 'fail', 'Update user data method is missing');
+                }
+                
+            } catch (error) {
+                addTestResult('analytics-tests', 'Analytics Test', 'fail', 'Error during analytics test', error.message);
+            }
+        }
+
+        async function testCommunityFeatures() {
+            addTestResult('community-tests', 'Community Features', 'info', 'Testing community functionality');
+            
+            try {
+                // Check community methods
+                if (app.community && typeof app.community.init === 'function') {
+                    addTestResult('community-tests', 'Community Init', 'pass', 'Community init method is available');
+                } else {
+                    addTestResult('community-tests', 'Community Init', 'fail', 'Community init method is missing');
+                }
+                
+            } catch (error) {
+                addTestResult('community-tests', 'Community Test', 'fail', 'Error during community test', error.message);
+            }
+        }
+
+        async function testPerformance() {
+            addTestResult('performance-tests', 'Performance & Error Handling', 'info', 'Testing performance and error handling');
+            
+            try {
+                // Test error handling
+                const originalConsoleError = console.error;
+                let errorCaught = false;
+                
+                console.error = function() {
+                    errorCaught = true;
+                    originalConsoleError.apply(console, arguments);
+                };
+                
+                // Test promise error handling
+                try {
+                    await new Promise((resolve, reject) => {
+                        setTimeout(() => reject(new Error('Test error')), 100);
+                    });
+                } catch (error) {
+                    // Error was properly caught
+                }
+                
+                console.error = originalConsoleError;
+                
+                if (errorCaught) {
+                    addTestResult('performance-tests', 'Error Handling', 'pass', 'Error handling is working');
+                } else {
+                    addTestResult('performance-tests', 'Error Handling', 'warning', 'Error handling may need improvement');
+                }
+                
+                // Test performance monitoring
+                if ('PerformanceObserver' in window) {
+                    addTestResult('performance-tests', 'Performance Monitoring', 'pass', 'Performance monitoring is available');
+                } else {
+                    addTestResult('performance-tests', 'Performance Monitoring', 'warning', 'Performance monitoring not available');
+                }
+                
+            } catch (error) {
+                addTestResult('performance-tests', 'Performance Test', 'fail', 'Error during performance test', error.message);
+            }
+        }
+
+        async function runAllTests() {
+            // Reset results
+            testResults = { total: 0, passed: 0, failed: 0, warnings: 0 };
+            
+            // Clear previous results
+            document.querySelectorAll('.test-item').forEach(item => item.remove());
+            
+            // Run all tests
+            await testCoreFunctions();
+            await testAuthentication();
+            await testGoalsSystem();
+            await testAISystem();
+            await testGamification();
+            await testAnalytics();
+            await testCommunityFeatures();
+            await testPerformance();
+            
+            // Update summary
+            updateSummary();
+            
+            console.log('All tests completed:', testResults);
+        }
+
+        // Auto-run tests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            addTestResult('core-tests', 'Test Suite Loaded', 'info', 'Test suite is ready to run');
+        });
+    </script>
+</body>
+</html> 

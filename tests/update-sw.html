@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Worker Update</title>
+</head>
+<body>
+    <h1>Service Worker Update Tool</h1>
+    <button onclick="updateServiceWorker()">Force Update Service Worker</button>
+    <button onclick="clearAllCaches()">Clear All Caches</button>
+    <button onclick="unregisterServiceWorker()">Unregister Service Worker</button>
+    <div id="status"></div>
+
+    <script>
+        async function updateServiceWorker() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = 'Updating service worker...';
+            
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        await registration.update();
+                        statusDiv.innerHTML = '✅ Service worker update triggered. Check console for logs.';
+                        console.log('Service worker update triggered');
+                    } else {
+                        statusDiv.innerHTML = '❌ No service worker registration found';
+                    }
+                } else {
+                    statusDiv.innerHTML = '❌ Service Worker not supported';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function clearAllCaches() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = 'Clearing all caches...';
+            
+            try {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+                statusDiv.innerHTML = '✅ All caches cleared';
+                console.log('All caches cleared');
+            } catch (error) {
+                statusDiv.innerHTML = `❌ Error clearing caches: ${error.message}`;
+            }
+        }
+
+        async function unregisterServiceWorker() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = 'Unregistering service worker...';
+            
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        await registration.unregister();
+                        statusDiv.innerHTML = '✅ Service worker unregistered. Refresh the page to re-register.';
+                        console.log('Service worker unregistered');
+                    } else {
+                        statusDiv.innerHTML = '❌ No service worker registration found';
+                    }
+                } else {
+                    statusDiv.innerHTML = '❌ Service Worker not supported';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        // Check current service worker status
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration().then(registration => {
+                if (registration) {
+                    console.log('Current service worker:', registration.active?.scriptURL);
+                    document.getElementById('status').innerHTML = `Current SW: ${registration.active?.scriptURL || 'Installing...'}`;
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

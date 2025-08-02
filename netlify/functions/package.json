@@ -1,0 +1,25 @@
+{
+  "name": "operator-uplift-functions",
+  "version": "2.0.0",
+  "description": "Netlify functions for Operator Uplift application",
+  "main": "ai-proxy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "netlify",
+    "functions",
+    "ai",
+    "firebase",
+    "security"
+  ],
+  "author": "Operator Uplift Team",
+  "license": "MIT"
+} 

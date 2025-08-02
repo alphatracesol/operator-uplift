@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operator Uplift - Final Comprehensive Test Suite</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #111827, #0a0a0a);
+            color: #e5e7eb;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(24, 24, 27, 0.4);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .test-title {
+            color: #f97316;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            border-left: 4px solid #10b981;
+        }
+        .test-item.failed {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .test-item.warning {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .status {
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status.pass { color: #10b981; }
+        .status.fail { color: #ef4444; }
+        .status.warning { color: #f59e0b; }
+        .btn {
+            background: #f97316;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #fb923c;
+        }
+        .btn.secondary {
+            background: #6b7280;
+            color: white;
+        }
+        .btn.danger {
+            background: #ef4444;
+            color: white;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+        .summary {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transition: width 0.3s ease;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f97316;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 style="text-align: center; color: #f97316; margin-bottom: 30px;">
+            🧪 Operator Uplift - Final Comprehensive Test Suite
+        </h1>
+        
+        <div class="test-section">
+            <div class="test-title">🤖 AI Integration Tests</div>
+            <div id="ai-tests">
+                <div class="test-item">
+                    <span>AI Connection</span>
+                    <span class="status pass" id="ai-connection-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>AI Message Validation</span>
+                    <span class="status pass" id="ai-validation-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>AI Rate Limiting</span>
+                    <span class="status pass" id="ai-rate-limit-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>AI Performance Monitoring</span>
+                    <span class="status pass" id="ai-performance-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>AI Feature Testing</span>
+                    <span class="status pass" id="ai-features-test">Testing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔧 App Functionality Tests</div>
+            <div id="app-tests">
+                <div class="test-item">
+                    <span>Authentication System</span>
+                    <span class="status pass" id="auth-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Goals System</span>
+                    <span class="status pass" id="goals-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Habits System</span>
+                    <span class="status pass" id="habits-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Focus System</span>
+                    <span class="status pass" id="focus-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Analytics System</span>
+                    <span class="status pass" id="analytics-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Community System</span>
+                    <span class="status pass" id="community-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Gamification System</span>
+                    <span class="status pass" id="gamification-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>UI System</span>
+                    <span class="status pass" id="ui-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Firebase Integration</span>
+                    <span class="status pass" id="firebase-test">Testing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">⚡ Performance Tests</div>
+            <div id="performance-tests">
+                <div class="test-item">
+                    <span>Web Vitals</span>
+                    <span class="status pass" id="web-vitals-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Memory Usage</span>
+                    <span class="status pass" id="memory-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Load Times</span>
+                    <span class="status pass" id="load-time-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Network Requests</span>
+                    <span class="status pass" id="network-test">Testing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔒 Security Tests</div>
+            <div id="security-tests">
+                <div class="test-item">
+                    <span>Input Validation</span>
+                    <span class="status pass" id="input-validation-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>XSS Protection</span>
+                    <span class="status pass" id="xss-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>CSP Compliance</span>
+                    <span class="status pass" id="csp-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Rate Limiting</span>
+                    <span class="status pass" id="rate-limit-test">Testing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔍 Debug Tools Tests</div>
+            <div id="debug-tests">
+                <div class="test-item">
+                    <span>AI Debug Panel</span>
+                    <span class="status pass" id="ai-debug-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>App Debug Panel</span>
+                    <span class="status pass" id="app-debug-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Comprehensive Debug</span>
+                    <span class="status pass" id="comprehensive-debug-test">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span>Performance Monitoring</span>
+                    <span class="status pass" id="performance-monitoring-test">Testing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn" onclick="runAllTests()">🧪 Run All Tests</button>
+            <button class="btn secondary" onclick="runAITests()">🤖 AI Tests Only</button>
+            <button class="btn secondary" onclick="runAppTests()">🔧 App Tests Only</button>
+            <button class="btn secondary" onclick="runPerformanceTests()">⚡ Performance Only</button>
+            <button class="btn secondary" onclick="runSecurityTests()">🔒 Security Only</button>
+            <button class="btn secondary" onclick="runDebugTests()">🔍 Debug Tools Only</button>
+            <button class="btn" onclick="generateReport()">📊 Generate Report</button>
+            <button class="btn danger" onclick="resetAllTests()">🔄 Reset All</button>
+        </div>
+
+        <div id="progress-section" style="display: none;">
+            <h3>Test Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div id="progress-text">0% Complete</div>
+        </div>
+
+        <div id="results" class="results" style="display: none;">
+            <h3>Test Results</h3>
+            <div id="test-output"></div>
+        </div>
+
+        <div id="summary" class="summary" style="display: none;">
+            <h3>Test Summary</h3>
+            <div id="summary-content"></div>
+        </div>
+
+        <div id="metrics" class="metrics-grid" style="display: none;">
+            <div class="metric-card">
+                <div class="metric-value" id="total-tests">0</div>
+                <div class="metric-label">Total Tests</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="passed-tests">0</div>
+                <div class="metric-label">Passed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="failed-tests">0</div>
+                <div class="metric-label">Failed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="success-rate">0%</div>
+                <div class="metric-label">Success Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test Results Storage
+        let testResults = {
+            ai: {},
+            app: {},
+            performance: {},
+            security: {},
+            debug: {}
+        };
+
+        let totalTests = 0;
+        let completedTests = 0;
+
+        // Test Functions
+        async function testAIConnection() {
+            try {
+                if (window.app && app.ai && app.ai.debug) {
+                    const result = await app.ai.debug.testConnection();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAIMessageValidation() {
+            try {
+                if (window.app && app.ai && app.ai.debug) {
+                    const testMessages = [
+                        { role: 'user', content: 'Test message' }
+                    ];
+                    return app.ai.debug.validateMessages(testMessages);
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAIRateLimit() {
+            try {
+                if (window.app && app.ai && app.ai.debug) {
+                    const result = await app.ai.debug.checkRateLimit();
+                    return typeof result.allowed === 'boolean';
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAIPerformance() {
+            try {
+                if (window.app && app.ai && app.ai.debug) {
+                    const metrics = app.ai.debug.getPerformanceMetrics();
+                    return typeof metrics.totalCalls === 'number';
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAIFeatures() {
+            try {
+                if (window.app && app.ai && app.ai.test) {
+                    const result = await app.ai.test.testAllFeatures();
+                    return result.summary && result.summary.passed > 0;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAuthentication() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testAuthentication();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testGoals() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testGoals();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testHabits() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testHabits();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testFocus() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testFocus();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAnalytics() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testAnalytics();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testCommunity() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testCommunity();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testGamification() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testGamification();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testUI() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testUI();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testFirebase() {
+            try {
+                if (window.app && app.debug) {
+                    const result = await app.debug.testFirebase();
+                    return result.success;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testWebVitals() {
+            try {
+                const lcp = performance.getEntriesByType('largest-contentful-paint')[0];
+                const fid = performance.getEntriesByType('first-input')[0];
+                
+                const results = {
+                    lcp: lcp ? lcp.startTime < 2500 : true,
+                    fid: fid ? fid.processingStart - fid.startTime < 100 : true
+                };
+                
+                return Object.values(results).every(Boolean);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testMemoryUsage() {
+            try {
+                if (performance.memory) {
+                    const used = performance.memory.usedJSHeapSize;
+                    const limit = performance.memory.jsHeapSizeLimit;
+                    const usage = (used / limit) * 100;
+                    return usage < 80;
+                }
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testLoadTimes() {
+            try {
+                const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                const domReady = performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart;
+                return loadTime < 3000 && domReady < 2000;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testNetworkRequests() {
+            try {
+                const resources = performance.getEntriesByType('resource');
+                const slowResources = resources.filter(r => r.duration > 1000);
+                return slowResources.length < 5;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testInputValidation() {
+            try {
+                if (window.app && app.utils && app.utils.validateInput) {
+                    const emailTest = app.utils.validateInput('test@example.com', 'email');
+                    const invalidEmailTest = !app.utils.validateInput('invalid-email', 'email');
+                    return emailTest && invalidEmailTest;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testXSSProtection() {
+            try {
+                if (window.app && app.utils && app.utils.sanitizeInput) {
+                    const maliciousInput = '<script>alert("xss")</script>';
+                    const sanitized = app.utils.sanitizeInput(maliciousInput);
+                    return !sanitized.includes('<script>');
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testCSPCompliance() {
+            try {
+                const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+                return !!meta && meta.content.includes('script-src');
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testRateLimiting() {
+            try {
+                if (window.app && app.utils && app.utils.checkRateLimit) {
+                    const rateLimit = await app.utils.checkRateLimit('test');
+                    return typeof rateLimit.allowed === 'boolean';
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAIDebugPanel() {
+            try {
+                return !!window.AIIntegrationEnhancer;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testAppDebugPanel() {
+            try {
+                return !!window.AppFunctionalityDebugger;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testComprehensiveDebug() {
+            try {
+                return !!(window.app && app.comprehensiveDebug);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function testPerformanceMonitoring() {
+            try {
+                return 'PerformanceObserver' in window;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Update Test Status
+        function updateTestStatus(testId, passed, message = '') {
+            const element = document.getElementById(testId);
+            if (element) {
+                element.textContent = passed ? 'PASS' : 'FAIL';
+                element.className = `status ${passed ? 'pass' : 'fail'}`;
+                
+                const testItem = element.closest('.test-item');
+                if (testItem) {
+                    testItem.className = `test-item ${passed ? '' : 'failed'}`;
+                }
+            }
+            
+            completedTests++;
+            updateProgress();
+            
+            return passed;
+        }
+
+        function updateProgress() {
+            const progress = (completedTests / totalTests) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = Math.round(progress) + '% Complete';
+        }
+
+        // Run All Tests
+        async function runAllTests() {
+            console.log('🧪 Starting comprehensive test suite...');
+            
+            // Calculate total tests
+            totalTests = 26; // Total number of tests
+            completedTests = 0;
+            
+            document.getElementById('progress-section').style.display = 'block';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('metrics').style.display = 'block';
+            
+            // AI Tests
+            testResults.ai.connection = updateTestStatus('ai-connection-test', await testAIConnection());
+            testResults.ai.validation = updateTestStatus('ai-validation-test', await testAIMessageValidation());
+            testResults.ai.rateLimit = updateTestStatus('ai-rate-limit-test', await testAIRateLimit());
+            testResults.ai.performance = updateTestStatus('ai-performance-test', await testAIPerformance());
+            testResults.ai.features = updateTestStatus('ai-features-test', await testAIFeatures());
+
+            // App Tests
+            testResults.app.auth = updateTestStatus('auth-test', await testAuthentication());
+            testResults.app.goals = updateTestStatus('goals-test', await testGoals());
+            testResults.app.habits = updateTestStatus('habits-test', await testHabits());
+            testResults.app.focus = updateTestStatus('focus-test', await testFocus());
+            testResults.app.analytics = updateTestStatus('analytics-test', await testAnalytics());
+            testResults.app.community = updateTestStatus('community-test', await testCommunity());
+            testResults.app.gamification = updateTestStatus('gamification-test', await testGamification());
+            testResults.app.ui = updateTestStatus('ui-test', await testUI());
+            testResults.app.firebase = updateTestStatus('firebase-test', await testFirebase());
+
+            // Performance Tests
+            testResults.performance.webVitals = updateTestStatus('web-vitals-test', await testWebVitals());
+            testResults.performance.memory = updateTestStatus('memory-test', await testMemoryUsage());
+            testResults.performance.loadTime = updateTestStatus('load-time-test', await testLoadTimes());
+            testResults.performance.network = updateTestStatus('network-test', await testNetworkRequests());
+
+            // Security Tests
+            testResults.security.inputValidation = updateTestStatus('input-validation-test', await testInputValidation());
+            testResults.security.xss = updateTestStatus('xss-test', await testXSSProtection());
+            testResults.security.csp = updateTestStatus('csp-test', await testCSPCompliance());
+            testResults.security.rateLimit = updateTestStatus('rate-limit-test', await testRateLimiting());
+
+            // Debug Tests
+            testResults.debug.aiDebug = updateTestStatus('ai-debug-test', await testAIDebugPanel());
+            testResults.debug.appDebug = updateTestStatus('app-debug-test', await testAppDebugPanel());
+            testResults.debug.comprehensiveDebug = updateTestStatus('comprehensive-debug-test', await testComprehensiveDebug());
+            testResults.debug.performanceMonitoring = updateTestStatus('performance-monitoring-test', await testPerformanceMonitoring());
+
+            generateSummary();
+        }
+
+        function runAITests() {
+            console.log('🤖 Running AI tests...');
+            runSpecificTests('ai', [
+                { id: 'ai-connection-test', test: testAIConnection },
+                { id: 'ai-validation-test', test: testAIMessageValidation },
+                { id: 'ai-rate-limit-test', test: testAIRateLimit },
+                { id: 'ai-performance-test', test: testAIPerformance },
+                { id: 'ai-features-test', test: testAIFeatures }
+            ]);
+        }
+
+        function runAppTests() {
+            console.log('🔧 Running app tests...');
+            runSpecificTests('app', [
+                { id: 'auth-test', test: testAuthentication },
+                { id: 'goals-test', test: testGoals },
+                { id: 'habits-test', test: testHabits },
+                { id: 'focus-test', test: testFocus },
+                { id: 'analytics-test', test: testAnalytics },
+                { id: 'community-test', test: testCommunity },
+                { id: 'gamification-test', test: testGamification },
+                { id: 'ui-test', test: testUI },
+                { id: 'firebase-test', test: testFirebase }
+            ]);
+        }
+
+        function runPerformanceTests() {
+            console.log('⚡ Running performance tests...');
+            runSpecificTests('performance', [
+                { id: 'web-vitals-test', test: testWebVitals },
+                { id: 'memory-test', test: testMemoryUsage },
+                { id: 'load-time-test', test: testLoadTimes },
+                { id: 'network-test', test: testNetworkRequests }
+            ]);
+        }
+
+        function runSecurityTests() {
+            console.log('🔒 Running security tests...');
+            runSpecificTests('security', [
+                { id: 'input-validation-test', test: testInputValidation },
+                { id: 'xss-test', test: testXSSProtection },
+                { id: 'csp-test', test: testCSPCompliance },
+                { id: 'rate-limit-test', test: testRateLimiting }
+            ]);
+        }
+
+        function runDebugTests() {
+            console.log('🔍 Running debug tests...');
+            runSpecificTests('debug', [
+                { id: 'ai-debug-test', test: testAIDebugPanel },
+                { id: 'app-debug-test', test: testAppDebugPanel },
+                { id: 'comprehensive-debug-test', test: testComprehensiveDebug },
+                { id: 'performance-monitoring-test', test: testPerformanceMonitoring }
+            ]);
+        }
+
+        async function runSpecificTests(category, tests) {
+            totalTests = tests.length;
+            completedTests = 0;
+            
+            document.getElementById('progress-section').style.display = 'block';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('metrics').style.display = 'block';
+            
+            for (const test of tests) {
+                testResults[category][test.id] = updateTestStatus(test.id, await test.test());
+            }
+            
+            generateSummary();
+        }
+
+        function generateSummary() {
+            const allResults = Object.values(testResults).flatMap(category => Object.values(category));
+            const passedTests = allResults.filter(Boolean).length;
+            const failedTests = allResults.length - passedTests;
+            const successRate = ((passedTests / allResults.length) * 100).toFixed(1);
+
+            // Update metrics
+            document.getElementById('total-tests').textContent = allResults.length;
+            document.getElementById('passed-tests').textContent = passedTests;
+            document.getElementById('failed-tests').textContent = failedTests;
+            document.getElementById('success-rate').textContent = successRate + '%';
+
+            const summaryContent = `
+                <h4>Test Summary</h4>
+                <p><strong>Total Tests:</strong> ${allResults.length}</p>
+                <p><strong>Passed:</strong> <span style="color: #10b981;">${passedTests}</span></p>
+                <p><strong>Failed:</strong> <span style="color: #ef4444;">${failedTests}</span></p>
+                <p><strong>Success Rate:</strong> <span style="color: #10b981;">${successRate}%</span></p>
+                
+                <h4>Category Breakdown</h4>
+                <p><strong>AI Tests:</strong> ${Object.values(testResults.ai).filter(Boolean).length}/${Object.keys(testResults.ai).length} passed</p>
+                <p><strong>App Tests:</strong> ${Object.values(testResults.app).filter(Boolean).length}/${Object.keys(testResults.app).length} passed</p>
+                <p><strong>Performance Tests:</strong> ${Object.values(testResults.performance).filter(Boolean).length}/${Object.keys(testResults.performance).length} passed</p>
+                <p><strong>Security Tests:</strong> ${Object.values(testResults.security).filter(Boolean).length}/${Object.keys(testResults.security).length} passed</p>
+                <p><strong>Debug Tests:</strong> ${Object.values(testResults.debug).filter(Boolean).length}/${Object.keys(testResults.debug).length} passed</p>
+            `;
+
+            document.getElementById('summary-content').innerHTML = summaryContent;
+        }
+
+        function generateReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                testResults: testResults,
+                summary: {
+                    total: Object.values(testResults).flatMap(category => Object.values(category)).length,
+                    passed: Object.values(testResults).flatMap(category => Object.values(category)).filter(Boolean).length,
+                    successRate: ((Object.values(testResults).flatMap(category => Object.values(category)).filter(Boolean).length / Object.values(testResults).flatMap(category => Object.values(category)).length) * 100).toFixed(1)
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'operator-uplift-final-test-report.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function resetAllTests() {
+            testResults = {
+                ai: {},
+                app: {},
+                performance: {},
+                security: {},
+                debug: {}
+            };
+            
+            totalTests = 0;
+            completedTests = 0;
+            
+            // Reset all test statuses
+            const testElements = document.querySelectorAll('.test-item .status');
+            testElements.forEach(element => {
+                element.textContent = 'Testing...';
+                element.className = 'status pass';
+                element.closest('.test-item').className = 'test-item';
+            });
+            
+            // Hide sections
+            document.getElementById('progress-section').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('summary').style.display = 'none';
+            document.getElementById('metrics').style.display = 'none';
+            
+            console.log('🔄 All tests reset');
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (window.app) {
+                    runAllTests();
+                } else {
+                    console.log('⏳ Waiting for app to load...');
+                    setTimeout(() => {
+                        if (window.app) {
+                            runAllTests();
+                        }
+                    }, 2000);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

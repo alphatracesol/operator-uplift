@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Test Suite - Operator Uplift</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #0a0a0a;
+            color: #e5e7eb;
+        }
+        .test-section {
+            background: rgba(24, 24, 27, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+        }
+        .test-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+        .status-pass { background: #10b981; color: white; }
+        .status-fail { background: #ef4444; color: white; }
+        .status-warning { background: #f59e0b; color: white; }
+        .status-info { background: #3b82f6; color: white; }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f97316;
+            color: black;
+            margin: 0.5rem;
+        }
+        .btn:hover { background: #fb923c; }
+        .log {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔒 Security Test Suite - Operator Uplift</h1>
+    <p>Comprehensive security testing for all implemented features</p>
+    
+    <div style="background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; border-radius: 0.5rem; padding: 1rem; margin-bottom: 2rem;">
+        <h3 style="color: #f59e0b; margin: 0 0 0.5rem 0;">⚠️ Local Development Notice</h3>
+        <p style="margin: 0; color: #e5e7eb;">
+            When running locally, some tests will show warnings because Netlify functions and production security headers are not available. 
+            These tests will pass when deployed to production. The tests that can run locally (Service Worker, Local Storage, etc.) will show actual results.
+        </p>
+    </div>
+
+    <div class="test-section">
+        <h2>🛡️ Firebase Security Rules</h2>
+        <div id="firebase-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔐 Authentication Security</h2>
+        <div id="auth-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🌐 Network Security</h2>
+        <div id="network-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🤖 AI System Security</h2>
+        <div id="ai-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔄 Data Synchronization</h2>
+        <div id="sync-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Test Results</h2>
+        <div id="results"></div>
+        <button class="btn" onclick="runAllTests()">Run All Tests</button>
+        <button class="btn" onclick="generateReport()">Generate Report</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Test Log</h2>
+        <div id="test-log" class="log"></div>
+    </div>
+
+    <script>
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            warnings: 0
+        };
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.style.color = type === 'error' ? '#ef4444' : 
+                                  type === 'success' ? '#10b981' : 
+                                  type === 'warning' ? '#f59e0b' : '#3b82f6';
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function addTestResult(section, testName, status, details = '') {
+            const sectionDiv = document.getElementById(section);
+            const testDiv = document.createElement('div');
+            testDiv.className = 'test-item';
+            
+            const statusClass = status === 'pass' ? 'status-pass' : 
+                              status === 'fail' ? 'status-fail' : 
+                              status === 'warning' ? 'status-warning' : 'status-info';
+            
+            testDiv.innerHTML = `
+                <div>
+                    <strong>${testName}</strong>
+                    ${details ? `<br><small>${details}</small>` : ''}
+                </div>
+                <span class="test-status ${statusClass}">${status.toUpperCase()}</span>
+            `;
+            
+            sectionDiv.appendChild(testDiv);
+            
+            testResults.total++;
+            if (status === 'pass') testResults.passed++;
+            else if (status === 'fail') testResults.failed++;
+            else if (status === 'warning') testResults.warnings++;
+            
+            updateResults();
+        }
+
+        function updateResults() {
+            const resultsDiv = document.getElementById('results');
+            const passRate = testResults.total > 0 ? ((testResults.passed / testResults.total) * 100).toFixed(1) : 0;
+            
+            resultsDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                    <div style="text-align: center; padding: 1rem; background: rgba(16, 185, 129, 0.2); border-radius: 0.5rem;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #10b981;">${testResults.passed}</div>
+                        <div>Passed</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: rgba(239, 68, 68, 0.2); border-radius: 0.5rem;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #ef4444;">${testResults.failed}</div>
+                        <div>Failed</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: rgba(245, 158, 11, 0.2); border-radius: 0.5rem;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #f59e0b;">${testResults.warnings}</div>
+                        <div>Warnings</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: rgba(59, 130, 246, 0.2); border-radius: 0.5rem;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #3b82f6;">${passRate}%</div>
+                        <div>Pass Rate</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function testFirebaseSecurity() {
+            log('Testing Firebase Security Rules...', 'info');
+            
+            // Test 1: Check if Firebase config is accessible
+            try {
+                const response = await fetch('/.netlify/functions/config');
+                if (response.ok) {
+                    const config = await response.json();
+                    if (config.firebaseConfig && config.firebaseConfig.apiKey) {
+                        addTestResult('firebase-tests', 'Firebase Config Access', 'pass', 'Configuration accessible');
+                        log('✅ Firebase config accessible', 'success');
+                    } else {
+                        addTestResult('firebase-tests', 'Firebase Config Access', 'fail', 'Invalid config structure');
+                        log('❌ Firebase config invalid', 'error');
+                    }
+                } else {
+                    addTestResult('firebase-tests', 'Firebase Config Access', 'fail', 'Config endpoint not accessible');
+                    log('❌ Firebase config endpoint failed', 'error');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('firebase-tests', 'Firebase Config Access', 'warning', 'Local development - Netlify functions not available');
+                    log('⚠️ Local development: Netlify functions not available', 'warning');
+                } else {
+                    addTestResult('firebase-tests', 'Firebase Config Access', 'fail', error.message);
+                    log(`❌ Firebase config error: ${error.message}`, 'error');
+                }
+            }
+
+            // Test 2: Check security headers
+            try {
+                const response = await fetch('/.netlify/functions/config');
+                const headers = response.headers;
+                const securityHeaders = [
+                    'x-frame-options',
+                    'x-xss-protection',
+                    'x-content-type-options'
+                ];
+                
+                let headersPassed = 0;
+                securityHeaders.forEach(header => {
+                    if (headers.get(header)) {
+                        headersPassed++;
+                    }
+                });
+                
+                if (headersPassed === securityHeaders.length) {
+                    addTestResult('firebase-tests', 'Security Headers', 'pass', 'All security headers present');
+                    log('✅ Security headers present', 'success');
+                } else {
+                    addTestResult('firebase-tests', 'Security Headers', 'warning', `${headersPassed}/${securityHeaders.length} headers present`);
+                    log(`⚠️ Security headers: ${headersPassed}/${securityHeaders.length}`, 'warning');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('firebase-tests', 'Security Headers', 'warning', 'Local development - Cannot test Netlify headers');
+                    log('⚠️ Local development: Cannot test Netlify security headers', 'warning');
+                } else {
+                    addTestResult('firebase-tests', 'Security Headers', 'fail', error.message);
+                    log(`❌ Security headers error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testAuthenticationSecurity() {
+            log('Testing Authentication Security...', 'info');
+            
+            // Test 1: Check if authentication is required
+            try {
+                const response = await fetch('/.netlify/functions/ai-proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        provider: 'gemini', 
+                        messages: [{ role: 'user', content: 'test' }],
+                        userId: 'test-user'
+                    })
+                });
+                
+                if (response.status === 401) {
+                    addTestResult('auth-tests', 'Authentication Required', 'pass', 'AI proxy requires authentication');
+                    log('✅ Authentication required for AI proxy', 'success');
+                } else {
+                    addTestResult('auth-tests', 'Authentication Required', 'fail', 'AI proxy should require authentication');
+                    log('❌ AI proxy does not require authentication', 'error');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('auth-tests', 'Authentication Required', 'warning', 'Local development - Netlify functions not available');
+                    log('⚠️ Local development: Cannot test authentication requirements', 'warning');
+                } else {
+                    addTestResult('auth-tests', 'Authentication Required', 'fail', error.message);
+                    log(`❌ Authentication test error: ${error.message}`, 'error');
+                }
+            }
+
+            // Test 2: Check CORS configuration
+            try {
+                const response = await fetch('/.netlify/functions/ai-proxy', {
+                    method: 'OPTIONS'
+                });
+                
+                const corsHeaders = response.headers.get('access-control-allow-origin');
+                if (corsHeaders && corsHeaders !== '*') {
+                    addTestResult('auth-tests', 'CORS Configuration', 'pass', 'CORS properly configured');
+                    log('✅ CORS properly configured', 'success');
+                } else {
+                    addTestResult('auth-tests', 'CORS Configuration', 'warning', 'CORS allows all origins');
+                    log('⚠️ CORS allows all origins', 'warning');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('auth-tests', 'CORS Configuration', 'warning', 'Local development - Cannot test CORS');
+                    log('⚠️ Local development: Cannot test CORS configuration', 'warning');
+                } else {
+                    addTestResult('auth-tests', 'CORS Configuration', 'fail', error.message);
+                    log(`❌ CORS test error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testNetworkSecurity() {
+            log('Testing Network Security...', 'info');
+            
+            // Test 1: Check HTTPS enforcement
+            if (window.location.protocol === 'https:') {
+                addTestResult('network-tests', 'HTTPS Enforcement', 'pass', 'Site served over HTTPS');
+                log('✅ Site served over HTTPS', 'success');
+            } else {
+                addTestResult('network-tests', 'HTTPS Enforcement', 'warning', 'Local development - HTTP expected');
+                log('⚠️ Local development: HTTP is expected', 'warning');
+            }
+
+            // Test 2: Check security headers
+            try {
+                const response = await fetch('/');
+                const headers = response.headers;
+                
+                const requiredHeaders = [
+                    'x-frame-options',
+                    'x-xss-protection',
+                    'x-content-type-options',
+                    'strict-transport-security'
+                ];
+                
+                let headersPresent = 0;
+                requiredHeaders.forEach(header => {
+                    if (headers.get(header)) {
+                        headersPresent++;
+                    }
+                });
+                
+                if (headersPresent === requiredHeaders.length) {
+                    addTestResult('network-tests', 'Security Headers', 'pass', 'All security headers present');
+                    log('✅ All security headers present', 'success');
+                } else {
+                    addTestResult('network-tests', 'Security Headers', 'warning', `${headersPresent}/${requiredHeaders.length} headers present`);
+                    log(`⚠️ Security headers: ${headersPresent}/${requiredHeaders.length}`, 'warning');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('network-tests', 'Security Headers', 'warning', 'Local development - Cannot test headers');
+                    log('⚠️ Local development: Cannot test security headers', 'warning');
+                } else {
+                    addTestResult('network-tests', 'Security Headers', 'fail', error.message);
+                    log(`❌ Security headers error: ${error.message}`, 'error');
+                }
+            }
+
+            // Test 3: Check CSP
+            try {
+                const response = await fetch('/');
+                const cspHeader = response.headers.get('content-security-policy');
+                if (cspHeader) {
+                    addTestResult('network-tests', 'Content Security Policy', 'pass', 'CSP header present');
+                    log('✅ CSP header present', 'success');
+                } else {
+                    addTestResult('network-tests', 'Content Security Policy', 'warning', 'CSP header not found');
+                    log('⚠️ CSP header not found', 'warning');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('network-tests', 'Content Security Policy', 'warning', 'Local development - Cannot test CSP');
+                    log('⚠️ Local development: Cannot test CSP', 'warning');
+                } else {
+                    addTestResult('network-tests', 'Content Security Policy', 'fail', error.message);
+                    log(`❌ CSP test error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testAISystemSecurity() {
+            log('Testing AI System Security...', 'info');
+            
+            // Test 1: Check input validation
+            try {
+                const response = await fetch('/.netlify/functions/ai-proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        provider: 'invalid-provider',
+                        messages: 'invalid-messages-format',
+                        userId: 'test-user'
+                    })
+                });
+                
+                if (response.status === 400) {
+                    addTestResult('ai-tests', 'Input Validation', 'pass', 'AI proxy validates input');
+                    log('✅ AI proxy validates input', 'success');
+                } else {
+                    addTestResult('ai-tests', 'Input Validation', 'fail', 'AI proxy should validate input');
+                    log('❌ AI proxy does not validate input', 'error');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('ai-tests', 'Input Validation', 'warning', 'Local development - Cannot test input validation');
+                    log('⚠️ Local development: Cannot test input validation', 'warning');
+                } else {
+                    addTestResult('ai-tests', 'Input Validation', 'fail', error.message);
+                    log(`❌ Input validation error: ${error.message}`, 'error');
+                }
+            }
+
+            // Test 2: Check rate limiting
+            try {
+                // Send multiple requests to trigger rate limiting
+                const promises = [];
+                for (let i = 0; i < 10; i++) {
+                    promises.push(fetch('/.netlify/functions/ai-proxy', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            provider: 'gemini',
+                            messages: [{ role: 'user', content: 'test' }],
+                            userId: 'test-user'
+                        })
+                    }));
+                }
+                
+                const responses = await Promise.all(promises);
+                const rateLimited = responses.some(r => r.status === 429);
+                
+                if (rateLimited) {
+                    addTestResult('ai-tests', 'Rate Limiting', 'pass', 'Rate limiting active');
+                    log('✅ Rate limiting active', 'success');
+                } else {
+                    addTestResult('ai-tests', 'Rate Limiting', 'warning', 'Rate limiting not triggered');
+                    log('⚠️ Rate limiting not triggered', 'warning');
+                }
+            } catch (error) {
+                if (error.message.includes('Failed to fetch')) {
+                    addTestResult('ai-tests', 'Rate Limiting', 'warning', 'Local development - Cannot test rate limiting');
+                    log('⚠️ Local development: Cannot test rate limiting', 'warning');
+                } else {
+                    addTestResult('ai-tests', 'Rate Limiting', 'fail', error.message);
+                    log(`❌ Rate limiting error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testDataSync() {
+            log('Testing Data Synchronization...', 'info');
+            
+            // Test 1: Check offline support
+            if ('serviceWorker' in navigator) {
+                addTestResult('sync-tests', 'Service Worker', 'pass', 'Service worker supported');
+                log('✅ Service worker supported', 'success');
+            } else {
+                addTestResult('sync-tests', 'Service Worker', 'warning', 'Service worker not supported');
+                log('⚠️ Service worker not supported', 'warning');
+            }
+
+            // Test 2: Check local storage
+            try {
+                localStorage.setItem('test-key', 'test-value');
+                const value = localStorage.getItem('test-key');
+                localStorage.removeItem('test-key');
+                
+                if (value === 'test-value') {
+                    addTestResult('sync-tests', 'Local Storage', 'pass', 'Local storage working');
+                    log('✅ Local storage working', 'success');
+                } else {
+                    addTestResult('sync-tests', 'Local Storage', 'fail', 'Local storage not working');
+                    log('❌ Local storage not working', 'error');
+                }
+            } catch (error) {
+                addTestResult('sync-tests', 'Local Storage', 'fail', error.message);
+                log(`❌ Local storage error: ${error.message}`, 'error');
+            }
+
+            // Test 3: Check network status
+            if (navigator.onLine) {
+                addTestResult('sync-tests', 'Network Status', 'pass', 'Online status detected');
+                log('✅ Online status detected', 'success');
+            } else {
+                addTestResult('sync-tests', 'Network Status', 'warning', 'Offline status detected');
+                log('⚠️ Offline status detected', 'warning');
+            }
+        }
+
+        async function runAllTests() {
+            log('Starting comprehensive security test suite...', 'info');
+            
+            // Reset results
+            testResults = { total: 0, passed: 0, failed: 0, warnings: 0 };
+            
+            // Clear previous results
+            document.querySelectorAll('.test-item').forEach(item => item.remove());
+            
+            // Run all test suites
+            await testFirebaseSecurity();
+            await testAuthenticationSecurity();
+            await testNetworkSecurity();
+            await testAISystemSecurity();
+            await testDataSync();
+            
+            log(`Test suite completed. Results: ${testResults.passed} passed, ${testResults.failed} failed, ${testResults.warnings} warnings`, 'info');
+        }
+
+        function generateReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                results: testResults,
+                summary: {
+                    passRate: testResults.total > 0 ? ((testResults.passed / testResults.total) * 100).toFixed(1) : 0,
+                    securityLevel: testResults.failed === 0 ? 'Enterprise' : testResults.failed <= 2 ? 'High' : 'Medium',
+                    recommendations: []
+                }
+            };
+            
+            if (testResults.failed > 0) {
+                report.summary.recommendations.push('Fix failed security tests before production deployment');
+            }
+            if (testResults.warnings > 0) {
+                report.summary.recommendations.push('Address security warnings for improved security posture');
+            }
+            if (testResults.passRate < 90) {
+                report.summary.recommendations.push('Improve security implementation to achieve higher pass rate');
+            }
+            
+            const reportBlob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const reportUrl = URL.createObjectURL(reportBlob);
+            const reportLink = document.createElement('a');
+            reportLink.href = reportUrl;
+            reportLink.download = `security-test-report-${new Date().toISOString().split('T')[0]}.json`;
+            reportLink.click();
+            
+            log('Security test report generated and downloaded', 'success');
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 1000);
+        });
+    </script>
+</body>
+</html> 

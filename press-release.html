@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tailwindcss.com https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js blob: wss://api.operatoruplift.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://www.google-analytics.com https://api.openai.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.operatoruplift.com wss://api.operatoruplift.com; frame-src 'self' https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <title>Press Release: Operator Uplift MVP Launch - AI-Powered Self-Progression</title>
     <meta name="description" content="Operator Uplift launches MVP to bridge the execution gap for high-agency operators. Transform ambitious goals into achievable progress through AI-driven deconstruction and psychological optimization.">
     <meta property="og:title" content="Press Release: Operator Uplift MVP Launch">
@@ -16,11 +22,105 @@
     <meta name="theme-color" content="#f97316">
     <link rel="canonical" href="https://operatoruplift.com/press-release">
     
+    <!-- Security & Accessibility Utilities -->
+    <script src="security-utils.js"></script>
+    <script src="accessibility-audit.js"></script>
+    <script src="pwa-enhancer.js"></script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- tsParticles for ember effects -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" defer></script>
+    
+    <!-- Initialize Security, Accessibility, and PWA -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize security utilities
+            const securityUtils = new SecurityUtils();
+            
+            // Initialize accessibility audit
+            const accessibilityAudit = new AccessibilityAudit();
+            accessibilityAudit.runFullAudit();
+            accessibilityAudit.autoFixIssues();
+            
+            // Initialize PWA features
+            const pwaEnhancer = new PWAEnhancer();
+            
+            // Log PWA status and performance metrics
+            console.log('🚀 PWA Status:', pwaEnhancer.getPWAStatus());
+            console.log('⚡ Performance Metrics:', pwaEnhancer.getPerformanceMetrics());
+            
+            // GDPR cookie consent
+            if (!localStorage.getItem('cookieConsent')) {
+                const consent = confirm('This website uses cookies to enhance your experience. Do you accept?');
+                localStorage.setItem('cookieConsent', consent);
+            }
+            
+            // Enhance form security
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                const inputs = form.querySelectorAll('input, textarea, select');
+                inputs.forEach(input => {
+                    // Add ARIA attributes for accessibility
+                    if (!input.getAttribute('aria-label') && !input.getAttribute('aria-labelledby')) {
+                        const label = form.querySelector(`label[for="${input.id}"]`);
+                        if (label) {
+                            input.setAttribute('aria-labelledby', label.id);
+                        } else {
+                            input.setAttribute('aria-label', input.placeholder || input.name || 'Input field');
+                        }
+                    }
+                    
+                    // Add input validation
+                    input.addEventListener('blur', function() {
+                        const isValid = securityUtils.validateInput(this.value, this.type);
+                        if (!isValid) {
+                            this.classList.add('error');
+                            this.setAttribute('aria-invalid', 'true');
+                        } else {
+                            this.classList.remove('error');
+                            this.setAttribute('aria-invalid', 'false');
+                        }
+                    });
+                });
+            });
+            
+            // Enhance accessibility for interactive elements
+            const interactiveElements = document.querySelectorAll('button, a, [role="button"]');
+            interactiveElements.forEach(element => {
+                if (!element.getAttribute('aria-label')) {
+                    element.setAttribute('aria-label', element.textContent?.trim() || 'Interactive element');
+                }
+                
+                // Add keyboard navigation support
+                element.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+            
+            // Announce page load to screen readers
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.setAttribute('aria-atomic', 'true');
+            announcement.className = 'sr-only';
+            announcement.textContent = 'Press Release page loaded successfully';
+            document.body.appendChild(announcement);
+            
+            // Remove announcement after 3 seconds
+            setTimeout(() => {
+                if (announcement.parentElement) {
+                    announcement.remove();
+                }
+            }, 3000);
+        });
+    </script>
     
     <style>
         :root {
@@ -57,6 +157,7 @@
 
         html {
             scroll-behavior: smooth;
+            height: 100%;
         }
 
         body {
@@ -68,6 +169,9 @@
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
             position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         body::before {
@@ -122,7 +226,8 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
+            transition: left 0.6s ease;
+            z-index: 1;
         }
 
         .glass-card:hover::before {
@@ -130,7 +235,86 @@
         }
 
         .glass-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Ascent CTA Section - Bento Box Hover Effect */
+        .ascent-cta-section {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .ascent-cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .ascent-cta-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(249, 115, 22, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .ascent-cta-section:hover::before {
+            left: 100%;
+        }
+
+        .ascent-cta-section:hover::after {
+            opacity: 1;
+        }
+
+        .ascent-cta-section:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(249, 115, 22, 0.3), 
+                0 0 60px rgba(249, 115, 22, 0.2),
+                0 0 100px rgba(249, 115, 22, 0.1);
+        }
+
+        .ascent-cta-section:active {
+            transform: translateY(-4px) scale(1.01);
+            transition: all 0.1s ease;
+        }
+
+        /* Ember particles styling */
+        #ember-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            filter: blur(0.5px);
+        }
+
+        /* Enhanced ember glow effect */
+        .ascent-cta-section:hover #ember-particles {
+            filter: blur(0.5px) brightness(1.2);
         }
 
         .navbar {
@@ -138,16 +322,96 @@
             top: 0;
             left: 0;
             right: 0;
+            width: 100%;
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
-            transition: all 0.3s ease;
+            padding: 1rem 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .navbar.scrolled {
             background: rgba(10, 10, 10, 0.98);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+
+
+        /* Orange bubble gradient sweep effect */
+        .orange-bubble {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .orange-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.3), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+
+        .orange-bubble:hover::before {
+            left: 100%;
+        }
+
+        .orange-bubble > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Ripple effect styles */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .cta-button, .btn-secondary {
+            position: relative;
+            overflow: hidden;
         }
 
         .nav-links {
@@ -157,15 +421,17 @@
             align-items: center;
         }
 
-        .nav-links a {
+        .nav-links a, .nav-link {
             color: var(--text-muted-color);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
-        .nav-links a::after {
+        .nav-links a::after, .nav-link::after {
             content: '';
             position: absolute;
             bottom: -4px;
@@ -176,11 +442,11 @@
             transition: width 0.3s ease;
         }
 
-        .nav-links a:hover {
-            color: var(--text-color);
+        .nav-links a:hover, .nav-link:hover {
+            color: var(--primary-color);
         }
 
-        .nav-links a:hover::after {
+        .nav-links a:hover::after, .nav-link:hover::after {
             width: 100%;
         }
 
@@ -236,6 +502,147 @@
             }
         }
 
+        .mobile-menu-toggle {
+            display: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .hamburger-icon span {
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            margin: 2px 0;
+            transition: 0.3s ease;
+            border-radius: 1px;
+            display: block;
+        }
+
+        .mobile-menu-toggle.active .hamburger-icon span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-toggle.active .hamburger-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active .hamburger-icon span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .desktop-only {
+            display: block;
+        }
+
+        /* Mobile menu functionality */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--accent-color);
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Ripple effect for MVP link */
+        .nav-links.desktop-only {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links.desktop-only:hover {
+            color: var(--accent-color) !important;
+        }
+
+        .nav-links.desktop-only::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(249, 115, 22, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .nav-links.desktop-only:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Ripple effect for header logo - JavaScript-based like landing page */
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -253,33 +660,868 @@
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
         }
+
+        /* --- FOOTER STYLES --- */
+        footer {
+            background: var(--card-bg-glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-glass);
+            margin-top: auto;
+            width: 100%;
+            position: relative;
+            left: 0;
+            right: 0;
+        }
+        
+        footer a {
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: var(--accent-color) !important;
+        }
+
+        /* --- TOGGLE SWITCH STYLES --- */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 3rem;
+            height: 1.5rem;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #374151;
+            transition: 0.3s;
+            border-radius: 1.5rem;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 1.125rem;
+            width: 1.125rem;
+            left: 0.1875rem;
+            bottom: 0.1875rem;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(1.5rem);
+        }
+
+        /* --- GLASS CARD BACKGROUND --- */
+        :root {
+            --card-bg-glass: rgba(24, 24, 27, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --accent-color: #f97316;
+            --accent-hover: #fb923c;
+            --accent-color-light: #fb923c;
+            --text-color: #e5e7eb;
+            --text-muted-color: #9ca3af;
+        }
+
+        /* --- COMPREHENSIVE MOBILE RESPONSIVE STYLES --- */
+        @media (max-width: 768px) {
+            /* Navigation improvements */
+            .nav-links {
+                display: none;
+            }
+            
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 10, 0.98);
+                padding: 1rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Main content spacing - preserve original scaling */
+            .max-w-4xl {
+                max-width: 100%;
+                padding: 1rem;
+                margin-top: 6rem !important; /* Ensure proper spacing from header */
+            }
+            
+            /* Ensure proper scaling on mobile */
+            .max-w-4xl {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 1rem !important;
+            }
+
+            /* Header improvements */
+            h1 {
+                font-size: 2rem !important;
+                line-height: 1.2 !important;
+            }
+
+            .text-4xl {
+                font-size: 1.75rem !important;
+            }
+
+            .text-5xl {
+                font-size: 2rem !important;
+            }
+
+            /* Section spacing */
+            .space-y-12 > * + * {
+                margin-top: 2rem !important;
+            }
+
+            .space-y-16 > * + * {
+                margin-top: 2.5rem !important;
+            }
+
+            /* Card improvements */
+            .glass-card {
+                padding: 1.5rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            /* Grid improvements */
+            .grid.md\\:grid-cols-3 {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            /* Button improvements */
+            .cta-button {
+                width: 100% !important;
+                text-align: center !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+            }
+
+            .btn-secondary {
+                width: 100% !important;
+                text-align: center !important;
+                padding: 1rem !important;
+                margin-top: 0.5rem !important;
+            }
+
+            /* Call to action section */
+            .rounded-lg.p-8 {
+                padding: 1.5rem !important;
+            }
+
+            .rounded-lg.p-12 {
+                padding: 2rem !important;
+            }
+
+            /* Flex improvements */
+            .flex.flex-col.sm\\:flex-row {
+                flex-direction: column !important;
+            }
+
+            .flex.flex-col.sm\\:flex-row.justify-center {
+                gap: 1rem !important;
+            }
+
+            /* Text sizing */
+            .text-lg {
+                font-size: 1rem !important;
+            }
+
+            .text-xl {
+                font-size: 1.125rem !important;
+            }
+
+            .text-2xl {
+                font-size: 1.5rem !important;
+            }
+
+            .text-3xl {
+                font-size: 1.75rem !important;
+            }
+
+            /* Spacing improvements */
+            .mb-12 {
+                margin-bottom: 2rem !important;
+            }
+
+            .mb-16 {
+                margin-bottom: 2.5rem !important;
+            }
+
+            .mt-20 {
+                margin-top: 5rem !important;
+            }
+
+            /* Footer improvements */
+            footer {
+                padding: 2rem 1rem !important;
+                margin: 0 !important;
+                width: 100% !important;
+                position: relative !important;
+            }
+
+            footer .flex.flex-col.sm\\:flex-row {
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+            }
+
+            footer .flex.flex-wrap {
+                justify-content: center !important;
+                gap: 1rem !important;
+            }
+
+            footer .gap-x-6 {
+                gap: 0.75rem !important;
+            }
+
+            /* About section spacing */
+            .mt-16.mb-8 {
+                margin-top: 3rem !important;
+                margin-bottom: 2rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra small devices */
+            .max-w-4xl {
+                padding: 0.75rem !important;
+                margin-top: 5rem !important; /* Ensure proper spacing from header */
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            h1 {
+                font-size: 1.75rem !important;
+            }
+
+            .text-4xl {
+                font-size: 1.5rem !important;
+            }
+
+            .glass-card {
+                padding: 1rem !important;
+            }
+
+            .cta-button {
+                padding: 0.875rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            footer {
+                padding: 1.5rem 0.75rem !important;
+            }
+
+            footer .flex.flex-wrap {
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .cta-button,
+            .btn-secondary,
+            footer a {
+                min-height: 44px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .nav-links a {
+                padding: 0.75rem !important;
+                min-height: 44px !important;
+            }
+        }
+
+        /* --- CUSTOM SCROLLBAR STYLING --- */
+        /* Hide default scrollbar and create custom one */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-color), #ea580c);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ea580c, var(--accent-color));
+        }
+        
+        /* Firefox scrollbar styling */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- ENHANCED MOBILE RESPONSIVE FIXES --- */
+        @media (max-width: 768px) {
+            /* Hero section improvements */
+            .hero-content h1 {
+                font-size: 2rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .hero-content p {
+                font-size: 1rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            /* Hero buttons - improved spacing and layout */
+            .hero-buttons {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+                width: 100% !important;
+                max-width: 300px !important;
+                margin: 0 auto !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                width: 100% !important;
+                padding: 1rem 1.5rem !important;
+                font-size: 1rem !important;
+                text-align: center !important;
+                margin: 0 !important;
+                min-height: 48px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            /* Trust badges - better mobile layout */
+            .trust-badge {
+                font-size: 0.75rem !important;
+                padding: 0.375rem 0.75rem !important;
+                margin: 0.25rem !important;
+            }
+
+            /* Countdown timer - better positioning */
+            #countdown-badge {
+                margin-top: 1.5rem !important;
+                padding: 0.75rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* Scroll to top button - prevent header overlap */
+            .scroll-to-top {
+                bottom: 5rem !important; /* Move up to avoid header overlap */
+                right: 1rem !important;
+                width: 2.5rem !important;
+                height: 2.5rem !important;
+                font-size: 1rem !important;
+                z-index: 999 !important; /* Lower than cookie banner */
+            }
+
+            /* Navigation improvements */
+            .navbar {
+                padding: 0.75rem 1rem !important;
+            }
+
+            .nav-container {
+                gap: 0.5rem !important;
+            }
+
+            .nav-links {
+                display: none !important; /* Hide on mobile, use hamburger */
+            }
+
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+
+            .desktop-only {
+                display: none !important;
+            }
+
+            .cta-button.desktop-only {
+                display: none !important;
+            }
+
+            .nav-container {
+                gap: 1rem !important;
+                padding: 0 1rem !important;
+            }
+
+            .logo {
+                font-size: 0.9rem !important;
+            }
+
+            /* Container improvements */
+            .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            /* Grid improvements */
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+
+            .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Card improvements */
+            .feature-card, .testimonial-card, .glass-card {
+                padding: 1.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Text sizing */
+            .text-4xl { font-size: 1.75rem !important; }
+            .text-5xl { font-size: 2rem !important; }
+            .text-6xl { font-size: 2.5rem !important; }
+            .text-3xl { font-size: 1.5rem !important; }
+            .text-2xl { font-size: 1.25rem !important; }
+            .text-xl { font-size: 1.125rem !important; }
+            .text-lg { font-size: 1rem !important; }
+
+            /* Spacing improvements */
+            .space-y-8 > * + * {
+                margin-top: 2rem !important;
+            }
+
+            .space-y-12 > * + * {
+                margin-top: 3rem !important;
+            }
+
+            .space-y-16 > * + * {
+                margin-top: 4rem !important;
+            }
+
+            /* Footer improvements */
+            footer {
+                padding: 2rem 1rem !important;
+            }
+
+            footer .flex {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            /* Touch-friendly improvements */
+            .cta-button, .btn-secondary, .nav-links a, footer a {
+                min-height: 44px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra small devices - further refinements */
+            .hero-content h1 {
+                font-size: 1.75rem !important;
+                line-height: 1.1 !important;
+            }
+
+            .hero-content p {
+                font-size: 0.875rem !important;
+            }
+
+            /* Hero buttons - even better spacing for very small screens */
+            .hero-buttons {
+                max-width: 280px !important;
+                gap: 0.75rem !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                padding: 0.875rem 1.25rem !important;
+                font-size: 0.875rem !important;
+                min-height: 44px !important;
+            }
+
+            /* Trust badges - compact layout */
+            .flex.flex-wrap.gap-3 {
+                gap: 0.5rem !important;
+                justify-content: center !important;
+            }
+
+            .trust-badge {
+                font-size: 0.7rem !important;
+                padding: 0.25rem 0.5rem !important;
+            }
+
+            /* Countdown timer - compact */
+            #countdown-badge {
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.75rem !important;
+            }
+
+            /* Scroll to top button - even more space from header */
+            .scroll-to-top {
+                bottom: 6rem !important;
+                right: 0.75rem !important;
+                width: 2.25rem !important;
+                height: 2.25rem !important;
+            }
+
+            .scene {
+                width: 150px !important;
+                height: 150px !important;
+            }
+
+            .cube-face {
+                width: 150px !important;
+                height: 150px !important;
+            }
+
+            .cube-logo {
+                width: 45px !important;
+                height: 45px !important;
+            }
+
+            .py-20 {
+                padding: 3rem 0.75rem !important;
+            }
+
+            .py-12 {
+                padding: 1.5rem 0.75rem !important;
+            }
+
+            .container {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+
+            .feature-card, .testimonial-card, .glass-card {
+                padding: 1rem !important;
+            }
+        }
+
+        /* --- VERTICAL SCREEN ORIENTATION FIXES --- */
+        @media (max-height: 600px) and (orientation: landscape) {
+            /* For very short screens in landscape mode */
+            .hero {
+                padding: 2rem 0 !important;
+                min-height: auto !important;
+            }
+
+            .hero-content h1 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            .hero-content p {
+                font-size: 0.875rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .hero-buttons {
+                flex-direction: row !important;
+                gap: 0.75rem !important;
+                max-width: none !important;
+            }
+
+            .hero-buttons .cta-button,
+            .hero-buttons .btn-secondary {
+                width: auto !important;
+                padding: 0.75rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* Hide countdown on very short screens */
+            #countdown-badge {
+                display: none !important;
+            }
+
+            /* Adjust scroll to top position for short screens */
+            .scroll-to-top {
+                bottom: 1rem !important;
+                right: 1rem !important;
+            }
+        }
+
+        /* --- TOUCH DEVICE OPTIMIZATIONS --- */
+        @media (hover: none) and (pointer: coarse) {
+            .cta-button, .btn-secondary, .nav-links a, footer a {
+                min-height: 44px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .scroll-to-top {
+                min-height: 44px !important;
+                min-width: 44px !important;
+            }
+
+            /* Increase touch targets */
+            .nav-links a {
+                padding: 0.75rem !important;
+                min-height: 44px !important;
+            }
+        }
+
+        /* Accessibility Styles */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus indicators */
+        button:focus,
+        a:focus,
+        input:focus,
+        textarea:focus,
+        select:focus,
+        [tabindex]:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Error states */
+        .error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Online/Offline status */
+        .online-status {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .online-status.online {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .online-status.offline {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .offline-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(239, 68, 68, 0.95);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            z-index: 1001;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .offline-indicator button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+        }
+
+        /* PWA Install Button */
+        .pwa-install-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .pwa-install-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+        }
+
+        /* PWA Update Notification */
+        .pwa-update-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            max-width: 400px;
+            z-index: 1002;
+            backdrop-filter: blur(10px);
+        }
+
+        .pwa-update-notification h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .pwa-update-notification p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .pwa-update-notification button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+
+        .pwa-update-notification button:last-child {
+            background: transparent;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* High contrast support */
+        @media (prefers-contrast: high) {
+            :root {
+                --border-color: rgba(255, 255, 255, 0.5);
+                --border-color-light: rgba(255, 255, 255, 0.7);
+            }
+
+            .glass-card {
+                border: 2px solid var(--border-color);
+            }
+
+            button,
+            .cta-button {
+                border: 2px solid currentColor;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
+
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link" tabindex="0">Skip to main content</a>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-3 text-xl font-bold text-white">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="grid grid-cols-3 items-center">
+                <div class="logo" onclick="window.location.href='index.html'" role="button" tabindex="0" aria-label="Navigate to Operator Uplift home page">
+                    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M25.0558 23.4284L16 28.5713L6.94421 23.4284V13.1427L16 8L25.0558 13.1427V23.4284Z" stroke="var(--accent-color)" stroke-width="2"/>
                         <g>
                             <path d="M16 18.2857L16 8M16 18.2857L22.9282 22.1429M16 18.2857L9.0718 22.1429" stroke="var(--accent-color)" stroke-width="1.5"/>
                         </g>
                     </svg>
-                    <span>Operator Uplift</span>
+                    <span style="color: white; white-space: nowrap; position: relative; overflow: hidden; cursor: pointer;" class="ripple-effect">Operator Uplift</span>
                 </div>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="app.html">Launch App</a></li>
+                <ul class="nav-links justify-self-center" role="navigation" aria-label="Main navigation">
+                    <li><a href="MVP Launch Page.html" aria-label="View MVP launch page">MVP</a></li>
                 </ul>
-                <a href="app.html" class="cta-button">Launch App</a>
+                <div class="flex justify-end items-center gap-4">
+                    <a href="app.html" class="cta-button desktop-only" aria-label="Launch Operator Uplift application">Launch App</a>
+                    <div class="mobile-menu-toggle" role="button" tabindex="0" aria-label="Toggle mobile menu" aria-expanded="false">
+                        <div class="hamburger-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="MVP Launch Page.html">MVP</a>
+        <a href="app.html">Launch App</a>
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
+    </div>
+
     <!-- Main Content -->
-    <div class="max-w-4xl mx-auto p-6 sm:p-8 md:p-12 mt-20">
+    <main id="main-content" class="max-w-4xl mx-auto p-6 sm:p-8 md:p-12 mt-32 flex-1" role="main" aria-labelledby="page-title">
         
         <!-- Header Section -->
         <header class="text-center mb-12 md:mb-16 fade-in">
@@ -290,12 +1532,12 @@
                         <path d="M16 18.2857L16 8M16 18.2857L22.9282 22.1429M16 18.2857L9.0718 22.1429" stroke="var(--accent-color)" stroke-width="1.5"/>
                     </g>
                 </svg>
-                <span class="text-2xl font-bold" style="color: var(--accent-color);">Operator Uplift</span>
+                                 <span class="text-2xl font-bold" style="color: white; white-space: nowrap; position: relative; overflow: hidden; cursor: pointer;" class="ripple-effect">Operator Uplift</span>
             </div>
-            <div class="inline-block bg-orange-400/10 text-orange-400 text-sm font-semibold px-4 py-1 rounded-full mb-4">
-                INTERNAL PRESS RELEASE
-            </div>
-            <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                            <div class="inline-block bg-orange-400/10 text-orange-400 text-sm font-semibold px-4 py-1 rounded-full mb-4 orange-bubble">
+                    INTERNAL PRESS RELEASE
+                </div>
+            <h1 id="page-title" class="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight text-center">
                 Operator Uplift Launches MVP to <span class="gradient-text">Bridge the Execution Gap</span>
             </h1>
             <p class="mt-4 md:mt-6 max-w-3xl mx-auto text-lg md:text-xl text-gray-400">
@@ -349,17 +1591,17 @@
                 <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-orange-500 pl-4">How It Works</h2>
                 <div class="relative pl-8 border-l-2 border-dark space-y-10">
                     <div class="relative">
-                        <div class="absolute -left-[38px] top-1 h-4 w-4 rounded-full" style="background-color: var(--accent-color); box-shadow: 0 0 0 8px var(--bg-color);"></div>
+                        <div class="absolute -left-[38px] top-2 h-4 w-4 rounded-full" style="background-color: var(--accent-color); box-shadow: 0 0 0 8px var(--bg-color);"></div>
                         <h3 class="font-bold text-white text-lg">1. Input Ambitious Goal</h3>
                         <p class="text-gray-400">e.g., "Launch a venture-backed startup in 6 months".</p>
                     </div>
                     <div class="relative">
-                        <div class="absolute -left-[38px] top-1 h-4 w-4 rounded-full" style="background-color: var(--accent-color); box-shadow: 0 0 0 8px var(--bg-color);"></div>
+                        <div class="absolute -left-[38px] top-2 h-4 w-4 rounded-full" style="background-color: var(--accent-color); box-shadow: 0 0 0 8px var(--bg-color);"></div>
                         <h3 class="font-bold text-white text-lg">2. AI Generates Roadmap</h3>
                         <p class="text-gray-400">Produces a personalized, structured plan with weekly momentum tasks like "Week 1: Validate idea with 5 interviews."</p>
                     </div>
                     <div class="relative">
-                        <div class="absolute -left-[38px] top-1 h-4 w-4 rounded-full" style="background-color: var(--accent-color); box-shadow: 0 0 0 8px var(--bg-color);"></div>
+                        <div class="absolute -left-[38px] top-2 h-4 w-4 rounded-full" style="background-color: var(--accent-color); box-shadow: 0 0 0 8px var(--bg-color);"></div>
                         <h3 class="font-bold text-white text-lg">3. Execute & Ascend</h3>
                         <p class="text-gray-400">Complete quick-win tasks, earn progress markers, and receive AI mentor guidance for motivation boosts and real-time adjustments.</p>
                     </div>
@@ -368,7 +1610,7 @@
             
             <!-- Founder's Vision Section -->
             <section class="glass-card text-center fade-in">
-                <img src="https://placehold.co/80x80/f97316/ffffff?text=MS" alt="Matt Sim, Founder" class="w-20 h-20 rounded-full mx-auto mb-4 border-2" style="border-color: var(--accent-color);">
+                <img src="PFP.png" alt="Matt Sim, Founder" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 object-cover" style="border-color: var(--accent-color); object-position: center 20%;">
                 <h2 class="text-xl font-bold text-white mb-4">Founder's Vision</h2>
                 <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
                     "We don't need another to-do list piling on chores—we need a paradigm shift that <span class="gradient-text font-semibold">manufactures momentum.</span> Operator Uplift is that AI antidote: deconstructing ambition into engineered ascent, turning potential into inevitable progress for operators ready to level up."
@@ -387,33 +1629,69 @@
             </section>
 
             <!-- Call to Action Section -->
-            <section class="rounded-lg p-8 md:p-12 text-center glow fade-in" style="background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));">
-                <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Join the Ascent Today</h2>
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-                    <a href="app.html" class="w-full sm:w-auto bg-white text-orange-600 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-transform transform hover:scale-105">
-                        ➔ Try the Live MVP
-                    </a>
-                    <a href="https://x.com/OperatorUplift" target="_blank" class="w-full sm:w-auto bg-black/20 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-black/40 transition-transform transform hover:scale-105">
-                        Follow on X for Updates
-                    </a>
+            <section class="rounded-lg p-8 md:p-12 text-center glow fade-in ascent-cta-section" style="background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); position: relative; overflow: hidden;">
+                <!-- Ember particles container -->
+                <div id="ember-particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;"></div>
+                
+                <div style="position: relative; z-index: 2;">
+                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Join the Ascent Today</h2>
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+                        <a href="app.html" class="w-full sm:w-auto bg-white text-orange-600 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-transform transform hover:scale-105">
+                            ➔ Try the Live MVP
+                        </a>
+                        <a href="https://x.com/OperatorUplift" target="_blank" class="w-full sm:w-auto bg-black/20 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-black/40 transition-transform transform hover:scale-105">
+                            Follow on X for Updates
+                        </a>
+                    </div>
+                    <p class="text-white/80 mt-8 text-sm"><strong>Coming Week 3:</strong> Discipline Points to supercharge motivation.</p>
                 </div>
-                <p class="text-white/80 mt-8 text-sm"><strong>Coming Week 3:</strong> Discipline Points to supercharge motivation.</p>
+            </section>
+
+            <!-- About Section -->
+            <section class="mt-16 mb-16 text-center fade-in">
+                <h3 class="text-2xl font-bold text-white mb-6">About Operator Uplift</h3>
+                <p class="text-gray-400 max-w-3xl mx-auto text-lg leading-relaxed">
+                    An AI-powered platform dedicated to bridging the execution gap for high-agency operators, transforming ambitious goals into achievable progress through innovative deconstruction and psychological optimization.
+                </p>
+                <p class="mt-6 text-xl font-semibold gradient-text">Deconstruct Your Ambition. Engineer Your Ascent.</p>
             </section>
         </main>
+    </div>
 
-        <!-- Footer -->
-        <footer class="text-center mt-12 md:mt-16 pt-8 border-t border-dark fade-in">
-            <h3 class="text-lg font-bold text-white">About Operator Uplift</h3>
-            <p class="text-gray-500 mt-2 max-w-2xl mx-auto">
-                An AI-powered platform dedicated to bridging the execution gap for high-agency operators, transforming ambitious goals into achievable progress through innovative deconstruction and psychological optimization.
-            </p>
-            <p class="mt-4 text-lg font-semibold gradient-text">Deconstruct Your Ambition. Engineer Your Ascent.</p>
-            <div class="mt-8">
-                <a href="test.html" class="btn-secondary">← Back to Home</a>
+    <!-- Footer -->
+    <footer class="w-full text-center py-10 border-t border-zinc-800 fade-in" style="background: rgba(0, 0, 0, 0.3); width: 100%; margin: 0; position: relative;">
+            <div class="max-w-4xl mx-auto px-6 sm:px-8 md:px-12">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+                    <p class="text-slate-500">&copy; 2025 Operator Uplift. All rights reserved.</p>
+                    <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-4" style="flex-direction: row;">
+                        <a href="mailto:operatoruplift@gmail.com" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">Contact</a>
+                        <a href="https://twitter.com/OperatorUplift" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors" aria-label="Operator Uplift on X/Twitter">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        </a>
+                        <a href="https://www.facebook.com/operatoruplift" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors" aria-label="Operator Uplift on Facebook">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v7.028C18.343 21.128 22 16.991 22 12z"></path></svg>
+                        </a>
+                        <a href="https://instagram.com/operatoruplift" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors" aria-label="Operator Uplift on Instagram">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.012 3.584-.07 4.85c-.148 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.012-3.584.07-4.85C2.25 3.854 3.784 2.31 7.031 2.163 8.297 2.105 8.677 2.093 12 2.093m0-2.093c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618-6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"></path></svg>
+                        </a>
+                        <a href="https://linkedin.com/company/operatoruplift" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors" aria-label="Operator Uplift on LinkedIn">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+                        </a>
+                        <a href="index.html" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">← Back to Home</a>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-zinc-800/50 text-center">
+                    <p class="text-slate-400 text-sm">
+                        Built with ❤️ during The Residency's Delta Sprint
+                    </p>
+                </div>
             </div>
         </footer>
     </div>
 
+    <!-- Security Utilities -->
+    <script src="security-utils.js"></script>
+    
     <script>
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
@@ -448,6 +1726,203 @@
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            
+            mobileMenu.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
+        }
+
+        // Add click event to mobile menu toggle
+        document.querySelector('.mobile-menu-toggle').addEventListener('click', toggleMobileMenu);
+
+        // Header Logo Ripple Effect
+        document.querySelectorAll('.ripple-effect').forEach(element => {
+            element.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+                // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.remove('active');
+                document.querySelector('.mobile-menu-toggle').classList.remove('active');
+            });
+        });
+
+        // Initialize ember particles for the ascent CTA section
+        function initEmberParticles() {
+            if (typeof tsParticles !== 'undefined') {
+                tsParticles.load('ember-particles', {
+                    fpsLimit: 60,
+                    particles: {
+                        color: {
+                            value: ['#ff6b35', '#f7931e', '#ffa726', '#ffcc02', '#ff5722', '#ff9800']
+                        },
+                        number: {
+                            value: 15,
+                            density: {
+                                enable: true,
+                                value_area: 600
+                            }
+                        },
+                        opacity: {
+                            value: 1,
+                            random: true,
+                            anim: {
+                                enable: true,
+                                speed: 1.5,
+                                opacity_min: 0.2,
+                                sync: false
+                            }
+                        },
+                        size: {
+                            value: 4,
+                            random: true,
+                            anim: {
+                                enable: true,
+                                speed: 3,
+                                size_min: 1,
+                                sync: false
+                            }
+                        },
+                        move: {
+                            enable: true,
+                            speed: 2.5,
+                            direction: 'top',
+                            random: true,
+                            straight: false,
+                            out_mode: 'out',
+                            bounce: false,
+                            attract: {
+                                enable: true,
+                                rotateX: 600,
+                                rotateY: 1200
+                            }
+                        },
+                        shape: {
+                            type: 'circle'
+                        },
+                        line_linked: {
+                            enable: false
+                        },
+                        twinkle: {
+                            particles: {
+                                enable: true,
+                                color: '#ff6b35',
+                                frequency: 0.05,
+                                opacity: 1
+                            }
+                        }
+                    },
+                    interactivity: {
+                        detect_on: 'canvas',
+                        events: {
+                            onhover: {
+                                enable: true,
+                                mode: 'repulse'
+                            },
+                            onclick: {
+                                enable: false
+                            },
+                            resize: true
+                        },
+                        modes: {
+                            repulse: {
+                                distance: 100,
+                                duration: 0.4
+                            }
+                        }
+                    },
+                    retina_detect: true
+                });
+            }
+        }
+
+        // Initialize ember particles when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit for tsParticles to load
+            setTimeout(initEmberParticles, 1000);
+        });
+
+        // Also initialize when tsParticles becomes available
+        if (typeof tsParticles !== 'undefined') {
+            initEmberParticles();
+        } else {
+            // Check periodically for tsParticles
+            const checkTsParticles = setInterval(() => {
+                if (typeof tsParticles !== 'undefined') {
+                    initEmberParticles();
+                    clearInterval(checkTsParticles);
+                }
+            }, 100);
+        }
+
+        // --- Header Logo Ripple Effect ---
+        document.querySelectorAll('.ripple-effect').forEach(element => {
+            element.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // --- CTA Button Ripple Effects ---
+        document.querySelectorAll('.cta-button, .btn-secondary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
     </script>
-</body>
-</html> 
+    </body>
+    </html> 

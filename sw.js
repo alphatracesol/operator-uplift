@@ -1,10 +1,10 @@
 // Enhanced Service Worker for Operator Uplift
-// Version: 2.0 - Production Ready
+// Version: 2.1 - Fixed POST Request Caching
 
-const CACHE_NAME = 'operator-uplift-v2.0';
-const STATIC_CACHE = 'static-v2.0';
-const DYNAMIC_CACHE = 'dynamic-v2.0';
-const API_CACHE = 'api-v2.0';
+const CACHE_NAME = 'operator-uplift-v2.1';
+const STATIC_CACHE = 'static-v2.1';
+const DYNAMIC_CACHE = 'dynamic-v2.1';
+const API_CACHE = 'api-v2.1';
 
 // Cache strategies
 const CACHE_STRATEGIES = {
@@ -71,6 +71,13 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - implement caching strategies
 self.addEventListener('fetch', (event) => {
+    // CRITICAL: Never cache POST requests - handle them immediately
+    if (event.request.method === 'POST') {
+        console.log(`🚫 POST request detected, bypassing cache: ${event.request.url}`);
+        event.respondWith(fetch(event.request));
+        return;
+    }
+    
     const url = new URL(event.request.url);
     const strategy = getCacheStrategy(url);
     
@@ -93,8 +100,15 @@ self.addEventListener('fetch', (event) => {
 
 // Cache strategies implementation
 async function cacheFirst(request) {
+    // CRITICAL: Never cache POST requests - multiple safety checks
+    if (request.method === 'POST') {
+        console.log('🚫 POST request detected in cacheFirst, bypassing cache:', request.url);
+        return fetch(request);
+    }
+    
     // Skip caching for chrome-extension URLs
     if (request.url.startsWith('chrome-extension://')) {
+        console.log('🚫 Chrome extension request detected, bypassing cache:', request.url);
         return fetch(request);
     }
     
@@ -108,7 +122,8 @@ async function cacheFirst(request) {
     
     try {
         const networkResponse = await fetch(request);
-        if (networkResponse.ok) {
+        // Triple-check method before caching
+        if (networkResponse.ok && request.method !== 'POST' && request.method !== 'PUT' && request.method !== 'DELETE') {
             cache.put(request, networkResponse.clone());
         }
         return networkResponse;
@@ -119,8 +134,15 @@ async function cacheFirst(request) {
 }
 
 async function networkFirst(request) {
+    // CRITICAL: Never cache POST requests - multiple safety checks
+    if (request.method === 'POST') {
+        console.log('🚫 POST request detected in networkFirst, bypassing cache:', request.url);
+        return fetch(request);
+    }
+    
     // Skip caching for chrome-extension URLs
     if (request.url.startsWith('chrome-extension://')) {
+        console.log('🚫 Chrome extension request detected, bypassing cache:', request.url);
         return fetch(request);
     }
     
@@ -128,7 +150,8 @@ async function networkFirst(request) {
     
     try {
         const networkResponse = await fetch(request);
-        if (networkResponse.ok) {
+        // Triple-check method before caching
+        if (networkResponse.ok && request.method !== 'POST' && request.method !== 'PUT' && request.method !== 'DELETE') {
             cache.put(request, networkResponse.clone());
         }
         return networkResponse;
@@ -146,8 +169,15 @@ async function networkFirst(request) {
 }
 
 async function staleWhileRevalidate(request) {
+    // CRITICAL: Never cache POST requests - multiple safety checks
+    if (request.method === 'POST') {
+        console.log('🚫 POST request detected in staleWhileRevalidate, bypassing cache:', request.url);
+        return fetch(request);
+    }
+    
     // Skip caching for chrome-extension URLs
     if (request.url.startsWith('chrome-extension://')) {
+        console.log('🚫 Chrome extension request detected, bypassing cache:', request.url);
         return fetch(request);
     }
     
@@ -155,7 +185,8 @@ async function staleWhileRevalidate(request) {
     const cachedResponse = await cache.match(request);
     
     const fetchPromise = fetch(request).then(networkResponse => {
-        if (networkResponse.ok) {
+        // Triple-check method before caching
+        if (networkResponse.ok && request.method !== 'POST' && request.method !== 'PUT' && request.method !== 'DELETE') {
             cache.put(request, networkResponse.clone());
         }
         return networkResponse;

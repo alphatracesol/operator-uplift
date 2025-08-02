@@ -1,0 +1,174 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions for validation
+    function isValidUserData(data) {
+      return data.keys().hasAll(['uid', 'email', 'displayName', 'stats', 'settings', 'createdAt']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.displayName is string &&
+             data.stats is map &&
+             data.settings is map;
+    }
+    
+    function isValidGoalData(data) {
+      return data.keys().hasAll(['userId', 'title', 'category', 'createdAt']) &&
+             data.userId is string &&
+             data.title is string &&
+             data.category is string;
+    }
+    
+    function isValidHabitData(data) {
+      return data.keys().hasAll(['name', 'frequency', 'category', 'createdAt']) &&
+             data.name is string &&
+             data.frequency in ['daily', 'weekly', 'monthly', 'custom'] &&
+             data.category in ['health', 'productivity', 'learning', 'mindfulness', 'social', 'other'];
+    }
+    
+    function isValidFocusSessionData(data) {
+      return data.keys().hasAll(['duration', 'startTime']) &&
+             data.duration is number &&
+             data.duration > 0 &&
+             data.duration <= 14400 && // Max 4 hours
+             data.startTime is timestamp;
+    }
+    
+    function isValidAIInteractionData(data) {
+      return data.keys().hasAll(['userId', 'timestamp', 'type']) &&
+             data.userId is string &&
+             data.timestamp is timestamp &&
+             data.type in ['motivation', 'advice', 'goal-breakdown', 'chat', 'analysis'];
+    }
+
+    // Users can only access their own data with comprehensive validation
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && 
+                       request.auth.uid == userId && 
+                       request.auth.token.email_verified == true &&
+                       isValidUserData(request.resource.data);
+      allow update: if request.auth != null && 
+                       request.auth.uid == userId && 
+                       isValidUserData(request.resource.data);
+      allow delete: if false; // Prevent user deletion for data integrity
+    }
+    
+    // Users can only access their own goals with validation
+    match /goals/{goalId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       isValidGoalData(request.resource.data);
+      allow update: if request.auth != null && 
+                       resource.data.userId == request.auth.uid &&
+                       isValidGoalData(request.resource.data);
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Habits - users can only access their own habits
+    match /habits/{habitId} {
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       isValidHabitData(request.resource.data);
+      allow update: if request.auth != null && 
+                       resource.data.userId == request.auth.uid &&
+                       isValidHabitData(request.resource.data);
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Focus sessions - users can only access their own sessions
+    match /focusSessions/{sessionId} {
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       isValidFocusSessionData(request.resource.data);
+      allow update: if request.auth != null && 
+                       resource.data.userId == request.auth.uid &&
+                       isValidFocusSessionData(request.resource.data);
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // AI interactions - users can only access their own interactions
+    match /aiInteractions/{interactionId} {
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       isValidAIInteractionData(request.resource.data);
+      allow update: if request.auth != null && 
+                       resource.data.userId == request.auth.uid &&
+                       isValidAIInteractionData(request.resource.data);
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Community templates - read only for authenticated users, write by creator with validation
+    match /communityTemplates/{templateId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+                      request.auth.uid == resource.data.createdBy &&
+                      request.resource.data.keys().hasAll(['name', 'description', 'category', 'createdBy']);
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.createdBy &&
+                       request.resource.data.keys().hasAll(['name', 'description', 'category', 'createdBy']);
+      allow delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
+    }
+    
+    // Leaderboard - read only for authenticated users, write by user
+    match /leaderboard/{entryId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+                      request.auth.uid == resource.data.userId &&
+                      request.resource.data.keys().hasAll(['userId', 'displayName', 'stats']);
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       request.resource.data.keys().hasAll(['userId', 'displayName', 'stats']);
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Challenges - read only for authenticated users, write by creator
+    match /challenges/{challengeId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+                      request.auth.uid == resource.data.createdBy &&
+                      request.resource.data.keys().hasAll(['name', 'description', 'createdBy', 'startDate', 'endDate']);
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.createdBy &&
+                       request.resource.data.keys().hasAll(['name', 'description', 'createdBy', 'startDate', 'endDate']);
+      allow delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
+    }
+    
+    // User achievements - users can only access their own achievements
+    match /achievements/{achievementId} {
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       request.resource.data.keys().hasAll(['userId', 'type', 'unlockedAt']);
+      allow update: if request.auth != null && 
+                       resource.data.userId == request.auth.uid &&
+                       request.resource.data.keys().hasAll(['userId', 'type', 'unlockedAt']);
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // User analytics - users can only access their own analytics
+    match /analytics/{analyticsId} {
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       request.resource.data.keys().hasAll(['userId', 'date', 'metrics']);
+      allow update: if request.auth != null && 
+                       resource.data.userId == request.auth.uid &&
+                       request.resource.data.keys().hasAll(['userId', 'date', 'metrics']);
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Rate limiting for AI interactions
+    match /aiRateLimits/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

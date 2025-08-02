@@ -55,7 +55,7 @@
                 <meta name="robots" content="index, follow">
                 <meta name="theme-color" content="#f97316">
                 <meta name="msapplication-TileColor" content="#f97316">
-                <meta name="apple-mobile-web-app-capable" content="yes">
+                <meta name="mobile-web-app-capable" content="yes">
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
                 <meta name="apple-mobile-web-app-title" content="Operator Uplift">
                 <link rel="manifest" href="/manifest.json">
@@ -1350,9 +1350,10 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#success-stories">Success Stories</a></li>
                 <li><a href="#faq">FAQ</a></li>
-                <li><a href="press-release.html">Press Release</a></li>
-            </ul>
-            <a href="Operator_Uplift_Complete.html" class="cta-button">Launch App</a>
+                                        <li><a href="../press-release.html">Press Release</a></li>
+                <li><a href="../MVP Launch Page.html">MVP Launch</a></li>
+                    </ul>
+                    <a href="../app.html" class="cta-button">Launch App</a>
             <div class="mobile-menu-toggle">
                 <span></span>
                 <span></span>
@@ -1387,7 +1388,7 @@
                     Operator Uplift uses AI to build the execution plan for your most ambitious goals.
                 </p>
                 <div class="hero-buttons">
-                    <a href="Operator_Uplift_Complete.html" class="cta-button accent-glow-button" id="launch-app-btn">Launch App Now</a>
+                    <a href="../app.html" class="cta-button accent-glow-button" id="launch-app-btn">Launch App Now</a>
                     <a href="#features" class="btn-secondary" id="learn-more-btn">Learn More</a>
                 </div>
             </div>
@@ -1698,7 +1699,7 @@
             <div class="glass-card">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Life?</h2>
                 <p class="text-lg text-gray-400 mb-6 max-w-2xl mx-auto">Join thousands of operators who've already started their epic journey. Your future self will thank you.</p>
-                <a href="Operator_Uplift_Complete.html" class="cta-button accent-glow-button text-lg px-8 py-4">Launch Operator Uplift</a>
+                                    <a href="../app.html" class="cta-button accent-glow-button text-lg px-8 py-4">Launch Operator Uplift</a>
             </div>
         </div>
     </section>
@@ -2353,7 +2354,7 @@
                 launchAppBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     console.log('Launch App button clicked');
-                    window.location.href = 'Operator_Uplift_Complete.html';
+                    window.location.href = '../app.html';
                 });
             }
             
@@ -2370,11 +2371,11 @@
             }
 
             // Fix for all CTA buttons
-            document.querySelectorAll('a[href="Operator_Uplift_Complete.html"]').forEach(btn => {
+            document.querySelectorAll('a[href="../app.html"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     console.log('CTA button clicked');
-                    window.location.href = 'Operator_Uplift_Complete.html';
+                    window.location.href = '../app.html';
                 });
             });
             
@@ -2605,7 +2606,8 @@
                 <a href="#terms-modal" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Terms</a>
                 <a href="#privacy-modal" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Privacy</a>
                 <a href="#support-modal" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Support</a>
-                <a href="press-release.html" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">Press Release</a>
+                                        <a href="../press-release.html" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">Press Release</a>
+                    <a href="../MVP Launch Page.html" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">MVP Launch</a>
                 <a href="#" id="manage-cookies" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">Manage Cookies</a>
             </div>
         </div>
