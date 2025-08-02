@@ -32,8 +32,6 @@ class OperatorUplift {
      */
     async init() {
         try {
-            console.log('🚀 Initializing Operator Uplift...');
-            
             // Check for service worker support
             if ('serviceWorker' in navigator) {
                 await this.registerServiceWorker();
@@ -51,13 +49,10 @@ class OperatorUplift {
             // Mark as initialized
             this.isInitialized = true;
             
-            console.log('✅ Operator Uplift initialized successfully');
-            
             // Dispatch ready event
             window.dispatchEvent(new CustomEvent('operatorUpliftReady'));
             
         } catch (error) {
-            console.error('❌ Failed to initialize Operator Uplift:', error);
             this.handleInitializationError(error);
         }
     }
@@ -68,8 +63,6 @@ class OperatorUplift {
     async registerServiceWorker() {
         try {
             const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('📱 Service Worker registered:', registration);
-            
             // Handle service worker updates
             registration.addEventListener('updatefound', () => {
                 const newWorker = registration.installing;
@@ -82,8 +75,7 @@ class OperatorUplift {
             });
             
         } catch (error) {
-            console.warn('⚠️ Service Worker registration failed:', error);
-        }
+            }
     }
 
     /**
@@ -101,11 +93,9 @@ class OperatorUplift {
                 if (module.init) {
                     await module.init();
                     this.modules[module.name] = true;
-                    console.log(`✅ ${module.name} module initialized`);
-                }
+                    }
             } catch (error) {
-                console.error(`❌ Failed to initialize ${module.name} module:`, error);
-            }
+                }
         }
     }
 
@@ -115,12 +105,10 @@ class OperatorUplift {
     setupEventListeners() {
         // Handle online/offline status
         window.addEventListener('online', () => {
-            console.log('🌐 Back online');
             this.handleOnlineStatus(true);
         });
 
         window.addEventListener('offline', () => {
-            console.log('📴 Gone offline');
             this.handleOnlineStatus(false);
         });
 
@@ -168,8 +156,7 @@ class OperatorUplift {
             this.hideLoadingScreen();
             
         } catch (error) {
-            console.error('❌ Failed to initialize UI:', error);
-        }
+            }
     }
 
     /**
@@ -257,10 +244,8 @@ class OperatorUplift {
                 retina_detect: true
             });
             
-            console.log('✨ Particles initialized');
-        } catch (error) {
-            console.warn('⚠️ Failed to initialize particles:', error);
-        }
+            } catch (error) {
+            }
     }
 
     /**
@@ -340,8 +325,6 @@ class OperatorUplift {
      * Handle errors
      */
     handleError(error) {
-        console.error('❌ Application error:', error);
-        
         // Log to analytics if available
         if (window.gtag) {
             window.gtag('event', 'exception', {
@@ -355,8 +338,6 @@ class OperatorUplift {
      * Handle unhandled promise rejections
      */
     handleUnhandledRejection(reason) {
-        console.error('❌ Unhandled promise rejection:', reason);
-        
         // Log to analytics if available
         if (window.gtag) {
             window.gtag('event', 'exception', {

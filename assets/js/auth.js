@@ -184,7 +184,6 @@ class AuthManager {
             const userDoc = await getDoc(doc(this.db, 'users', this.user.uid));
             return userDoc.exists() ? userDoc.data() : null;
         } catch (error) {
-            console.error('Error getting user data:', error);
             return null;
         }
     }
@@ -219,8 +218,6 @@ class AuthManager {
     
     // Handle auth state changes
     onUserSignIn(user) {
-        console.log('User signed in:', user.email);
-        
         // Update last login
         updateDoc(doc(this.db, 'users', user.uid), {
             lastLogin: serverTimestamp()
@@ -235,8 +232,6 @@ class AuthManager {
     }
     
     onUserSignOut() {
-        console.log('User signed out');
-        
         // Track analytics
         if (typeof gtag !== 'undefined') {
             gtag('event', 'logout');

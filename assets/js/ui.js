@@ -18,8 +18,7 @@ class UIManager {
         this.setupAnimations();
         this.isInitialized = true;
         
-        console.log('🎨 UI Manager initialized');
-    }
+        }
     
     // Modal Management
     showModal(title, content, actions = []) {

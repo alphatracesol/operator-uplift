@@ -23,8 +23,7 @@ class AIManager {
         this.setupProviders();
         this.isInitialized = true;
         
-        console.log('🤖 AI Manager initialized');
-    }
+        }
     
     // Provider Setup
     setupProviders() {
@@ -233,7 +232,6 @@ class AIManager {
             };
             
         } catch (error) {
-            console.error('AI communication error:', error);
             return {
                 success: false,
                 error: error.message
@@ -418,8 +416,6 @@ ${personality.prompts.greeting}`;
     
     // Error Handling
     handleAIError(error) {
-        console.error('AI Error:', error);
-        
         // Track error
         if (typeof gtag !== 'undefined') {
             gtag('event', 'ai_error', {

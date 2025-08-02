@@ -13,7 +13,7 @@
     
     <!-- Enhanced AI & App Integration Scripts -->
     <script src="ai-integration-enhancer.js"></script>
-    <script src="app-functionality-debugger.js"></script>
+    <script src="app-functionality-.js"></script>
     <script src="comprehensive-integration.js"></script>
     <script src="enhanced-error-handling.js"></script>
     <script src="performance-optimizer.js"></script>
@@ -2610,8 +2610,6 @@
 
         // Enhanced error handling function
         function handleFirebaseError(error, operation = 'operation') {
-            console.error(`Firebase ${operation} error:`, error);
-            
             let userMessage = 'An unexpected error occurred. Please try again.';
             
             if (error.code) {
@@ -2684,14 +2682,12 @@
 
         // Global error handling
         window.addEventListener('unhandledrejection', (event) => {
-            console.error('Unhandled promise rejection:', event.reason);
             if (app && app.ui) {
                 app.ui.showToast('An unexpected error occurred. Please try again.', 'error');
             }
         });
 
         window.addEventListener('error', (event) => {
-            console.error('JavaScript error:', event.error);
             if (app && app.ui) {
                 app.ui.showToast('An error occurred. Please refresh the page.', 'error');
             }
@@ -2702,11 +2698,9 @@
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
-                        console.log('SW registered: ', registration);
-                    })
+                        })
                     .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
+                        });
             });
         }
 
@@ -2972,10 +2966,8 @@
                         const firebaseApp = initializeApp(config.firebaseConfig);
                         auth = getAuth(firebaseApp);
                         db = getFirestore(firebaseApp);
-                        console.log('Firebase initialized successfully');
                         this.state.firebaseReady = true;
                     } catch (error) {
-                        console.error("Firebase initialization failed:", error);
                         this.showInitializationError(error);
                         return;
                     }
@@ -2988,7 +2980,6 @@
                         this.ui.initMatrixRain();
                         this.auth.listenForAuthState();
                     } catch (error) {
-                        console.error("UI initialization failed:", error);
                         this.showInitializationError(error);
                     }
                 },
@@ -3027,10 +3018,8 @@
                         this.state.localGoals = {};
                         this.state.friendsData = [];
                         localStorage.removeItem('cachedUserData');
-                        console.log('App cleanup completed successfully');
-                    } catch (error) {
-                        console.error('Error during cleanup:', error);
-                    }
+                        } catch (error) {
+                        }
                 },
 
                 removeEventListeners() {
@@ -3048,7 +3037,6 @@
                         try {
                             return await app.state.currentUser.getIdToken(true);
                         } catch (error) {
-                            console.error('Failed to get auth token:', error);
                             return null;
                         }
                     },
@@ -3115,7 +3103,6 @@
                             
                             app.ui.restartBackgroundEffects();
                         } catch (error) {
-                            console.error('Failed to initialize data listeners:', error);
                             app.ui.showToast('Failed to load data. Please refresh the page.', 'error');
                         }
                     },
@@ -3162,8 +3149,7 @@
                             localStorage.setItem(sessionKey, currentSession);
                             
                         } catch (error) {
-                            console.error('Security check failed:', error);
-                        }
+                            }
                     },
 
                     async syncOfflineData() {
@@ -3177,8 +3163,7 @@
                                 try {
                                     await app.firestore.updateUserData(change);
                                 } catch (error) {
-                                    console.error('Failed to sync change:', error);
-                                }
+                                    }
                             }
                             
                             localStorage.removeItem('offlineChanges');
@@ -3370,7 +3355,6 @@
                                     
                                     // Validate data before using
                                     if (!this.validateUserData(userData)) {
-                                        console.error("Invalid user data received");
                                         app.ui.showToast("Data validation error. Please contact support.", "error");
                                         return;
                                     }
@@ -3389,8 +3373,7 @@
                                     // Initialize AI profile for new users
                                     if (app.state.userData.isNewUser || !app.state.userData.settings?.aiPreferences) {
                                         app.ai.initializeAIProfile(app.state.userData).catch(error => {
-                                            console.error('Error initializing AI profile:', error);
-                                        });
+                                            });
                                     }
                                     
                                     app.router.navigateTo('dashboard');
@@ -3421,14 +3404,11 @@
                                 // Always update UI when data changes
                                 app.ui.update();
                             } else {
-                                console.error("User document not found!");
                                 app.auth.logout();
                             }
                             }, 
                             (error) => {
-                            console.error("Error listening to user data:", error);
-                                
-                                // Try to load cached data
+                            // Try to load cached data
                                 const cachedData = localStorage.getItem('cachedUserData');
                                 if (cachedData) {
                                     try {
@@ -3488,8 +3468,6 @@
                             localStorage.setItem('cachedUserData', JSON.stringify(app.state.userData));
                             
                         } catch (error) {
-                            console.error("Update failed:", error);
-                            
                             if (retryCount < 3 && this.isRetryableError(error)) {
                                 await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
                                 return this.updateUserData(updates, retryCount + 1);
@@ -3622,8 +3600,7 @@
                             }
                             
                         } catch (error) {
-                            console.error('Sync failed:', error);
-                        }
+                            }
                     },
                     listenForGoals(uid) {
                         if (unsubscribeGoals) unsubscribeGoals();
@@ -3637,7 +3614,7 @@
                             if (app.state.activeView === 'goals' || app.state.activeView === 'calendar') {
                                 app.ui.update();
                             }
-                        }, error => console.error("Error listening to goals:", error));
+                        }, error => );
                     },
                     listenForCommunityTemplates() {
                         if (unsubscribeCommunityTemplates) unsubscribeCommunityTemplates();
@@ -3648,7 +3625,7 @@
                                 templates[doc.id] = { id: doc.id, ...doc.data() };
                             });
                             app.state.communityTemplates = templates;
-                        }, error => console.error("Error listening to templates:", error));
+                        }, error => );
                     },
                     listenForLeaderboard() {
                         if (unsubscribeLeaderboard) unsubscribeLeaderboard();
@@ -3662,7 +3639,7 @@
                             if (app.state.activeView === 'community') {
                                 app.ui.renderLeaderboard();
                             }
-                        }, error => console.error("Error listening to leaderboard:", error));
+                        }, error => );
                     },
                     listenForFriendsData(friendUids) {
                         if (unsubscribeFriends) unsubscribeFriends();
@@ -3681,7 +3658,7 @@
                             if (app.state.activeView === 'community') {
                                 app.ui.renderFriendsList();
                             }
-                        }, error => console.error("Error listening to friends:", error));
+                        }, error => );
                     },
                     listenForChallenges() {
                         if (unsubscribeChallenges) unsubscribeChallenges();
@@ -3695,7 +3672,7 @@
                              if (app.state.activeView === 'community') {
                                 app.ui.renderCommunityChallenges();
                             }
-                        }, error => console.error("Error listening to challenges:", error));
+                        }, error => );
                     },
                     async updateUserData(data) {
                         if (!app.state.currentUser) return;
@@ -4401,7 +4378,6 @@
                         // Check if all required elements exist
                         if (!modal || !goalForm || !goalParentIdInput || !goalModalTitle || !goalIdInput || 
                             !goalTitle || !goalDescription || !goalCategory || !goalPriority || !goalDueDate) {
-                            console.error('Required modal elements not found');
                             return;
                         }
                         
@@ -4495,8 +4471,7 @@
                                 if (app.state.userData) { this.applyUserSettings(); }
                             });
                         } catch (error) {
-                            console.warn("tsParticles library not loaded or failed to initialize. Particle effects will be disabled.", error);
-                        }
+                            }
                     },
                     initMatrixRain() {
                         if (app.state.matrixInterval) clearInterval(app.state.matrixInterval);
@@ -4868,7 +4843,6 @@
                                 app.ui.showToast('AI-generated tasks ready!', 'success');
                                 return tasks;
                             } catch (e) {
-                                console.error("AI API Error:", e);
                                 app.ui.showToast(`AI failed: ${e.message}. Using default tasks.`, 'error');
                             }
                         }
@@ -4895,17 +4869,14 @@
                     async toggleTask(goalId, taskId, taskElement) {
                         const goal = app.state.localGoals[goalId];
                         if (!goal) {
-                            console.warn('Goal not found:', goalId);
                             return;
                         }
                         
                         if (!goal.tasks) {
-                            console.warn('Goal tasks not found for goal:', goalId);
                             return;
                         }
                         
                         if (!goal.tasks[taskId]) {
-                            console.warn('Task not found:', taskId, 'in goal:', goalId);
                             return;
                         }
                         
@@ -5055,7 +5026,6 @@
                             
                             app.ui.showToast('Task broken down into sub-steps!', 'success');
                         } catch (e) {
-                            console.error("AI Breakdown Error:", e);
                             app.ui.showToast(`AI failed: ${e.message}.`, 'error');
                         }
                     },
@@ -5320,7 +5290,6 @@
                             const analysis = await this.generateAIProfile();
                             this.displayResults(analysis);
                         } catch (error) {
-                            console.error('Profile analysis failed:', error);
                             this.displayResults(this.generateFallbackProfile());
                         }
                     },
@@ -5477,7 +5446,6 @@ Provide the response in this exact JSON format:
                             await app.init();
                             
                         } catch (error) {
-                            console.error('Onboarding completion failed:', error);
                             app.ui.showToast('Setup completed, but there was an issue saving some data. You can continue using the app.', 'warning');
                         }
                     },
@@ -5576,7 +5544,6 @@ Provide the response in this exact JSON format:
                                 messageEl.textContent = await app.ai.call(messages);
                                 return;
                             } catch (e) {
-                                console.error("AI API Error:", e);
                                 messageEl.textContent = `AI Mentor is offline. Using standard message.`;
                             }
                         }
@@ -5794,7 +5761,6 @@ Provide the response in this exact JSON format:
                                 
                                 // Add null check to prevent undefined access
                                 if (!challengeData) {
-                                    console.warn('Challenge data not found for:', challengeDef.id);
                                     continue;
                                 }
                                 
@@ -5821,7 +5787,6 @@ Provide the response in this exact JSON format:
                             this.synths.levelUp = new Tone.FMSynth({ harmonicity: 2, modulationIndex: 3, detune: 0, oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.2, release: 0.5 }, modulation: { type: "square" }, modulationEnvelope: { attack: 0.1, decay: 0.1, sustain: 0.3, release: 0.5 }, volume: -18 }).toDestination();
                             this.synths.achievement = new Tone.PolySynth(Tone.Synth, { oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 }, volume: -22 }).toDestination();
                         } catch (e) {
-                            console.warn("Tone.js failed to initialize. Audio will be disabled.", e);
                             this.synths = {};
                         }
                     },
@@ -5929,10 +5894,9 @@ Provide the response in this exact JSON format:
                             
                             // Log which provider was used
                             if (data.fallback) {
-                                console.log(`AI request used fallback provider: ${data.data.provider} (original: ${data.originalProvider})`);
+                                `);
                             } else {
-                                console.log(`AI request successful with provider: ${data.data.provider}`);
-                            }
+                                }
                         
                             return data.data.content;
                         } catch (error) {
@@ -6039,7 +6003,6 @@ Provide the response in this exact JSON format:
                             }
                             return ['gemini']; // fallback
                         } catch (error) {
-                            console.error('Error getting available providers:', error);
                             return ['gemini']; // fallback
                         }
                     },
@@ -6079,7 +6042,6 @@ Provide the response in this exact JSON format:
                             
                             return { allowed: true };
                         } catch (error) {
-                            console.error('Rate limit check failed:', error);
                             return { allowed: true }; // Allow on error
                         }
                     },
@@ -6110,8 +6072,7 @@ Provide the response in this exact JSON format:
                             
                             await addDoc(collection(db, 'aiInteractions'), interactionData);
                         } catch (error) {
-                            console.error('Failed to log AI interaction:', error);
-                        }
+                            }
                     },
 
                     async requestMotivation() {
@@ -6220,8 +6181,7 @@ Provide the response in this exact JSON format:
                                 });
                             }
                         } catch (error) {
-                            console.error('Error initializing AI profile:', error);
-                        }
+                            }
                     },
 
                     // Generate AI personality based on user profile
@@ -6304,7 +6264,6 @@ Provide the response in this exact JSON format:
                             this.renderHabits();
                             
                         } catch (error) {
-                            console.error('Failed to create habit:', error);
                             app.ui.showToast('Failed to create habit. Please try again.', 'error');
                         }
                     },
@@ -6470,7 +6429,6 @@ Provide the response in this exact JSON format:
                             app.ui.showToast('Focus session started! Stay focused!', 'success');
                             
                         } catch (error) {
-                            console.error('Failed to start focus session:', error);
                             app.ui.showToast('Failed to start focus session. Please try again.', 'error');
                         }
                     },
@@ -6787,7 +6745,6 @@ Provide the response in this exact JSON format:
                             }
                         });
 
-
                         // Community Listeners
                         document.getElementById('challenge-list').addEventListener('click', e => {
                             if (e.target.classList.contains('join-challenge-btn')) {
@@ -7088,12 +7045,10 @@ Provide the response in this exact JSON format:
                 const authFailures = recentActivities.filter(a => a.type === 'auth_failure').length;
                 
                 if (errorCount > 5) {
-                    console.warn('High error rate detected');
                     this.reportSuspiciousActivity('high_error_rate', { errorCount });
                 }
                 
                 if (authFailures > 3) {
-                    console.warn('Multiple auth failures detected');
                     this.reportSuspiciousActivity('auth_failures', { authFailures });
                 }
             },
@@ -7111,8 +7066,7 @@ Provide the response in this exact JSON format:
                         });
                     }
                 } catch (error) {
-                    console.error('Failed to report suspicious activity:', error);
-                }
+                    }
             },
             
             async getClientIP() {
@@ -7128,7 +7082,6 @@ Provide the response in this exact JSON format:
 
         // Enhanced global error handling
         window.addEventListener('unhandledrejection', (event) => {
-            console.error('Unhandled promise rejection:', event.reason);
             securityMonitor.logActivity('unhandled_rejection', {
                 reason: event.reason?.message || 'Unknown',
                 stack: event.reason?.stack
@@ -7140,7 +7093,6 @@ Provide the response in this exact JSON format:
         });
 
         window.addEventListener('error', (event) => {
-            console.error('JavaScript error:', event.error);
             securityMonitor.logActivity('javascript_error', {
                 message: event.message,
                 filename: event.filename,
@@ -7166,7 +7118,6 @@ Provide the response in this exact JSON format:
         const originalInnerHTML = Element.prototype.innerHTML;
         Element.prototype.innerHTML = function(value) {
             if (typeof value === 'string' && value.includes('<script')) {
-                console.warn('Potential XSS attack prevented');
                 securityMonitor.logActivity('xss_attempt', { value: value.substring(0, 100) });
                 return;
             }
@@ -7181,7 +7132,6 @@ Provide the response in this exact JSON format:
                         if (node.nodeType === Node.ELEMENT_NODE) {
                             const scripts = node.querySelectorAll('script');
                             if (scripts.length > 0) {
-                                console.warn('Suspicious script injection detected');
                                 securityMonitor.logActivity('script_injection', {
                                     scripts: Array.from(scripts).map(s => s.src || s.textContent?.substring(0, 50))
                                 });
@@ -7199,8 +7149,6 @@ Provide the response in this exact JSON format:
 
         // Enhanced Firebase Error Handler
         function handleFirebaseError(error, operation = 'operation') {
-            console.error(`Firebase ${operation} error:`, error);
-            
             let userMessage = 'An error occurred. Please try again.';
             
             if (error.code) {
@@ -7597,7 +7545,6 @@ Provide the response in this exact JSON format:
 
                 async checkPermission() {
                     if (!('Notification' in window)) {
-                        console.log('This browser does not support notifications');
                         return;
                     }
 
@@ -7623,7 +7570,6 @@ Provide the response in this exact JSON format:
                             app.ui.showToast('Notifications disabled. You can enable them later in settings.', 'info');
                         }
                     } catch (error) {
-                        console.error('Error requesting notification permission:', error);
                         app.ui.showToast('Failed to enable notifications', 'error');
                     }
                 },
@@ -7652,7 +7598,6 @@ Provide the response in this exact JSON format:
 
                 async subscribeToPush() {
                     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-                        console.log('Push messaging is not supported');
                         return;
                     }
 
@@ -7666,10 +7611,8 @@ Provide the response in this exact JSON format:
                         this.subscription = subscription;
                         await this.saveSubscription(subscription);
                         
-                        console.log('Push notification subscription successful');
-                    } catch (error) {
-                        console.error('Failed to subscribe to push notifications:', error);
-                    }
+                        } catch (error) {
+                        }
                 },
 
                 async loadSubscription() {
@@ -7680,8 +7623,7 @@ Provide the response in this exact JSON format:
                         const subscription = await registration.pushManager.getSubscription();
                         this.subscription = subscription;
                     } catch (error) {
-                        console.error('Error loading push subscription:', error);
-                    }
+                        }
                 },
 
                 async saveSubscription(subscription) {
@@ -7706,8 +7648,7 @@ Provide the response in this exact JSON format:
                             }
                         });
                     } catch (error) {
-                        console.error('Error saving push subscription:', error);
-                    }
+                        }
                 },
 
                 async updateNotificationSetting(setting, enabled) {
@@ -7720,7 +7661,6 @@ Provide the response in this exact JSON format:
                         
                         app.ui.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} notifications ${enabled ? 'enabled' : 'disabled'}`, 'success');
                     } catch (error) {
-                        console.error('Error updating notification setting:', error);
                         app.ui.showToast('Failed to update notification setting', 'error');
                     }
                 },
@@ -7744,8 +7684,7 @@ Provide the response in this exact JSON format:
 
                         return notification;
                     } catch (error) {
-                        console.error('Error sending local notification:', error);
-                    }
+                        }
                 },
 
                 scheduleTaskReminder(taskId, dueDate) {
@@ -7837,8 +7776,7 @@ Provide the response in this exact JSON format:
                             this.data = { ...this.data, ...userDoc.data().analytics };
                         }
                     } catch (error) {
-                        console.error('Error loading analytics data:', error);
-                    }
+                        }
                 },
 
                 async saveAnalyticsData() {
@@ -7849,8 +7787,7 @@ Provide the response in this exact JSON format:
                             analytics: this.data
                         });
                     } catch (error) {
-                        console.error('Error saving analytics data:', error);
-                    }
+                        }
                 },
 
                 getAnalyticsData() {
@@ -7989,7 +7926,6 @@ Provide the response in this exact JSON format:
 
                 initializeCharts() {
                     if (!window.Chart) {
-                        console.log('Chart.js not loaded');
                         return;
                     }
 
@@ -8348,8 +8284,7 @@ Provide the response in this exact JSON format:
                         }));
 
                     } catch (error) {
-                        console.error('Error loading community data:', error);
-                    }
+                        }
                 },
 
                 initializeFeatures() {
@@ -8590,7 +8525,6 @@ Provide the response in this exact JSON format:
                         document.getElementById('create-group-modal').classList.remove('active');
                         app.ui.showToast('Group created successfully!', 'success');
                     } catch (error) {
-                        console.error('Error creating group:', error);
                         app.ui.showToast('Failed to create group', 'error');
                     }
                 },
@@ -8637,7 +8571,6 @@ Provide the response in this exact JSON format:
                         document.getElementById('create-event-modal').classList.remove('active');
                         app.ui.showToast('Event created successfully!', 'success');
                     } catch (error) {
-                        console.error('Error creating event:', error);
                         app.ui.showToast('Failed to create event', 'error');
                     }
                 },
@@ -8684,7 +8617,6 @@ Provide the response in this exact JSON format:
                         document.getElementById('create-discussion-modal').classList.remove('active');
                         app.ui.showToast('Discussion started successfully!', 'success');
                     } catch (error) {
-                        console.error('Error creating discussion:', error);
                         app.ui.showToast('Failed to start discussion', 'error');
                     }
                 },
@@ -8698,7 +8630,6 @@ Provide the response in this exact JSON format:
 
                         app.ui.showToast('Successfully joined event!', 'success');
                     } catch (error) {
-                        console.error('Error joining event:', error);
                         app.ui.showToast('Failed to join event', 'error');
                     }
                 },
@@ -8719,7 +8650,6 @@ Provide the response in this exact JSON format:
                             app.ui.showToast('Group not found', 'error');
                         }
                     } catch (error) {
-                        console.error('Error opening group:', error);
                         app.ui.showToast('Failed to load group', 'error');
                     }
                 },
@@ -8739,7 +8669,6 @@ Provide the response in this exact JSON format:
                             app.ui.showToast('Discussion not found', 'error');
                         }
                     } catch (error) {
-                        console.error('Error opening discussion:', error);
                         app.ui.showToast('Failed to load discussion', 'error');
                     }
                 },
@@ -8772,7 +8701,6 @@ Provide the response in this exact JSON format:
                             app.ui.showToast('No mentors available for your goals', 'info');
                         }
                     } catch (error) {
-                        console.error('Error finding mentors:', error);
                         app.ui.showToast('Failed to find mentors', 'error');
                     }
                 },
@@ -8784,7 +8712,6 @@ Provide the response in this exact JSON format:
                             userData: app.state.userData
                         });
                     } catch (error) {
-                        console.error('Error opening mentor registration:', error);
                         app.ui.showToast('Failed to open mentor registration', 'error');
                     }
                 }
@@ -8866,7 +8793,6 @@ Provide the response in this exact JSON format:
                         
                         this.installPrompt = null;
                     } catch (error) {
-                        console.error('Error installing app:', error);
                         app.ui.showToast('Installation failed', 'error');
                     }
                 },
@@ -8995,7 +8921,6 @@ Provide the response in this exact JSON format:
                         
                         app.ui.showToast('Refreshed successfully!', 'success');
                     } catch (error) {
-                        console.error('Error refreshing data:', error);
                         app.ui.showToast('Refresh failed', 'error');
                     }
                 }
@@ -9196,7 +9121,6 @@ Provide the response in this exact JSON format:
                             const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
                             
                             if (fps < 30) {
-                                console.warn('Low frame rate detected:', fps);
                                 this.optimizeForLowPerformance();
                             }
                             
@@ -9529,8 +9453,6 @@ Provide the response in this exact JSON format:
                 },
                 
                 capture(error, context = {}) {
-                    console.error('Error captured:', error, context);
-                    
                     const errorData = {
                         message: error.message || 'Unknown error',
                         stack: error.stack,
@@ -9688,7 +9610,6 @@ Provide the response in this exact JSON format:
                 throw new Error('Invalid Firebase configuration');
             }
         } catch (error) {
-            console.error('Error loading Firebase config:', error);
             throw error;
         }
     }
@@ -10109,8 +10030,6 @@ Provide the response in this exact JSON format:
                 const declineBtn = document.getElementById('cookie-decline');
                 const manageCookiesLink = document.getElementById('manage-cookies');
 
-                console.log('Initializing cookie consent:', { cookieBanner, acceptBtn, declineBtn, manageCookiesLink });
-
                 // Show banner if consent not given
                 if (!localStorage.getItem('cookie_consent_status')) {
                     if (cookieBanner) {
@@ -10121,7 +10040,6 @@ Provide the response in this exact JSON format:
                 // Accept button
                 if (acceptBtn) {
                     acceptBtn.addEventListener('click', () => {
-                        console.log('Cookie accept clicked');
                         localStorage.setItem('cookie_consent_status', 'granted');
                         if (cookieBanner) {
                             cookieBanner.classList.add('hidden');
@@ -10132,7 +10050,6 @@ Provide the response in this exact JSON format:
                 // Decline button
                 if (declineBtn) {
                     declineBtn.addEventListener('click', () => {
-                        console.log('Cookie decline clicked');
                         localStorage.setItem('cookie_consent_status', 'denied');
                         if (cookieBanner) {
                             cookieBanner.classList.add('hidden');
@@ -10144,7 +10061,6 @@ Provide the response in this exact JSON format:
                 if (manageCookiesLink) {
                     manageCookiesLink.addEventListener('click', (e) => {
                         e.preventDefault();
-                        console.log('Manage cookies clicked');
                         // Reset consent and show banner again
                         localStorage.removeItem('cookie_consent_status');
                         if (cookieBanner) {
@@ -10220,8 +10136,7 @@ Provide the response in this exact JSON format:
             const observer = new PerformanceObserver((list) => {
                 for (const entry of list.getEntries()) {
                     if (entry.entryType === 'largest-contentful-paint') {
-                        console.log('LCP:', entry.startTime);
-                    }
+                        }
                 }
             });
             observer.observe({ entryTypes: ['largest-contentful-paint'] });
@@ -10229,13 +10144,11 @@ Provide the response in this exact JSON format:
         
         // Error tracking
         window.addEventListener('error', (e) => {
-            console.error('Page error:', e.error);
             // Prevent error from breaking the page
             e.preventDefault();
         });
         
         window.addEventListener('unhandledrejection', (e) => {
-            console.error('Unhandled promise rejection:', e.reason);
             // Prevent rejection from breaking the page
             e.preventDefault();
         });

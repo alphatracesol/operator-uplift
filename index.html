@@ -163,22 +163,19 @@
                     document.addEventListener('DOMContentLoaded', async () => {
                         try {
                             const auditResults = await accessibilityAudit.runFullAudit();
-                            console.log('🔍 Accessibility Audit Results:', auditResults);
+                            // Accessibility audit completed
                             
                             // Auto-fix common issues
                             const fixes = accessibilityAudit.autoFixIssues();
-                            console.log('🔧 Auto-fixes applied:', fixes);
                             
                             // Get PWA status
                             const pwaStatus = pwaEnhancer.getPWAStatus();
-                            console.log('📱 PWA Status:', pwaStatus);
                             
                             // Get performance metrics
                             const performanceMetrics = pwaEnhancer.getPerformanceMetrics();
-                            console.log('⚡ Performance Metrics:', performanceMetrics);
                             
                         } catch (error) {
-                            console.error('❌ Accessibility audit failed:', error);
+                            // Accessibility audit failed
                         }
                     });
                     
@@ -584,8 +581,6 @@
             transform: translateY(-5px);
         }
 
-
-
         /* Modal & Legal Page Styles */
         .overlay-page {
             position: fixed;
@@ -761,9 +756,7 @@
         .legal-content li { margin-bottom: 0.5rem; line-height: 1.6; color: var(--text-muted-color); }
         .legal-content a { color: var(--accent-color); text-decoration: underline; }
         .legal-content a:hover { color: var(--accent-light); }
-        
 
-        
         /* Legal link styles */
         .legal-link {
             color: var(--text-muted-color);
@@ -1785,8 +1778,6 @@
             text-shadow: 0 0 8px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.4);
             animation: flicker 4s infinite alternate;
         }
-
-
 
         .accent-glow-button {
             box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
@@ -2968,8 +2959,6 @@
         </div>
     </section>
 
-
-
     <!-- Features Section -->
     <section id="features" class="py-20 px-4 section-spacing" style="position: relative; z-index: 10;">
         <div class="max-w-6xl mx-auto">
@@ -3013,10 +3002,6 @@
             </div>
         </div>
     </section>
-
-
-
-
 
     <!-- Success Stories Section -->
     <section id="success-stories" class="py-20 px-4 section-spacing" style="position: relative; z-index: 10;">
@@ -3150,14 +3135,6 @@
         </div>
     </section>
 
-
-
-
-
-
-
-
-
     <!-- FAQ Section -->
     <section id="faq" class="py-20 px-4 section-spacing" style="position: relative; z-index: 10;">
         <div class="max-w-6xl mx-auto">
@@ -3224,8 +3201,6 @@
             </div>
         </div>
     </section>
-
-
 
     <script>
         // Performance optimization utilities
@@ -3379,9 +3354,7 @@
                 }).then(container => {
                     window.particlesContainer = container;
                     window.particlesInstance = container;
-                    console.log('Particles initialized successfully');
-                }).catch(error => {
-                    console.warn('Particles failed to load, using fallback:', error);
+                    }).catch(error => {
                     initParticlesFallback();
                 });
             } else {
@@ -3569,14 +3542,6 @@
         `;
         document.head.appendChild(mobileStyle);
 
-
-
-
-
-
-
-
-
         // Simplified GSAP initialization for better performance
         function initGSAP() {
             if (typeof gsap !== 'undefined') {
@@ -3627,8 +3592,6 @@
         // Removed parallax effect for better performance
         // Simple scroll-based animations instead
 
-
-
         // Add spinner animation and error handling
         const spinnerStyle = document.createElement('style');
         spinnerStyle.textContent = `
@@ -3666,7 +3629,6 @@
         
         // Error handling for library loading
         window.addEventListener('error', (e) => {
-            console.warn('Library loading error:', e.message);
             // Show fallback for critical errors
             if (e.message.includes('gsap') || e.message.includes('three')) {
                 const fallback = document.createElement('div');
@@ -3685,7 +3647,6 @@
                 // Add click event to the entire card
                 item.addEventListener('click', (e) => {
                     const faqId = item.getAttribute('data-faq');
-                    console.log('FAQ clicked:', faqId);
                     toggleFAQ(faqId);
                 });
                 
@@ -3743,8 +3704,6 @@
             const declineBtn = document.getElementById('cookie-decline');
             const manageCookiesLink = document.getElementById('manage-cookies');
             
-            console.log('Initializing cookie consent:', { cookieBanner, acceptBtn, declineBtn, manageCookiesLink });
-            
             if (!localStorage.getItem('cookie_consent_status')) {
                 if (cookieBanner) {
                     cookieBanner.classList.remove('hidden');
@@ -3753,7 +3712,6 @@
             
             if (acceptBtn) {
                 acceptBtn.addEventListener('click', () => {
-                    console.log('Cookie accept clicked');
                     localStorage.setItem('cookie_consent_status', 'granted');
                     if (cookieBanner) {
                         cookieBanner.classList.add('hidden');
@@ -3763,7 +3721,6 @@
             
             if (declineBtn) {
                 declineBtn.addEventListener('click', () => {
-                    console.log('Cookie decline clicked');
                     localStorage.setItem('cookie_consent_status', 'denied');
                     if (cookieBanner) {
                         cookieBanner.classList.add('hidden');
@@ -3773,7 +3730,6 @@
             
             if (manageCookiesLink) {
                 manageCookiesLink.addEventListener('click', (e) => {
-                    console.log('Manage cookies clicked');
                     e.preventDefault();
                     localStorage.removeItem('cookie_consent_status');
                     if (cookieBanner) {
@@ -3788,29 +3744,23 @@
             const particlesToggle = document.getElementById('toggle-particles');
             const cubeToggle = document.getElementById('toggle-cube-rotation');
             
-            console.log('Initializing toggles:', { particlesToggle, cubeToggle });
-            
             // Initialize global variables
             window.autoRotateEnabled = true;
             
             if (particlesToggle) {
                 particlesToggle.addEventListener('change', e => {
-                    console.log('Particles toggle changed:', e.target.checked);
                     if (window.particlesInstance) {
                         try {
                             e.target.checked ? window.particlesInstance.play() : window.particlesInstance.pause();
                         } catch (error) {
-                            console.warn('Particles toggle error:', error);
-                        }
+                            }
                     } else {
-                        console.warn('Particles instance not found');
-                    }
+                        }
                 });
             }
             
             if (cubeToggle) {
                 cubeToggle.addEventListener('change', e => {
-                    console.log('Cube toggle changed:', e.target.checked);
                     window.autoRotateEnabled = e.target.checked;
                 });
             }
@@ -3837,8 +3787,7 @@
                 initCookieConsent();
                 initToggles();
             } catch (error) {
-                console.error('Initialization error:', error);
-            }
+                }
             
             // --- Legal Page & Modal Logic ---
             const legalLinks = document.querySelectorAll('.legal-link');
@@ -3907,7 +3856,6 @@
                 const href = link.getAttribute('href');
                 if (href && href.startsWith('#')) {
                     const pageId = href.substring(1);
-                    console.log('Legal link clicked:', pageId);
                     showPage(pageId);
                 }
             }));
@@ -3928,7 +3876,6 @@
             if (launchAppBtn) {
                 launchAppBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log('Launch App button clicked');
                     window.location.href = 'app.html';
                 });
             }
@@ -3937,7 +3884,6 @@
             if (learnMoreBtn) {
                 learnMoreBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log('Learn More button clicked');
                     const featuresSection = document.getElementById('features');
                     if (featuresSection) {
                         featuresSection.scrollIntoView({ behavior: 'smooth' });
@@ -3949,7 +3895,6 @@
             document.querySelectorAll('a[href="app.html"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log('CTA button clicked');
                     window.location.href = 'app.html';
                 });
             });
@@ -3959,12 +3904,9 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const targetId = link.getAttribute('href').substring(1);
-                    
-                    
-                    
+
                     const targetElement = document.getElementById(targetId);
                     if (targetElement) {
-                        console.log('Navigating to:', targetId);
                         targetElement.scrollIntoView({ behavior: 'smooth' });
                     }
                 });
@@ -3978,7 +3920,6 @@
                         const targetId = link.getAttribute('href').substring(1);
                         const targetElement = document.getElementById(targetId);
                         if (targetElement) {
-                            console.log('Navigating to:', targetId);
                             targetElement.scrollIntoView({ behavior: 'smooth' });
                         }
                     });
@@ -4003,14 +3944,11 @@
                         const perfData = performance.getEntriesByType('navigation')[0];
                         if (perfData) {
                             const loadTime = Math.round(perfData.loadEventEnd - perfData.loadEventStart);
-                            console.log('🚀 Page loaded in', loadTime, 'ms');
-                        }
+                            }
                     }, 1000);
                 });
             }
 
-            console.log('🚀 Operator Uplift Landing Page Loaded Successfully!');
-            
             // Scroll to top functionality
             const scrollToTopBtn = document.querySelector('.scroll-to-top');
             if (scrollToTopBtn) {
@@ -4244,8 +4182,6 @@
     <div id="privacy" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Privacy Policy" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Privacy Policy</h2><p><strong>Last updated: July 28, 2025</strong></p><p>This Privacy Policy describes how Operator Uplift ("we," "us," or "our") collects, uses, and discloses your information when you use our website and services (collectively, the "Service").</p><h3>1. Information We Collect</h3><p><strong>Personal Information:</strong> When you create an account, we collect your email address, display name, and any other information you choose to provide.</p><p><strong>Usage Data:</strong> We collect information about how you use our Service, including your goals, progress, achievements, and interactions with AI features.</p><p><strong>Technical Data:</strong> We automatically collect certain technical information, including your IP address, browser type, device information, and usage patterns.</p><h3>2. How We Use Your Information</h3><p>We use the information we collect to:</p><ul><li>Provide, maintain, and improve our Service</li><li>Personalize your experience and provide AI-powered recommendations</li><li>Process your goals, track progress, and manage achievements</li><li>Send you important updates about the Service</li><li>Respond to your comments, questions, and support requests</li><li>Analyze usage patterns to improve our Service</li><li>Ensure the security and integrity of our Service</li></ul><h3>3. Data Sharing and Disclosure</h3><p>We do not sell, trade, or rent your personal information to third parties. We may share your information in the following circumstances:</p><ul><li><strong>Service Providers:</strong> We use trusted third-party services (Firebase, Netlify, AI providers) to operate our Service</li><li><strong>Legal Requirements:</strong> We may disclose information if required by law or to protect our rights</li><li><strong>Business Transfers:</strong> In the event of a merger or acquisition, your information may be transferred</li><li><strong>Community Features:</strong> Some information may be visible to other users in community features (with your consent)</li></ul><h3>4. Data Security</h3><p>We implement appropriate security measures to protect your personal information:</p><ul><li>Encryption of data in transit and at rest</li><li>Secure authentication and authorization</li><li>Regular security assessments and updates</li><li>Access controls and monitoring</li></ul><p>However, no method of transmission over the Internet is 100% secure. We cannot guarantee absolute security.</p><h3>5. Your Rights and Choices</h3><p>You have the following rights regarding your personal information:</p><ul><li><strong>Access:</strong> Request a copy of your personal information</li><li><strong>Correction:</strong> Update or correct inaccurate information</li><li><strong>Deletion:</strong> Request deletion of your account and data</li><li><strong>Portability:</strong> Export your data in a machine-readable format</li><li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li></ul><p>To exercise these rights, contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p><h3>6. AI and Data Processing</h3><p>Our Service uses AI to provide personalized recommendations and assistance. Your goals, progress, and interactions may be processed by AI systems to improve your experience. We ensure AI processing complies with our privacy standards.</p><h3>7. Cookies and Tracking</h3><p>We use essential cookies to make our Service work properly. We do not use tracking cookies for advertising purposes. You can control cookie settings through your browser.</p><h3>8. Children's Privacy</h3><p>Our Service is not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected such information, please contact us immediately.</p><h3>9. International Data Transfers</h3><p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers.</p><h3>10. Changes to This Policy</h3><p>We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the new policy on this page or sending you an email.</p><h3>11. Contact Us</h3><p>If you have questions about this Privacy Policy or our data practices, please contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p></div></div></div>
     <div id="cookies" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Cookie Policy" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Cookie Policy</h2><p>Last updated: July 28, 2025</p><p>This Cookie Policy explains what cookies are and how we use them on the Operator Uplift website.</p><h3>What Are Cookies?</h3><p>Cookies are small text files that are placed on your computer or mobile device when you visit a website. They are widely used to make websites work, or work more efficiently, as well as to provide information to the owners of the site.</p><h3>How We Use Cookies</h3><p>We use cookies for a very limited and specific purpose:</p><ul><li><strong>Essential Cookies:</strong> We use one essential cookie to remember your choice regarding our cookie consent banner. This is a functional cookie that allows us to know whether you have accepted or declined our cookie policy, so we don't have to ask you on every visit.</li></ul><p>At this time, we do not use any cookies for analytics, advertising, or tracking purposes.</p><h3>Your Choices Regarding Cookies</h3><p>When you first visit our site, you are presented with a banner allowing you to accept or decline our use of cookies. If you decline, the functional cookie to remember your choice will still be set. Most web browsers allow some control of most cookies through the browser settings. To find out more about cookies, including how to see what cookies have been set, visit <a href="https://www.aboutcookies.org" target="_blank" rel="noopener noreferrer">www.aboutcookies.org</a> or <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer">www.allaboutcookies.org</a>.</p><h3>Changes to This Cookie Policy</h3><p>We may update this Cookie Policy in the future if we introduce new cookies or change how we use them. Any changes will be posted on this page.</p></div></div></div>
 
-
-
     <!-- Cookie Consent Banner -->
     <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 p-4 z-[9999] hidden">
         <div class="glass-card container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-lg">
@@ -4393,8 +4329,7 @@
             const observer = new PerformanceObserver((list) => {
                 for (const entry of list.getEntries()) {
                     if (entry.entryType === 'largest-contentful-paint') {
-                        console.log('LCP:', entry.startTime);
-                    }
+                        }
                 }
             });
             observer.observe({ entryTypes: ['largest-contentful-paint'] });
@@ -4402,12 +4337,10 @@
         
         // Error tracking
         window.addEventListener('error', (e) => {
-            console.error('Page error:', e.error);
             e.preventDefault();
         });
         
         window.addEventListener('unhandledrejection', (e) => {
-            console.error('Unhandled promise rejection:', e.reason);
             e.preventDefault();
             });
         });

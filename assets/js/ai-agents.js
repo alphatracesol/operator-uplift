@@ -453,7 +453,6 @@ class AIAgentManager {
         const missing = required.filter(field => !userData[field]);
         
         if (missing.length > 0) {
-            console.warn('Missing user data for AI analysis:', missing);
             return false;
         }
         

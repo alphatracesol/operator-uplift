@@ -22,8 +22,7 @@ const colors = {
 };
 
 function log(message, color = 'reset') {
-  console.log(`${colors[color]}${message}${colors.reset}`);
-}
+  }
 
 function logStep(step) {
   log(`\n${colors.bright}${colors.blue}=== ${step} ===${colors.reset}`);
@@ -257,7 +256,6 @@ function main() {
     
   } catch (error) {
     logError('Build process failed');
-    console.error(error);
     process.exit(1);
   }
 }
