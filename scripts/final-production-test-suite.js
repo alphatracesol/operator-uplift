@@ -433,12 +433,10 @@ const FinalProductionTestSuite = {
             recommendations: this.generateRecommendations()
         };
         
-        }s`);
-        `);
         // Log category results
         categories.forEach(category => {
             const cat = this.testResults[category];
-            `);
+            console.log(`${category}: ${cat.passed}/${cat.total} (${cat.percentage}%)`);
         });
         
         // Store report for access

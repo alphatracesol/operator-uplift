@@ -73,7 +73,7 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     const strategy = getCacheStrategy(url);
     
-    `);
+    console.log(`📡 Fetch: ${url.pathname} (${strategy})`);
     
     switch (strategy) {
         case 'cache-first':
