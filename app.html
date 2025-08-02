@@ -5900,7 +5900,7 @@ Provide the response in this exact JSON format:
                         }
                         
                         try {
-                            const response = await fetch('/.netlify/functions/ai-proxy', {
+                            const response = await fetch('/netlify/functions/ai-proxy', {
                                 method: 'POST',
                                 headers: { 
                                     'Content-Type': 'application/json',
@@ -6032,7 +6032,7 @@ Provide the response in this exact JSON format:
                     // Get available AI providers
                     async getAvailableProviders() {
                         try {
-                            const response = await fetch('/.netlify/functions/ai-proxy/health');
+                            const response = await fetch('/netlify/functions/ai-proxy/health');
                             if (response.ok) {
                                 const result = await response.json();
                                 return result.providers.filter(p => p.configured).map(p => p.name);
