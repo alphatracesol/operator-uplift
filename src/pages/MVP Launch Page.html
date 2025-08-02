@@ -24,9 +24,9 @@
     <link rel="canonical" href="https://your-site-name.netlify.app/mvp">
     
     <!-- Security & Accessibility Utilities -->
-    <script src="security-utils.js"></script>
-    <script src="accessibility-audit.js"></script>
-    <script src="pwa-enhancer.js"></script>
+    <script src="../../security-utils.js"></script>
+    <script src="../../accessibility-audit.js"></script>
+    <script src="../../pwa-enhancer.js"></script>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -52,8 +52,8 @@
             const pwaEnhancer = new PWAEnhancer();
             
             // Log PWA status and performance metrics
-            );
-            );
+            console.log('PWA Status:', pwaEnhancer.getStatus());
+            console.log('Performance:', performance.now());
             
             // GDPR cookie consent
             if (!localStorage.getItem('cookieConsent')) {
@@ -1148,7 +1148,7 @@
     </footer>
 
     <!-- Security Utilities -->
-    <script src="security-utils.js"></script>
+    <script src="../../security-utils.js"></script>
     
     <script>
         // Navbar scroll effect
