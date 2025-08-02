@@ -117,7 +117,7 @@ git push origin main
    - Publish directory: `.`
 3. **Set Environment Variables**:
    ```
-   FIREBASE_API_KEY=AIzaSyCUVSEKUKC_suEIVuguflAus1zM7b0E3NY
+   FIREBASE_API_KEY=your_firebase_api_key_here
    FIREBASE_AUTH_DOMAIN=operatoruplift-12b92.firebaseapp.com
    FIREBASE_PROJECT_ID=operatoruplift-12b92
    FIREBASE_STORAGE_BUCKET=operatoruplift-12b92.firebasestorage.app

@@ -110,13 +110,13 @@
 # Environment Variables (set these in Netlify dashboard)
 [context.production.environment]
   NODE_ENV = "production"
-  FIREBASE_API_KEY = "AIzaSyCUVSEKUKC_suEIVuguflAus1zM7b0E3NY"
-  FIREBASE_AUTH_DOMAIN = "operatoruplift-12b92.firebaseapp.com"
-  FIREBASE_PROJECT_ID = "operatoruplift-12b92"
-  FIREBASE_STORAGE_BUCKET = "operatoruplift-12b92.firebasestorage.app"
-  FIREBASE_MESSAGING_SENDER_ID = "414885610296"
-  FIREBASE_APP_ID = "1:414885610296:web:5195fb67878457ddd137cd"
-  FIREBASE_MEASUREMENT_ID = "G-JT3N5NX378"
+  # FIREBASE_API_KEY = "your_firebase_api_key_here"
+  # FIREBASE_AUTH_DOMAIN = "your_project.firebaseapp.com"
+  # FIREBASE_PROJECT_ID = "your_project_id"
+  # FIREBASE_STORAGE_BUCKET = "your_project.appspot.com"
+  # FIREBASE_MESSAGING_SENDER_ID = "your_sender_id"
+  # FIREBASE_APP_ID = "your_app_id"
+  # FIREBASE_MEASUREMENT_ID = "your_measurement_id"
 
 [context.deploy-preview.environment]
   NODE_ENV = "preview"

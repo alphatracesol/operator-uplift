@@ -9667,22 +9667,35 @@ Provide the response in this exact JSON format:
                 }
             };
 
-                // 4. Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyCUVSEKUKC_suEIVuguflAus1zM7b0E3NY",
-        authDomain: "operatoruplift-12b92.firebaseapp.com",
-        projectId: "operatoruplift-12b92",
-        storageBucket: "operatoruplift-12b92.firebasestorage.app",
-        messagingSenderId: "414885610296",
-        appId: "1:414885610296:web:5195fb67878457ddd137cd",
-        measurementId: "G-JT3N5NX378"
-    };
+                // 4. Firebase Configuration - Loaded from Netlify function
+    let firebaseConfig = null;
+    
+    // Load Firebase config from Netlify function
+    async function loadFirebaseConfig() {
+        try {
+            const response = await fetch('/.netlify/functions/config');
+            if (!response.ok) {
+                throw new Error('Failed to load Firebase configuration');
+            }
+            const data = await response.json();
+            firebaseConfig = data.firebaseConfig;
+            
+            // Initialize Firebase with loaded config
+            if (firebaseConfig) {
+                const app = initializeApp(firebaseConfig);
+                return app;
+            } else {
+                throw new Error('Invalid Firebase configuration');
+            }
+        } catch (error) {
+            console.error('Error loading Firebase config:', error);
+            throw error;
+        }
+    }
 
     // 5. VAPID Keys for Push Notifications (Production Ready)
-    const VAPID_CONFIG = {
-                        publicKey: VAPID_CONFIG.publicKey, // Uses environment variable or placeholder
-                privateKey: VAPID_CONFIG.privateKey // Uses environment variable or placeholder
-    };
+    // VAPID keys are loaded from environment variables via vapid-config.js
+    // This ensures no hardcoded keys are exposed in the repository
 
             // === PHASE 2: CORE ENHANCEMENTS ===
             

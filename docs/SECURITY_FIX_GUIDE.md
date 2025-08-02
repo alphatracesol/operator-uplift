@@ -2,7 +2,7 @@
 
 ## 🚨 CRITICAL SECURITY ISSUE DETECTED
 
-Your Firebase API key `AIzaSyCUVSEKUKC_suEIVuguflAus1zM7b0E3NY` has been exposed in the browser console. This is a **CRITICAL SECURITY VULNERABILITY** that needs **IMMEDIATE ACTION**.
+Your Firebase API key has been exposed in the browser console. This is a **CRITICAL SECURITY VULNERABILITY** that needs **IMMEDIATE ACTION**.
 
 ## ⚡ IMMEDIATE ACTIONS REQUIRED (DO THIS NOW)
 

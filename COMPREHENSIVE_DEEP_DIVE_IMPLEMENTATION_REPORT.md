@@ -29,7 +29,7 @@ All requested deep dive improvements have been successfully implemented, includi
 - **Configuration**:
   ```javascript
   const firebaseConfig = {
-      apiKey: "AIzaSyCUVSEKUKC_suEIVuguflAus1zM7b0E3NY",
+      apiKey: "your_firebase_api_key_here",
       authDomain: "operatoruplift-12b92.firebaseapp.com",
       projectId: "operatoruplift-12b92",
       storageBucket: "operatoruplift-12b92.firebasestorage.app",
