@@ -135,9 +135,9 @@
                 <link rel="preload" href="https://images.pexels.com/photos/10988021/pexels-photo-10988021.jpeg" as="image" fetchpriority="high">
                 
                 <!-- Security & Accessibility Utilities -->
-                <script src="security-utils.js"></script>
-                <script src="accessibility-audit.js"></script>
-                <script src="pwa-enhancer.js"></script>
+                <script src="scripts/security-utils.js"></script>
+                <script src="scripts/accessibility-audit.js"></script>
+                <script src="scripts/pwa-enhancer.js"></script>
                 
                 <!-- Service Worker for caching -->
                 <script>
@@ -4325,30 +4325,31 @@
             document.body.addEventListener('keydown', () => document.body.dataset.input = 'keyboard');
 
             // --- Performance monitoring ---
-        if ('PerformanceObserver' in window) {
-            const observer = new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                    if (entry.entryType === 'largest-contentful-paint') {
+            if ('PerformanceObserver' in window) {
+                const observer = new PerformanceObserver((list) => {
+                    for (const entry of list.getEntries()) {
+                        if (entry.entryType === 'largest-contentful-paint') {
+                            // LCP monitoring
                         }
-                }
+                    }
+                });
+                observer.observe({ entryTypes: ['largest-contentful-paint'] });
+            }
+            
+            // Error tracking
+            window.addEventListener('error', (e) => {
+                e.preventDefault();
             });
-            observer.observe({ entryTypes: ['largest-contentful-paint'] });
-        }
-        
-        // Error tracking
-        window.addEventListener('error', (e) => {
-            e.preventDefault();
-        });
-        
-        window.addEventListener('unhandledrejection', (e) => {
-            e.preventDefault();
+            
+            window.addEventListener('unhandledrejection', (e) => {
+                e.preventDefault();
             });
-        });
 
-        // Initialize 100% Enhancement Suite
-        if (window.HundredPercentEnhancement) {
-            HundredPercentEnhancement.init();
-        }
+            // Initialize 100% Enhancement Suite
+            if (window.HundredPercentEnhancement) {
+                HundredPercentEnhancement.init();
+            }
+        });
     </script>
 
     <!-- Ripple effect styles -->
