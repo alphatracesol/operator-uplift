@@ -97,12 +97,6 @@
   to = "/MVP Launch Page.html"
   status = 200
 
-# SPA fallback
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
 # Functions
 [functions]
   directory = "netlify/functions"
