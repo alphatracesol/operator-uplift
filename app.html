@@ -3198,7 +3198,17 @@
                                 uid: user.uid, email: user.email, displayName: name, createdAt: serverTimestamp(),
                                 stats: { points: 0, level: 1, currentStreak: 0, lastCompletedDate: null, totalGoals: 0, completedGoals: 0, dailyCompletions: {}, bestStreak: 0, bestDay: { date: null, count: 0 }, lastLogin: null, tasksUntilChest: 10, energy: { value: 100, lastUpdated: new Date().toISOString() }, aiCredits: 5 },
                                 achievements: [], inventory: { streakProtection: 0, unlockedThemes: [] },
-                                settings: { theme: 'dark', colorScheme: 'Firewall Flare', motivationalStyle: 'Mentor', aiProvider: 'gemini' },
+                                settings: { 
+                                    theme: 'dark', 
+                                    colorScheme: 'Firewall Flare', 
+                                    motivationalStyle: 'Mentor', 
+                                    aiProvider: 'gemini',
+                                    aiPreferences: {
+                                        defaultProvider: 'gemini',
+                                        personalizedResponses: true,
+                                        learningEnabled: true
+                                    }
+                                },
                                 moods: {},
                                 characterStats: { discipline: 0, creativity: 0, focus: 0, wellness: 0 },
                                 journeys: {},
@@ -3375,6 +3385,14 @@
                                     app.ui.applyUserSettings();
                                     app.gamification.dailyLogin();
                                     app.gamification.startEnergySystem();
+                                    
+                                    // Initialize AI profile for new users
+                                    if (app.state.userData.isNewUser || !app.state.userData.settings?.aiPreferences) {
+                                        app.ai.initializeAIProfile(app.state.userData).catch(error => {
+                                            console.error('Error initializing AI profile:', error);
+                                        });
+                                    }
+                                    
                                     app.router.navigateTo('dashboard');
                                     app.ui.showToast(`Welcome back, ${app.state.userData.displayName}!`, 'success');
                                     
@@ -5849,12 +5867,17 @@ Provide the response in this exact JSON format:
 
                 // --- ENHANCED AI SYSTEM WITH MULTIPLE PROVIDERS ---
                 ai: {
-                    async call(messages, provider = null, fallbackProvider = null) {
-                        if (!app.state.userData) throw new Error("User not loaded.");
-                        
-                        // Use provided provider or default from settings
-                        const selectedProvider = provider || app.state.userData.settings.aiProvider || 'gemini';
-                        const fallback = fallbackProvider || this.selectFallbackProvider(selectedProvider);
+                                    async call(messages, provider = null, fallbackProvider = null, requestType = 'default') {
+                    if (!app.state.userData) throw new Error("User not loaded.");
+                    
+                    // Get user profile for personalized AI selection
+                    const userProfile = app.state.userData.profile || null;
+                    
+                    // Use provided provider, user preference, or smart selection based on profile
+                    const selectedProvider = provider || 
+                                           app.state.userData.settings?.aiProvider || 
+                                           this.selectProvider(requestType, userProfile);
+                    const fallback = fallbackProvider || this.selectFallbackProvider(selectedProvider);
                         
                         if (!selectedProvider || selectedProvider === 'none') {
                             throw new Error("No AI provider selected in settings.");
@@ -5919,16 +5942,32 @@ Provide the response in this exact JSON format:
                         }
                     },
 
-                    // Smart provider selection based on request type
-                    selectProvider(requestType) {
+                    // Smart provider selection based on request type and user profile
+                    selectProvider(requestType, userProfile = null) {
+                        // Default to Gemini for new users and general requests
+                        const defaultProvider = 'gemini';
+                        
+                        // If no user profile or user is new, use Gemini as default
+                        if (!userProfile || !userProfile.aiPreferences) {
+                            return defaultProvider;
+                        }
+                        
+                        // Use user's preferred provider if available
+                        if (userProfile.aiPreferences.defaultProvider) {
+                            return userProfile.aiPreferences.defaultProvider;
+                        }
+                        
+                        // Smart provider selection based on request type and user personality
                         const providerMap = {
-                            'motivation': 'claude', // Claude is great for motivation
-                            'advice': 'gpt', // GPT is good for general advice
-                            'goal-breakdown': 'gemini', // Gemini is good for structured tasks
-                            'productivity': 'perplexity', // Perplexity is good for research
-                            'creative': 'xai', // xAI is good for creative tasks
-                            'analysis': 'deepseek', // DeepSeek is good for analysis
-                            'default': 'gemini'
+                            'motivation': userProfile.personality?.extroverted ? 'claude' : 'gemini',
+                            'advice': userProfile.personality?.analytical ? 'deepseek' : 'gpt',
+                            'goal-breakdown': 'gemini', // Gemini excels at structured tasks
+                            'productivity': userProfile.personality?.detailOriented ? 'perplexity' : 'gemini',
+                            'creative': userProfile.personality?.creative ? 'xai' : 'claude',
+                            'analysis': 'deepseek', // DeepSeek is best for analysis
+                            'coaching': userProfile.personality?.extroverted ? 'claude' : 'gemini',
+                            'planning': 'gemini', // Gemini is excellent for planning
+                            'default': defaultProvider
                         };
                         
                         return providerMap[requestType] || providerMap.default;
@@ -5946,6 +5985,48 @@ Provide the response in this exact JSON format:
                         };
                         
                         return fallbackMap[primaryProvider] || 'gemini';
+                    },
+
+                    // Build personality context for AI interactions
+                    buildPersonalityContext(userProfile) {
+                        if (!userProfile || !userProfile.personality) {
+                            return "This is a new user. Provide encouraging, clear guidance.";
+                        }
+                        
+                        const personality = userProfile.personality;
+                        let context = "User personality profile: ";
+                        
+                        if (personality.extroverted) {
+                            context += "Extroverted and social. ";
+                        } else {
+                            context += "Introverted and reflective. ";
+                        }
+                        
+                        if (personality.analytical) {
+                            context += "Analytical and logical thinker. ";
+                        }
+                        
+                        if (personality.creative) {
+                            context += "Creative and innovative. ";
+                        }
+                        
+                        if (personality.detailOriented) {
+                            context += "Detail-oriented and thorough. ";
+                        }
+                        
+                        if (personality.goalOriented) {
+                            context += "Goal-oriented and driven. ";
+                        }
+                        
+                        if (personality.learningStyle) {
+                            context += `Prefers ${personality.learningStyle} learning. `;
+                        }
+                        
+                        if (personality.motivationType) {
+                            context += `Motivated by ${personality.motivationType}. `;
+                        }
+                        
+                        return context + "Tailor your response to match their personality and preferences.";
                     },
 
                     // Get available AI providers
@@ -6035,12 +6116,14 @@ Provide the response in this exact JSON format:
 
                     async requestMotivation() {
                         try {
+                            const userProfile = app.state.userData.profile || {};
+                            const personalityContext = this.buildPersonalityContext(userProfile);
+                            
                             const messages = [
-                                { role: 'system', content: 'You are a motivational coach. Provide a short, inspiring message to help the user stay motivated and focused on their goals.' },
-                                { role: 'user', content: `User: ${app.state.userData.displayName}, Current Level: ${app.state.userData.stats.level}, Streak: ${app.state.userData.stats.currentStreak} days. Provide motivation.` }
+                                { role: 'system', content: `You are a personalized motivational coach. ${personalityContext} Provide a short, inspiring message tailored to this user's personality and current situation.` },
+                                { role: 'user', content: `User: ${app.state.userData.displayName}, Current Level: ${app.state.userData.stats.level}, Streak: ${app.state.userData.stats.currentStreak} days. Provide personalized motivation.` }
                             ];
-                            const provider = this.selectProvider('motivation');
-                            const response = await this.call(messages, provider);
+                            const response = await this.call(messages, null, null, 'motivation');
                             app.ui.showToast(response, 'info');
                         } catch (error) {
                             app.ui.showToast('Unable to get motivation right now. Keep pushing forward!', 'warning');
@@ -6049,12 +6132,14 @@ Provide the response in this exact JSON format:
 
                     async requestAdvice() {
                         try {
+                            const userProfile = app.state.userData.profile || {};
+                            const personalityContext = this.buildPersonalityContext(userProfile);
+                            
                             const messages = [
-                                { role: 'system', content: 'You are a productivity coach. Provide practical advice for improving productivity and achieving goals.' },
-                                { role: 'user', content: `User: ${app.state.userData.displayName}. Provide actionable productivity advice.` }
+                                { role: 'system', content: `You are a personalized productivity coach. ${personalityContext} Provide practical advice tailored to this user's personality and current goals.` },
+                                { role: 'user', content: `User: ${app.state.userData.displayName}. Provide personalized productivity advice.` }
                             ];
-                            const provider = this.selectProvider('advice');
-                            const response = await this.call(messages, provider);
+                            const response = await this.call(messages, null, null, 'advice');
                             app.ui.showToast(response, 'info');
                         } catch (error) {
                             app.ui.showToast('Unable to get advice right now. Try again later!', 'warning');
@@ -6069,13 +6154,15 @@ Provide the response in this exact JSON format:
                                 return;
                             }
                             
+                            const userProfile = app.state.userData.profile || {};
+                            const personalityContext = this.buildPersonalityContext(userProfile);
                             const goal = activeGoals[0]; // Use first active goal
+                            
                             const messages = [
-                                { role: 'system', content: 'You are a goal-setting expert. Break down the given goal into 3-5 specific, actionable tasks.' },
+                                { role: 'system', content: `You are a personalized goal-setting expert. ${personalityContext} Break down the given goal into 3-5 specific, actionable tasks tailored to this user's personality and preferences.` },
                                 { role: 'user', content: `Goal: ${goal.title}\nDescription: ${goal.description}\nCategory: ${goal.category}\n\nBreak this down into specific tasks.` }
                             ];
-                            const provider = this.selectProvider('goal-breakdown');
-                            const response = await this.call(messages, provider);
+                            const response = await this.call(messages, null, null, 'goal-breakdown');
                             
                             // Show breakdown in a modal or toast
                             app.ui.showConfirm('Goal Breakdown', response, () => {
@@ -6096,15 +6183,80 @@ Provide the response in this exact JSON format:
                         };
                         
                         try {
+                            const userProfile = app.state.userData.profile || {};
+                            const personalityContext = this.buildPersonalityContext(userProfile);
+                            
                             const messages = [
-                                { role: 'system', content: 'You are a helpful AI mentor. Provide concise, actionable advice.' },
+                                { role: 'system', content: `You are a personalized AI mentor. ${personalityContext} Provide concise, actionable advice tailored to this user.` },
                                 { role: 'user', content: questions[type] }
                             ];
-                            const response = await this.call(messages);
+                            const response = await this.call(messages, null, null, type);
                             app.ui.showToast(response, 'info');
                         } catch (error) {
                             app.ui.showToast('Unable to get response right now. Try again later!', 'warning');
                         }
+                    },
+
+                    // Initialize AI preferences for new users
+                    async initializeAIProfile(userData) {
+                        try {
+                            // Set Gemini as default provider for new users
+                            if (!userData.settings?.aiProvider) {
+                                await app.firestore.updateUserData({
+                                    'settings.aiProvider': 'gemini',
+                                    'settings.aiPreferences': {
+                                        defaultProvider: 'gemini',
+                                        personalizedResponses: true,
+                                        learningEnabled: true
+                                    }
+                                });
+                            }
+                            
+                            // Create AI personality profile based on onboarding data
+                            if (userData.profile && !userData.profile.aiPersonality) {
+                                const aiPersonality = this.generateAIPersonality(userData.profile);
+                                await app.firestore.updateUserData({
+                                    'profile.aiPersonality': aiPersonality
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Error initializing AI profile:', error);
+                        }
+                    },
+
+                    // Generate AI personality based on user profile
+                    generateAIPersonality(userProfile) {
+                        const personality = userProfile.personality || {};
+                        
+                        let aiPersonality = {
+                            communicationStyle: 'encouraging',
+                            responseLength: 'concise',
+                            focusAreas: ['productivity', 'goal-setting'],
+                            preferredApproach: 'structured'
+                        };
+                        
+                        // Adjust based on personality traits
+                        if (personality.extroverted) {
+                            aiPersonality.communicationStyle = 'energetic';
+                        } else {
+                            aiPersonality.communicationStyle = 'calm';
+                        }
+                        
+                        if (personality.analytical) {
+                            aiPersonality.responseLength = 'detailed';
+                            aiPersonality.preferredApproach = 'analytical';
+                        }
+                        
+                        if (personality.creative) {
+                            aiPersonality.focusAreas.push('creativity');
+                            aiPersonality.preferredApproach = 'innovative';
+                        }
+                        
+                        if (personality.detailOriented) {
+                            aiPersonality.responseLength = 'comprehensive';
+                        }
+                        
+                        return aiPersonality;
                     }
                 },
 
