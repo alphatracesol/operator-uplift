@@ -2956,7 +2956,7 @@
                 // --- INITIALIZATION ---
                 async init() {
                     try {
-                        const response = await fetch('/.netlify/functions/config');
+                        const response = await fetch('/netlify/functions/config');
                         if (!response.ok) {
                             throw new Error(`Failed to fetch Firebase config: ${response.status} ${response.statusText}`);
                         }
@@ -9673,7 +9673,7 @@ Provide the response in this exact JSON format:
     // Load Firebase config from Netlify function
     async function loadFirebaseConfig() {
         try {
-            const response = await fetch('/.netlify/functions/config');
+            const response = await fetch('/netlify/functions/config');
             if (!response.ok) {
                 throw new Error('Failed to load Firebase configuration');
             }
