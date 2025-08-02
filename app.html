@@ -5847,12 +5847,16 @@ Provide the response in this exact JSON format:
                     }
                 },
 
-                // --- ENHANCED AI SYSTEM WITH SECURITY & SYNC ---
+                // --- ENHANCED AI SYSTEM WITH MULTIPLE PROVIDERS ---
                 ai: {
-                    async call(messages) {
+                    async call(messages, provider = null, fallbackProvider = null) {
                         if (!app.state.userData) throw new Error("User not loaded.");
-                        const provider = app.state.userData.settings.aiProvider;
-                        if (!provider || provider === 'none') {
+                        
+                        // Use provided provider or default from settings
+                        const selectedProvider = provider || app.state.userData.settings.aiProvider || 'gemini';
+                        const fallback = fallbackProvider || this.selectFallbackProvider(selectedProvider);
+                        
+                        if (!selectedProvider || selectedProvider === 'none') {
                             throw new Error("No AI provider selected in settings.");
                         }
                         
@@ -5873,37 +5877,89 @@ Provide the response in this exact JSON format:
                         }
                         
                         try {
-                        const response = await fetch('/.netlify/functions/ai-proxy', {
-                            method: 'POST',
+                            const response = await fetch('/.netlify/functions/ai-proxy', {
+                                method: 'POST',
                                 headers: { 
                                     'Content-Type': 'application/json',
                                     'Authorization': `Bearer ${await app.auth.getAuthToken()}`
                                 },
                                 body: JSON.stringify({ 
-                                    provider, 
+                                    provider: selectedProvider,
+                                    fallbackProvider: fallback,
                                     messages,
                                     userId: app.state.currentUser.uid,
                                     timestamp: new Date().toISOString()
                                 })
-                        });
+                            });
 
-                        const data = await response.json();
+                            const data = await response.json();
 
-                        if (!response.ok) {
-                            throw new Error(data.error || 'AI proxy request failed.');
-                        }
+                            if (!response.ok) {
+                                throw new Error(data.error || 'AI proxy request failed.');
+                            }
                             
-                            // Log AI interaction
-                            await this.logInteraction('chat', messages, data.response);
+                            // Log AI interaction with provider info
+                            await this.logInteraction('chat', messages, data.data.content, data.data.provider);
                             
                             // Deduct AI credit
                             await app.firestore.updateUserData({ 'stats.aiCredits': increment(-1) });
+                            
+                            // Log which provider was used
+                            if (data.fallback) {
+                                console.log(`AI request used fallback provider: ${data.data.provider} (original: ${data.originalProvider})`);
+                            } else {
+                                console.log(`AI request successful with provider: ${data.data.provider}`);
+                            }
                         
-                        return data.response;
+                            return data.data.content;
                         } catch (error) {
                             // Log failed interaction
-                            await this.logInteraction('error', messages, error.message);
+                            await this.logInteraction('error', messages, error.message, selectedProvider);
                             throw error;
+                        }
+                    },
+
+                    // Smart provider selection based on request type
+                    selectProvider(requestType) {
+                        const providerMap = {
+                            'motivation': 'claude', // Claude is great for motivation
+                            'advice': 'gpt', // GPT is good for general advice
+                            'goal-breakdown': 'gemini', // Gemini is good for structured tasks
+                            'productivity': 'perplexity', // Perplexity is good for research
+                            'creative': 'xai', // xAI is good for creative tasks
+                            'analysis': 'deepseek', // DeepSeek is good for analysis
+                            'default': 'gemini'
+                        };
+                        
+                        return providerMap[requestType] || providerMap.default;
+                    },
+
+                    // Select fallback provider
+                    selectFallbackProvider(primaryProvider) {
+                        const fallbackMap = {
+                            'gemini': 'claude',
+                            'claude': 'gpt',
+                            'gpt': 'gemini',
+                            'perplexity': 'deepseek',
+                            'deepseek': 'perplexity',
+                            'xai': 'claude'
+                        };
+                        
+                        return fallbackMap[primaryProvider] || 'gemini';
+                    },
+
+                    // Get available AI providers
+                    async getAvailableProviders() {
+                        try {
+                            const response = await fetch('/.netlify/functions/ai-proxy/health');
+                            if (response.ok) {
+                                const result = await response.json();
+                                return result.providers.filter(p => p.configured).map(p => p.name);
+                            }
+                            return ['gemini']; // fallback
+                        } catch (error) {
+                            console.error('Error getting available providers:', error);
+                            return ['gemini']; // fallback
                         }
                     },
 
@@ -5960,7 +6016,7 @@ Provide the response in this exact JSON format:
                         );
                     },
 
-                    async logInteraction(type, input, output) {
+                    async logInteraction(type, input, output, provider = null) {
                         try {
                             const interactionData = {
                                 userId: app.state.currentUser.uid,
@@ -5968,7 +6024,7 @@ Provide the response in this exact JSON format:
                                 input: input,
                                 output: output,
                                 timestamp: serverTimestamp(),
-                                provider: app.state.userData.settings.aiProvider
+                                provider: provider || app.state.userData.settings.aiProvider
                             };
                             
                             await addDoc(collection(db, 'aiInteractions'), interactionData);
@@ -5983,7 +6039,8 @@ Provide the response in this exact JSON format:
                                 { role: 'system', content: 'You are a motivational coach. Provide a short, inspiring message to help the user stay motivated and focused on their goals.' },
                                 { role: 'user', content: `User: ${app.state.userData.displayName}, Current Level: ${app.state.userData.stats.level}, Streak: ${app.state.userData.stats.currentStreak} days. Provide motivation.` }
                             ];
-                            const response = await this.call(messages);
+                            const provider = this.selectProvider('motivation');
+                            const response = await this.call(messages, provider);
                             app.ui.showToast(response, 'info');
                         } catch (error) {
                             app.ui.showToast('Unable to get motivation right now. Keep pushing forward!', 'warning');
@@ -5996,7 +6053,8 @@ Provide the response in this exact JSON format:
                                 { role: 'system', content: 'You are a productivity coach. Provide practical advice for improving productivity and achieving goals.' },
                                 { role: 'user', content: `User: ${app.state.userData.displayName}. Provide actionable productivity advice.` }
                             ];
-                            const response = await this.call(messages);
+                            const provider = this.selectProvider('advice');
+                            const response = await this.call(messages, provider);
                             app.ui.showToast(response, 'info');
                         } catch (error) {
                             app.ui.showToast('Unable to get advice right now. Try again later!', 'warning');
@@ -6016,7 +6074,8 @@ Provide the response in this exact JSON format:
                                 { role: 'system', content: 'You are a goal-setting expert. Break down the given goal into 3-5 specific, actionable tasks.' },
                                 { role: 'user', content: `Goal: ${goal.title}\nDescription: ${goal.description}\nCategory: ${goal.category}\n\nBreak this down into specific tasks.` }
                             ];
-                            const response = await this.call(messages);
+                            const provider = this.selectProvider('goal-breakdown');
+                            const response = await this.call(messages, provider);
                             
                             // Show breakdown in a modal or toast
                             app.ui.showConfirm('Goal Breakdown', response, () => {
