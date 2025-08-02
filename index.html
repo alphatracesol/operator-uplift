@@ -2838,6 +2838,90 @@
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 20px 40px rgba(249, 115, 22, 0.3);
         }
+
+        /* Enhanced animations and effects - restored */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(249, 115, 22, 0.6); }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Enhanced glass card effects */
+        .glass-card {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .glass-card:hover {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Enhanced button effects */
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Enhanced navigation effects */
+        .nav-links a {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
     </style>
 </head>
         <body>
@@ -3294,7 +3378,77 @@
         // Initialize GSAP when loaded
         function initGSAP() {
             if (typeof gsap !== 'undefined') {
-                initAnimations();
+                // Hero section animations
+                gsap.from('.hero-content h1', {
+                    duration: 1,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    delay: 0.2
+                });
+
+                gsap.from('.hero-content p', {
+                    duration: 1,
+                    y: 30,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    delay: 0.4
+                });
+
+                gsap.from('.hero-buttons', {
+                    duration: 1,
+                    y: 30,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    delay: 0.6
+                });
+
+                gsap.from('.scene', {
+                    duration: 1.5,
+                    scale: 0.8,
+                    opacity: 0,
+                    ease: 'back.out(1.7)',
+                    delay: 0.8
+                });
+
+                // Features section animations
+                gsap.from('.features-grid .glass-card', {
+                    duration: 0.8,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    stagger: 0.2,
+                    scrollTrigger: {
+                        trigger: '.features-grid',
+                        start: 'top 80%'
+                    }
+                });
+
+                // Success stories animations
+                gsap.from('.testimonial-card', {
+                    duration: 0.8,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    stagger: 0.3,
+                    scrollTrigger: {
+                        trigger: '#success-stories',
+                        start: 'top 80%'
+                    }
+                });
+
+                // FAQ animations
+                gsap.from('.faq-item', {
+                    duration: 0.6,
+                    y: 30,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: '#faq',
+                        start: 'top 80%'
+                    }
+                });
             } else {
                 setTimeout(initGSAP, 100);
             }
@@ -3539,40 +3693,84 @@
             });
         });
 
-        // GSAP Animations - Ultra-lightweight for performance
-        function initAnimations() {
-            if (typeof gsap === 'undefined') return;
-            
-            // Minimal hero animations
-            gsap.from('.hero-content h1', {
-                duration: 0.8,
-                y: 20,
-                opacity: 0,
-                ease: 'power2.out'
-            });
+        // Enhanced GSAP animations - restored for proper functionality
+        function initGSAP() {
+            if (typeof gsap !== 'undefined') {
+                // Hero section animations
+                gsap.from('.hero-content h1', {
+                    duration: 1,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    delay: 0.2
+                });
 
-            gsap.from('.hero-content p', {
-                duration: 0.8,
-                y: 15,
-                opacity: 0,
-                ease: 'power2.out',
-                delay: 0.2
-            });
+                gsap.from('.hero-content p', {
+                    duration: 1,
+                    y: 30,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    delay: 0.4
+                });
 
-            gsap.from('.hero-buttons', {
-                duration: 0.8,
-                y: 15,
-                opacity: 0,
-                ease: 'power2.out',
-                delay: 0.4
-            });
+                gsap.from('.hero-buttons', {
+                    duration: 1,
+                    y: 30,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    delay: 0.6
+                });
 
-            gsap.from('.scene', {
-                duration: 1,
-                scale: 0.8,
-                opacity: 0,
-                ease: 'power2.out',
-                delay: 0.6
+                gsap.from('.scene', {
+                    duration: 1.5,
+                    scale: 0.8,
+                    opacity: 0,
+                    ease: 'back.out(1.7)',
+                    delay: 0.8
+                });
+
+                // Features section animations
+                gsap.from('.features-grid .glass-card', {
+                    duration: 0.8,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    stagger: 0.2,
+                    scrollTrigger: {
+                        trigger: '.features-grid',
+                        start: 'top 80%'
+                    }
+                });
+
+                // Success stories animations
+                gsap.from('.testimonial-card', {
+                    duration: 0.8,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    stagger: 0.3,
+                    scrollTrigger: {
+                        trigger: '#success-stories',
+                        start: 'top 80%'
+                    }
+                });
+
+                // FAQ animations
+                gsap.from('.faq-item', {
+                    duration: 0.6,
+                    y: 30,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: '#faq',
+                        start: 'top 80%'
+                    }
+                });
+            } else {
+                setTimeout(initGSAP, 100);
+            }
+        }
             });
 
             // Disable scroll-triggered animations for better performance
@@ -3718,8 +3916,41 @@
             });
         }
 
-        // Removed parallax effect for better performance
-        // Simple scroll-based animations instead
+        // Enhanced animations and effects - restored for proper functionality
+        function initEnhancedAnimations() {
+            // Restore parallax effect
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.hero');
+                if (parallax) {
+                    const speed = scrolled * 0.5;
+                    parallax.style.transform = `translateY(${speed}px)`;
+                }
+            });
+
+            // Enhanced scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animated elements
+            document.querySelectorAll('.glass-card, .feature-card, .testimonial-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        }
 
         // Add spinner animation and error handling
         const spinnerStyle = document.createElement('style');
@@ -4647,6 +4878,7 @@
             initHeaderAnimations();
             initFAQ();
             initGSAP();
+            initEnhancedAnimations();
             showCookieConsent();
             
             // Add error handling
