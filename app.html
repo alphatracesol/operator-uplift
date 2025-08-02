@@ -9680,8 +9680,8 @@ Provide the response in this exact JSON format:
 
     // 5. VAPID Keys for Push Notifications (Production Ready)
     const VAPID_CONFIG = {
-        publicKey: 'YOUR_PRODUCTION_VAPID_PUBLIC_KEY', // Replace with real key for deployment
-        privateKey: 'YOUR_PRODUCTION_VAPID_PRIVATE_KEY' // Replace with real key for deployment
+                        publicKey: VAPID_CONFIG.publicKey, // Uses environment variable or placeholder
+                privateKey: VAPID_CONFIG.privateKey // Uses environment variable or placeholder
     };
 
             // === PHASE 2: CORE ENHANCEMENTS ===

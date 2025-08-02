@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Production Test - Operator Uplift</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #f97316;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #f97316;
+        }
+        .test-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #f97316;
+        }
+        .test-results {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .run-test-btn {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: transform 0.2s;
+            margin: 10px 0;
+        }
+        .run-test-btn:hover {
+            transform: translateY(-2px);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+            color: #22c55e;
+        }
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+        .status.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid #f59e0b;
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Comprehensive Production Test</h1>
+        <p style="text-align: center; margin-bottom: 30px; color: #d1d5db;">
+            Testing all components, security, and identifying gaps before Netlify deployment
+        </p>
+
+        <div class="test-section">
+            <div class="test-title">🔒 Security Tests</div>
+            <button class="run-test-btn" onclick="runSecurityTests()">Run Security Tests</button>
+            <div id="security-results" class="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">⚙️ Functionality Tests</div>
+            <button class="run-test-btn" onclick="runFunctionalityTests()">Run Functionality Tests</button>
+            <div id="functionality-results" class="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔍 Placeholder & Gap Tests</div>
+            <button class="run-test-btn" onclick="runPlaceholderTests()">Run Placeholder Tests</button>
+            <div id="placeholder-results" class="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🚀 Deployment Tests</div>
+            <button class="run-test-btn" onclick="runDeploymentTests()">Run Deployment Tests</button>
+            <div id="deployment-results" class="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📊 Overall Results</div>
+            <button class="run-test-btn" onclick="runAllTests()">Run All Tests</button>
+            <div id="overall-results" class="test-results"></div>
+        </div>
+    </div>
+
+    <script src="COMPREHENSIVE_PRODUCTION_TEST.js"></script>
+    <script>
+        // Override console.log to capture output
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function captureOutput(elementId) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '';
+            
+            console.log = function(...args) {
+                originalLog.apply(console, args);
+                element.innerHTML += args.join(' ') + '\n';
+                element.scrollTop = element.scrollHeight;
+            };
+            
+            console.error = function(...args) {
+                originalError.apply(console, args);
+                element.innerHTML += '❌ ERROR: ' + args.join(' ') + '\n';
+                element.scrollTop = element.scrollHeight;
+            };
+            
+            console.warn = function(...args) {
+                originalWarn.apply(console, args);
+                element.innerHTML += '⚠️ WARNING: ' + args.join(' ') + '\n';
+                element.scrollTop = element.scrollHeight;
+            };
+        }
+
+        function restoreConsole() {
+            console.log = originalLog;
+            console.error = originalError;
+            console.warn = originalWarn;
+        }
+
+        async function runSecurityTests() {
+            captureOutput('security-results');
+            console.log('🔒 STARTING SECURITY TESTS...\n');
+            
+            // Test for placeholder API keys
+            const placeholderPatterns = [/YOUR_/g, /your_/g, /placeholder/g, /REPLACE_WITH/g];
+            const criticalFiles = ['app.html', 'pwa-enhancer.js', 'vapid-config.js'];
+            
+            let issuesFound = 0;
+            
+            for (const file of criticalFiles) {
+                try {
+                    const response = await fetch(file);
+                    const content = await response.text();
+                    
+                    for (const pattern of placeholderPatterns) {
+                        const matches = content.match(pattern);
+                        if (matches) {
+                            console.error(`CRITICAL: Found placeholder in ${file}: ${matches.join(', ')}`);
+                            issuesFound++;
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error reading ${file}: ${error.message}`);
+                    issuesFound++;
+                }
+            }
+            
+            // Test CSP headers
+            const cspHeaders = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            if (!cspHeaders) {
+                console.error('CRITICAL: No CSP headers found');
+                issuesFound++;
+            } else {
+                console.log('✅ CSP headers found');
+            }
+            
+            if (issuesFound === 0) {
+                console.log('🎉 All security tests passed!');
+            } else {
+                console.error(`❌ ${issuesFound} security issues found`);
+            }
+            
+            restoreConsole();
+        }
+
+        async function runFunctionalityTests() {
+            captureOutput('functionality-results');
+            console.log('⚙️ STARTING FUNCTIONALITY TESTS...\n');
+            
+            // Test core components
+            const coreComponents = ['app', 'app.state', 'app.auth', 'app.firestore', 'app.goals', 'app.ui'];
+            let missingComponents = 0;
+            
+            for (const component of coreComponents) {
+                try {
+                    const exists = eval(`typeof ${component} !== 'undefined'`);
+                    if (exists) {
+                        console.log(`✅ ${component} found`);
+                    } else {
+                        console.error(`❌ Missing: ${component}`);
+                        missingComponents++;
+                    }
+                } catch (error) {
+                    console.error(`❌ Error testing ${component}: ${error.message}`);
+                    missingComponents++;
+                }
+            }
+            
+            // Test Firebase
+            if (typeof firebase !== 'undefined') {
+                console.log('✅ Firebase loaded');
+            } else {
+                console.error('❌ Firebase not loaded');
+                missingComponents++;
+            }
+            
+            // Test service worker
+            if ('serviceWorker' in navigator) {
+                console.log('✅ Service Worker supported');
+            } else {
+                console.error('❌ Service Worker not supported');
+                missingComponents++;
+            }
+            
+            if (missingComponents === 0) {
+                console.log('🎉 All functionality tests passed!');
+            } else {
+                console.error(`❌ ${missingComponents} functionality issues found`);
+            }
+            
+            restoreConsole();
+        }
+
+        async function runPlaceholderTests() {
+            captureOutput('placeholder-results');
+            console.log('🔍 STARTING PLACEHOLDER TESTS...\n');
+            
+            const placeholderPatterns = [/coming soon/i, /not implemented/i, /TODO/i, /FIXME/i, /XXX/i, /HACK/i];
+            const htmlFiles = ['index.html', 'app.html', 'MVP Launch Page.html', 'press-release.html'];
+            
+            let placeholdersFound = 0;
+            
+            for (const file of htmlFiles) {
+                try {
+                    const response = await fetch(file);
+                    const content = await response.text();
+                    
+                    for (const pattern of placeholderPatterns) {
+                        const matches = content.match(pattern);
+                        if (matches) {
+                            console.error(`PLACEHOLDER: Found "${matches[0]}" in ${file}`);
+                            placeholdersFound++;
+                        }
+                    }
+                } catch (error) {
+                    console.error(`ERROR: Could not read ${file}: ${error.message}`);
+                    placeholdersFound++;
+                }
+            }
+            
+            if (placeholdersFound === 0) {
+                console.log('🎉 No placeholders found!');
+            } else {
+                console.error(`❌ ${placeholdersFound} placeholders found`);
+            }
+            
+            restoreConsole();
+        }
+
+        async function runDeploymentTests() {
+            captureOutput('deployment-results');
+            console.log('🚀 STARTING DEPLOYMENT TESTS...\n');
+            
+            let deploymentIssues = 0;
+            
+            // Test Netlify configuration
+            try {
+                const response = await fetch('netlify.toml');
+                if (response.ok) {
+                    console.log('✅ netlify.toml found');
+                } else {
+                    console.error('❌ netlify.toml not found');
+                    deploymentIssues++;
+                }
+            } catch (error) {
+                console.error(`❌ Error reading netlify.toml: ${error.message}`);
+                deploymentIssues++;
+            }
+            
+            // Test manifest.json
+            try {
+                const response = await fetch('manifest.json');
+                if (response.ok) {
+                    const manifest = await response.json();
+                    if (manifest.name && manifest.short_name) {
+                        console.log('✅ manifest.json valid');
+                    } else {
+                        console.error('❌ manifest.json missing required fields');
+                        deploymentIssues++;
+                    }
+                } else {
+                    console.error('❌ manifest.json not found');
+                    deploymentIssues++;
+                }
+            } catch (error) {
+                console.error(`❌ Error reading manifest.json: ${error.message}`);
+                deploymentIssues++;
+            }
+            
+            // Test service worker
+            try {
+                const response = await fetch('sw.js');
+                if (response.ok) {
+                    console.log('✅ sw.js found');
+                } else {
+                    console.error('❌ sw.js not found');
+                    deploymentIssues++;
+                }
+            } catch (error) {
+                console.error(`❌ Error reading sw.js: ${error.message}`);
+                deploymentIssues++;
+            }
+            
+            // Test AI proxy function
+            try {
+                const response = await fetch('netlify/functions/ai-proxy.js');
+                if (response.ok) {
+                    console.log('✅ AI proxy function found');
+                } else {
+                    console.error('❌ AI proxy function not found');
+                    deploymentIssues++;
+                }
+            } catch (error) {
+                console.error(`❌ Error reading AI proxy: ${error.message}`);
+                deploymentIssues++;
+            }
+            
+            if (deploymentIssues === 0) {
+                console.log('🎉 All deployment tests passed!');
+            } else {
+                console.error(`❌ ${deploymentIssues} deployment issues found`);
+            }
+            
+            restoreConsole();
+        }
+
+        async function runAllTests() {
+            captureOutput('overall-results');
+            console.log('🚀 STARTING COMPREHENSIVE PRODUCTION TEST');
+            console.log('==========================================\n');
+            
+            await runSecurityTests();
+            console.log('\n');
+            await runFunctionalityTests();
+            console.log('\n');
+            await runPlaceholderTests();
+            console.log('\n');
+            await runDeploymentTests();
+            
+            console.log('\n📊 COMPREHENSIVE TEST COMPLETE');
+            console.log('==============================');
+            console.log('Check individual test results above for detailed analysis.');
+            
+            restoreConsole();
+        }
+    </script>
+</body>
+</html> 

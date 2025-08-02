@@ -300,7 +300,7 @@ const PWAEnhancer = {
             const registration = await navigator.serviceWorker.ready;
             const subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: this.urlBase64ToUint8Array('YOUR_VAPID_PUBLIC_KEY')
+                applicationServerKey: this.urlBase64ToUint8Array(VAPID_CONFIG.publicKey)
             });
             
             // Send subscription to server
