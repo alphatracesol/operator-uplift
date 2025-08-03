@@ -20,7 +20,7 @@
     <!-- tsParticles for enhanced effects -->
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" crossorigin="anonymous"></script>
     <!-- Date-fns for date manipulation -->
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js" crossorigin="anonymous"></script>
+    <script src="assets/js/date-fns.min.js"></script>
     <style>
         /* Immediate background fix to prevent white flash */
         html, body {
@@ -3129,16 +3129,18 @@
                     } catch (error) {
                         console.error("Firebase initialization failed:", error);
                         
-                        // Fallback: Try to use import.meta.env for Vite build system
+                        // Use import.meta.env for Vite build system
                         try {
                             const firebaseConfig = {
-                                apiKey: import.meta.env?.VITE_FIREBASE_API_KEY || process.env?.VITE_FIREBASE_API_KEY,
-                                authDomain: import.meta.env?.VITE_FIREBASE_AUTH_DOMAIN || process.env?.VITE_FIREBASE_AUTH_DOMAIN,
-                                projectId: import.meta.env?.VITE_FIREBASE_PROJECT_ID || process.env?.VITE_FIREBASE_PROJECT_ID,
-                                storageBucket: import.meta.env?.VITE_FIREBASE_STORAGE_BUCKET || process.env?.VITE_FIREBASE_STORAGE_BUCKET,
-                                messagingSenderId: import.meta.env?.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env?.VITE_FIREBASE_MESSAGING_SENDER_ID,
-                                appId: import.meta.env?.VITE_FIREBASE_APP_ID || process.env?.VITE_FIREBASE_APP_ID
+                                apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+                                authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+                                projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+                                storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+                                messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+                                appId: import.meta.env.VITE_FIREBASE_APP_ID
                             };
+                            
+                            console.log('Vite Env Loaded:', !!import.meta.env.VITE_FIREBASE_API_KEY);
                             
                             console.log('Firebase Config Loaded:', !!firebaseConfig.apiKey);
                             console.log('Firebase Config Debug (import.meta.env):', {
@@ -3150,7 +3152,7 @@
                                 appId: firebaseConfig.appId ? 'SET' : 'MISSING'
                             });
                             
-                            if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'undefined' || firebaseConfig.apiKey === 'null') {
+                            if (!import.meta.env.VITE_FIREBASE_API_KEY) {
                                 console.error('Firebase environment variables not available:', {
                                     apiKey: firebaseConfig.apiKey,
                                     authDomain: firebaseConfig.authDomain,
@@ -3173,7 +3175,7 @@
                             console.error("Firebase env initialization failed:", envError);
                             
                             // Fallback: Local mock authentication for MVP
-                            if (!import.meta.env?.VITE_FIREBASE_API_KEY && !process.env?.VITE_FIREBASE_API_KEY) {
+                            if (!import.meta.env.VITE_FIREBASE_API_KEY) {
                                 console.warn('Firebase down—using local mock');
                                 
                                 // Mock auth functions
@@ -3451,9 +3453,38 @@
                         }
                     },
 
-                    // Enhanced auth state listener with security checks
+                    // TEMPORARILY DISABLED: Enhanced auth state listener with security checks
                     listenForAuthState() {
-                        console.log('Setting up auth state listener...'); // Debug
+                        console.log('AUTH DISABLED: Bypassing authentication for testing...'); // Debug
+                        
+                        // TEMPORARY: Bypass authentication and show dashboard immediately
+                        setTimeout(() => {
+                            console.log('Showing dashboard without authentication...'); // Debug
+                            
+                            // Update UI - Hide login, show header/sidebar/dashboard
+                            const authViewWrapper = document.getElementById('auth-view-wrapper');
+                            const appHeader = document.getElementById('app-header');
+                            const sidebar = document.getElementById('sidebar');
+                            const dashboardView = document.getElementById('dashboard-view');
+                            
+                            if (authViewWrapper) authViewWrapper.style.display = 'none';
+                            if (appHeader) appHeader.classList.remove('hidden');
+                            if (sidebar) sidebar.classList.remove('hidden');
+                            if (dashboardView) dashboardView.classList.remove('hidden');
+                            
+                            // Hide loading overlay
+                            const loadingOverlay = document.getElementById('loading-overlay');
+                            if (loadingOverlay) {
+                                loadingOverlay.style.opacity = '0';
+                                setTimeout(() => loadingOverlay.style.display = 'none', 500);
+                            }
+                            
+                            // Show success message
+                            app.ui.showToast('Authentication bypassed for testing. Welcome to Operator Uplift!', 'success');
+                            
+                        }, 2000); // 2 second delay to show loading screen
+                        
+                        /* ORIGINAL AUTH CODE COMMENTED OUT:
                         onAuthStateChanged(auth, async (user) => {
                             try {
                                 if (user) {
@@ -3561,6 +3592,7 @@
                                 }
                             }
                         });
+                        */
                     },
 
                     async initializeSecureDataListeners(uid) {
@@ -3653,7 +3685,12 @@
                             app.ui.showToast('Offline changes synced successfully!', 'success');
                         }
                     },
+                    // TEMPORARILY DISABLED: Register function
                     async register(name, email, password) {
+                        console.log('REGISTER DISABLED: Authentication bypassed for testing');
+                        app.ui.showToast('Registration disabled for testing. Dashboard will load automatically.', 'info');
+                        return;
+                        /* ORIGINAL REGISTER CODE COMMENTED OUT:
                         try {
                             console.log('Attempting registration for:', email); // Debug
                             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -3684,8 +3721,14 @@
                         } catch (error) {
                             handleFirebaseError(error, 'registration');
                         }
+                        */
                     },
+                    // TEMPORARILY DISABLED: Login function
                     async login(email, password) {
+                        console.log('LOGIN DISABLED: Authentication bypassed for testing');
+                        app.ui.showToast('Login disabled for testing. Dashboard will load automatically.', 'info');
+                        return;
+                        /* ORIGINAL LOGIN CODE COMMENTED OUT:
                         try {
                             console.log('Attempting login for:', email); // Debug
                             const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -3722,6 +3765,7 @@
                             }); // Debug
                             handleFirebaseError(error, 'login');
                         }
+                        */
                     },
                     
                     async resetPassword(email) {
