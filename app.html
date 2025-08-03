@@ -851,7 +851,7 @@
                 width: 2.5rem !important;
                 height: 2.5rem !important;
                 font-size: 1rem !important;
-                z-index: 50 !important; /* Lower than cookie banner */
+                z-index: 50 !important; /* Scroll to top button z-index */
             }
         }
 
@@ -1044,17 +1044,7 @@
             color: var(--accent-color) !important;
         }
 
-        /* --- COOKIE CONSENT STYLES --- */
-        #cookie-consent-banner {
-            background: var(--card-bg-glass);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border-glass);
-        }
-        
-        #cookie-consent-banner .glass-card {
-            background: var(--card-bg-glass);
-            border: 1px solid var(--border-glass);
-        }
+        /* --- COOKIE CONSENT STYLES - Removed for login page --- */
 
         /* --- SCROLL TO TOP BUTTON --- */
         .scroll-to-top {
@@ -1312,7 +1302,7 @@
             <div class="checkbox-wrapper">
                 <input type="checkbox" id="terms-privacy-checkbox" required>
                 <label for="terms-privacy-checkbox">
-                    I agree to the <a href="#" onclick="document.getElementById('terms-modal').classList.add('active'); return false;" style="color: var(--accent-color);">Terms of Service</a> and <a href="#" onclick="document.getElementById('privacy-modal').classList.add('active'); return false;" style="color: var(--accent-color);">Privacy Policy</a>
+                    I agree to the <a href="#" onclick="document.getElementById('terms').classList.add('active'); return false;" style="color: var(--accent-color);">Terms of Service</a> and <a href="#" onclick="document.getElementById('privacy').classList.add('active'); return false;" style="color: var(--accent-color);">Privacy Policy</a>
                 </label>
             </div>
         </div>
@@ -10049,60 +10039,7 @@ Provide the response in this exact JSON format:
                 app.quotaManager.showQuotaStatus();
             }, 2000);
 
-            // Cookie consent functionality
-            function initCookieConsent() {
-                const cookieBanner = document.getElementById('cookie-consent-banner');
-                const acceptBtn = document.getElementById('cookie-accept');
-                const declineBtn = document.getElementById('cookie-decline');
-                const manageCookiesLink = document.getElementById('manage-cookies');
-
-                console.log('Initializing cookie consent:', { cookieBanner, acceptBtn, declineBtn, manageCookiesLink });
-
-                // Show banner if consent not given
-                if (!localStorage.getItem('cookie_consent_status')) {
-                    if (cookieBanner) {
-                        cookieBanner.classList.remove('hidden');
-                    }
-                }
-
-                // Accept button
-                if (acceptBtn) {
-                    acceptBtn.addEventListener('click', () => {
-                        console.log('Cookie accept clicked');
-                        localStorage.setItem('cookie_consent_status', 'granted');
-                        if (cookieBanner) {
-                            cookieBanner.classList.add('hidden');
-                        }
-                    });
-                }
-
-                // Decline button
-                if (declineBtn) {
-                    declineBtn.addEventListener('click', () => {
-                        console.log('Cookie decline clicked');
-                        localStorage.setItem('cookie_consent_status', 'denied');
-                        if (cookieBanner) {
-                            cookieBanner.classList.add('hidden');
-                        }
-                    });
-                }
-
-                // Manage cookies link
-                if (manageCookiesLink) {
-                    manageCookiesLink.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        console.log('Manage cookies clicked');
-                        // Reset consent and show banner again
-                        localStorage.removeItem('cookie_consent_status');
-                        if (cookieBanner) {
-                            cookieBanner.classList.remove('hidden');
-                        }
-                    });
-                }
-            }
-
-            // Initialize cookie consent
-            initCookieConsent();
+            // Cookie consent functionality removed for login page
         });
     </script>
 
@@ -10124,11 +10061,10 @@ Provide the response in this exact JSON format:
                 <a href="https://linkedin.com/company/operatoruplift" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors" aria-label="Operator Uplift on LinkedIn">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
                 </a>
-                <a href="#terms-modal" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Terms</a>
-                <a href="#privacy-modal" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Privacy</a>
+                <a href="#terms" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Terms</a>
+                <a href="#privacy" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Privacy</a>
                 <a href="#support-modal" class="legal-link text-slate-500 hover:text-[var(--accent-color)] transition-colors">Support</a>
                 <a href="press-release.html" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">Press Release</a>
-                <a href="#" id="manage-cookies" class="text-slate-500 hover:text-[var(--accent-color)] transition-colors">Manage Cookies</a>
             </div>
         </div>
         <div class="mt-8 pt-6 border-t border-zinc-800/50 flex flex-col sm:flex-row justify-center items-center gap-x-8 gap-y-4 text-sm text-slate-400">
@@ -10142,16 +10078,7 @@ Provide the response in this exact JSON format:
     <div id="privacy" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Privacy Policy" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Privacy Policy</h2><p><strong>Last updated: July 28, 2025</strong></p><p>This Privacy Policy describes how Operator Uplift ("we," "us," or "our") collects, uses, and discloses your information when you use our website and services (collectively, the "Service").</p><h3>1. Information We Collect</h3><p><strong>Personal Information:</strong> When you create an account, we collect your email address, display name, and any other information you choose to provide.</p><p><strong>Usage Data:</strong> We collect information about how you use our Service, including your goals, progress, achievements, and interactions with AI features.</p><p><strong>Technical Data:</strong> We automatically collect certain technical information, including your IP address, browser type, device information, and usage patterns.</p><h3>2. How We Use Your Information</h3><p>We use the information we collect to:</p><ul><li>Provide, maintain, and improve our Service</li><li>Personalize your experience and provide AI-powered recommendations</li><li>Process your goals, track progress, and manage achievements</li><li>Send you important updates about the Service</li><li>Respond to your comments, questions, and support requests</li><li>Analyze usage patterns to improve our Service</li><li>Ensure the security and integrity of our Service</li></ul><h3>3. Data Sharing and Disclosure</h3><p>We do not sell, trade, or rent your personal information to third parties. We may share your information in the following circumstances:</p><ul><li><strong>Service Providers:</strong> We use trusted third-party services (Firebase, Netlify, AI providers) to operate our Service</li><li><strong>Legal Requirements:</strong> We may disclose information if required by law or to protect our rights</li><li><strong>Business Transfers:</strong> In the event of a merger or acquisition, your information may be transferred</li><li><strong>Community Features:</strong> Some information may be visible to other users in community features (with your consent)</li></ul><h3>4. Data Security</h3><p>We implement appropriate security measures to protect your personal information:</p><ul><li>Encryption of data in transit and at rest</li><li>Secure authentication and authorization</li><li>Regular security assessments and updates</li><li>Access controls and monitoring</li></ul><p>However, no method of transmission over the Internet is 100% secure. We cannot guarantee absolute security.</p><h3>5. Your Rights and Choices</h3><p>You have the following rights regarding your personal information:</p><ul><li><strong>Access:</strong> Request a copy of your personal information</li><li><strong>Correction:</strong> Update or correct inaccurate information</li><li><strong>Deletion:</strong> Request deletion of your account and data</li><li><strong>Portability:</strong> Export your data in a machine-readable format</li><li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li></ul><p>To exercise these rights, contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p><h3>6. AI and Data Processing</h3><p>Our Service uses AI to provide personalized recommendations and assistance. Your goals, progress, and interactions may be processed by AI systems to improve your experience. We ensure AI processing complies with our privacy standards.</p><h3>7. Cookies and Tracking</h3><p>We use essential cookies to make our Service work properly. We do not use tracking cookies for advertising purposes. You can control cookie settings through your browser.</p><h3>8. Children's Privacy</h3><p>Our Service is not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected such information, please contact us immediately.</p><h3>9. International Data Transfers</h3><p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers.</p><h3>10. Changes to This Policy</h3><p>We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the new policy on this page or sending you an email.</p><h3>11. Contact Us</h3><p>If you have questions about this Privacy Policy or our data practices, please contact us at <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a>.</p></div></div></div>
     <div id="cookies" class="overlay-page is-scrollable"><div class="modal-content-wrapper relative max-w-4xl w-full"><button aria-label="Close Cookie Policy" class="close-overlay-btn absolute top-4 right-6 text-slate-400 text-4xl hover:text-white">&times;</button><div class="legal-content"><h2>Cookie Policy</h2><p>Last updated: July 28, 2025</p><p>This Cookie Policy explains what cookies are and how we use them on the Operator Uplift website.</p><h3>What Are Cookies?</h3><p>Cookies are small text files that are placed on your computer or mobile device when you visit a website. They are widely used to make websites work, or work more efficiently, as well as to provide information to the owners of the site.</p><h3>How We Use Cookies</h3><p>We use cookies for a very limited and specific purpose:</p><ul><li><strong>Essential Cookies:</strong> We use one essential cookie to remember your choice regarding our cookie consent banner. This is a functional cookie that allows us to know whether you have accepted or declined our cookie policy, so we don't have to ask you on every visit.</li></ul><p>At this time, we do not use any cookies for analytics, advertising, or tracking purposes.</p><h3>Your Choices Regarding Cookies</h3><p>When you first visit our site, you are presented with a banner allowing you to accept or decline our use of cookies. If you decline, the functional cookie to remember your choice will still be set. Most web browsers allow some control of most cookies through the browser settings. To find out more about cookies, including how to see what cookies have been set, visit <a href="https://www.aboutcookies.org" target="_blank" rel="noopener noreferrer">www.aboutcookies.org</a> or <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer">www.allaboutcookies.org</a>.</p><h3>Changes to This Cookie Policy</h3><p>We may update this Cookie Policy in the future if we introduce new cookies or change how we use them. Any changes will be posted on this page.</p></div></div></div>
 
-    <!-- Cookie Consent Banner -->
-    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 p-4 z-[60] hidden">
-        <div class="glass-card container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-lg">
-            <p class="text-sm text-slate-300">We use essential cookies to make our site work. For more details, see our <a href="#privacy-modal" class="legal-link text-[var(--accent-color)] hover:underline">Privacy Policy</a> and <a href="#terms-modal" class="legal-link text-[var(--accent-color)] hover:underline">Terms of Service</a>.</p>
-            <div class="flex gap-3 flex-shrink-0">
-                <button id="cookie-decline" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-zinc-700 transition-colors">Decline</button>
-                <button id="cookie-accept" class="px-5 py-2 rounded-lg text-sm font-semibold bg-[var(--accent-color)] text-black hover:bg-[var(--accent-color)] transition-colors">Accept</button>
-            </div>
-        </div>
-    </div>
+    <!-- Cookie Consent Banner - Removed for login page -->
     
     <!-- Scroll to top button - Hidden on login page -->
     <button class="scroll-to-top" aria-label="Scroll to top" style="z-index: 50; display: none;" id="scroll-to-top-btn">
