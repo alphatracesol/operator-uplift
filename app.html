@@ -25,15 +25,34 @@
         /* Immediate background fix to prevent white flash */
         html, body {
             background-color: #0a0a0a !important;
-            background: linear-gradient(135deg, #111827, #0a0a0a) !important;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%) !important;
         }
         
         /* --- GLOBAL STYLES & CSS VARIABLES --- */
         :root {
+            --primary-color: #f97316;
+            --primary-dark: #ea580c;
+            --primary-light: #fb923c;
+            --secondary-color: #f97316;
+            --secondary-dark: #ea580c;
             --accent-color: #f97316;
-            --accent-color-light: #fb923c;
-            --accent-color-glow: rgba(249, 115, 22, 0.6);
-            --secondary-color: #10b981;
+            --accent-light: #fb923c;
+            --accent-hover: #fb923c;
+            --accent-glow: rgba(249, 115, 22, 0.6);
+            --bg-color: #0a0a0a;
+            --text-color: #e5e7eb;
+            --text-muted-color: #9ca3af;
+            --dark-card: rgba(24, 24, 27, 0.5);
+            --dark-card-hover: rgba(24, 24, 27, 0.7);
+            --text-light: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-color-light: rgba(255, 255, 255, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+            --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            --gradient-hero: linear-gradient(135deg, #0a0a0a 0%, #1f2937 50%, #374151 100%);
             --danger-color: #ef4444;
             --info-color: #3b82f6;
             --energy-color: #84cc16;
@@ -76,13 +95,27 @@
         html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-family);
-            background-color: #0a0a0a;
-            background: linear-gradient(135deg, #111827, #0a0a0a);
-            color: var(--text-color);
-            transition: background 1s, color 0.3s;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.01) 0%, transparent 30%),
+                radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.005) 0%, transparent 30%);
+            z-index: 0;
+            pointer-events: none;
         }
         
         #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
@@ -106,6 +139,36 @@
         .btn-outline { background-color: transparent; border: 1px solid var(--border-glass); color: var(--text-color); }
         .btn-outline:hover { background-color: rgba(255,255,255,0.1); }
         [data-theme="light"] .btn-outline:hover { background-color: rgba(0,0,0,0.05); }
+        /* Optimized glass card effect */
+        .glass-card {
+            background: rgba(24, 24, 27, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
         .card {
             background: var(--card-bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border-glass); border-radius: 0.75rem;
@@ -423,7 +486,7 @@
         @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #111827, #0a0a0a);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%);
             z-index: 99999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; transition: opacity 0.5s;
         }
@@ -1238,6 +1301,7 @@
             <!-- Matrix rain canvas - temporarily disabled -->
         <!-- <canvas id="matrix-rain-canvas"></canvas> -->
     <div id="celebration-container"></div>
+    <div id="tsparticles"></div>
     <div class="app-wrapper">
         <div id="app-container">
             <!-- Sidebar -->
@@ -1287,7 +1351,7 @@
                     <!-- Auth View -->
                     <div id="auth-view">
                         <div id="auth-view-wrapper">
-                            <div class="card">
+                            <div class="glass-card">
                                 <div class="auth-header">
                                     <img src="/assets/images/android-chrome-512x512.png" alt="Operator Uplift Logo" style="width: 80px; height: 80px; margin: 0 auto 1rem; display: block;">
                                     <h2 style="font-size: 1.5rem; text-align: center;">Welcome to Operator Uplift</h2>
@@ -4817,26 +4881,91 @@
 
                         try {
                             tsParticles.load("tsparticles", {
-                                fpsLimit: 120, background: { color: { value: "transparent" } },
+                                fpsLimit: 15, // Ultra-low for maximum performance
+                                background: { color: { value: "transparent" } },
                                 interactivity: { events: { onHover: { enable: false }, resize: true } },
                                 particles: {
-                                    color: { value: "var(--particle-color)" },
-                                    links: { color: "var(--particle-color)", distance: 150, enable: true, opacity: 0.5, width: 1 },
-                                    move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1, straight: false },
-                                    number: { density: { enable: true, area: 800 }, value: 80 },
-                                    opacity: { value: 0.5, },
-                                    shape: { type: "circle" },
-                                    size: { value: { min: 1, max: 3 } },
+                                    number: {
+                                        value: 15, // Minimal particles for performance
+                                        density: {
+                                            enable: true,
+                                            value_area: 1000
+                                        }
+                                    },
+                                    color: {
+                                        value: '#f97316'
+                                    },
+                                    shape: {
+                                        type: 'circle'
+                                    },
+                                    opacity: {
+                                        value: 0.2, // Very low opacity
+                                        random: false,
+                                        anim: {
+                                            enable: false
+                                        }
+                                    },
+                                    size: {
+                                        value: 1.5, // Very small particles
+                                        random: false,
+                                        anim: {
+                                            enable: false
+                                        }
+                                    },
+                                    line_linked: {
+                                        enable: true,
+                                        distance: 200,
+                                        color: '#f97316',
+                                        opacity: 0.1, // Very low opacity
+                                        width: 0.5
+                                    },
+                                    move: {
+                                        enable: true,
+                                        speed: 0.3, // Very slow movement
+                                        direction: 'none',
+                                        random: false,
+                                        straight: false,
+                                        out_mode: 'out',
+                                        bounce: false
+                                    }
                                 },
-                                detectRetina: true,
+                                interactivity: {
+                                    detect_on: 'canvas',
+                                    events: {
+                                        onhover: {
+                                            enable: false
+                                        },
+                                        onclick: {
+                                            enable: false
+                                        },
+                                        resize: true
+                                    }
+                                },
+                                retina_detect: false // Disable for better performance
                             }).then(container => {
                                 app.state.particlesInstance = container;
                                 if (app.state.userData) { this.applyUserSettings(); }
+                                console.log('Particles initialized successfully');
+                            }).catch(error => {
+                                console.warn('Particles failed to load, using fallback:', error);
+                                this.initParticlesFallback();
                             });
                         } catch (error) {
                             console.warn("tsParticles library not loaded or failed to initialize. Particle effects will be disabled.", error);
+                            this.initParticlesFallback();
                         }
                     },
+                    
+                    initParticlesFallback() {
+                        const particlesContainer = document.getElementById('tsparticles');
+                        if (particlesContainer) {
+                            particlesContainer.style.background = `
+                                radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.02) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.01) 0%, transparent 50%)
+                            `;
+                        }
+                    },
+                    
                     initMatrixRain() {
                         // Prevent multiple initializations
                         if (app.state.matrixInterval) {
