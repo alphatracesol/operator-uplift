@@ -9,7 +9,7 @@
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "build:netlify": "npm install && npm run copy-files && echo 'Build completed for Netlify'",
-    "copy-files": "powershell -Command \"if (!(Test-Path 'build')) { New-Item -ItemType Directory -Path 'build' }; Copy-Item '*.html' 'build/'; if (Test-Path 'assets') { Copy-Item 'assets' 'build/' -Recurse }; if (Test-Path 'manifest.json') { Copy-Item 'manifest.json' 'build/' }; if (Test-Path 'sw.js') { Copy-Item 'sw.js' 'build/' }; if (Test-Path 'site.webmanifest') { Copy-Item 'site.webmanifest' 'build/' }\"",
+    "copy-files": "node scripts/copy-files.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
