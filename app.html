@@ -3343,6 +3343,38 @@
                         }
                     },
                     
+                    // Helper function to check and update email verification status
+                    async checkEmailVerificationStatus(user) {
+                        try {
+                            console.log('Checking email verification status...'); // Debug
+                            
+                            // Add a small delay to allow Firebase to sync verification status
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            
+                            // Reload user to get latest verification status
+                            await user.reload();
+                            const updatedUser = auth.currentUser;
+                            
+                            if (updatedUser && updatedUser.emailVerified) {
+                                console.log('Email verification confirmed'); // Debug
+                                
+                                // Update Firestore to reflect verification status
+                                await updateDoc(doc(db, "users", updatedUser.uid), {
+                                    emailVerified: true,
+                                    lastLogin: serverTimestamp()
+                                });
+                                
+                                return true;
+                            } else {
+                                console.log('Email still not verified'); // Debug
+                                return false;
+                            }
+                        } catch (error) {
+                            console.error('Error checking email verification status:', error); // Debug
+                            return false;
+                        }
+                    },
+                    
                     // Comprehensive test function for debugging
                     async runAuthTests() {
                         console.log('=== FIREBASE AUTHENTICATION DEBUG TESTS ===');
@@ -3409,11 +3441,21 @@
                                     console.log('User email:', user.email); // Debug
                                     console.log('Email verified:', user.emailVerified); // Debug
                                     
-                                    // Verify email is verified
+                                    // Verify email is verified with retry mechanism
                                     if (!user.emailVerified) {
-                                        app.ui.showToast('Please verify your email address before continuing.', 'error');
-                                        await signOut(auth);
-                                        return;
+                                        console.log('Email not verified, checking for recent verification...'); // Debug
+                                        
+                                        // Use helper function to check verification status
+                                        const isVerified = await this.checkEmailVerificationStatus(user);
+                                        
+                                        if (!isVerified) {
+                                            console.log('Email still not verified after check'); // Debug
+                                            app.ui.showToast('Please verify your email address before continuing. Check your inbox for a verification link.', 'error');
+                                            await signOut(auth);
+                                            return;
+                                        } else {
+                                            console.log('Email verification confirmed, continuing...'); // Debug
+                                        }
                                     }
                                     
                                     // Check for suspicious activity
@@ -3631,19 +3673,24 @@
                             console.log('Login success'); // Debug
                             console.log('User UID:', user.uid); // Debug
                             
-                            // Check if email is verified
+                            // Check if email is verified with retry mechanism
                             if (!user.emailVerified) {
-                                console.log('Email not verified, signing out...'); // Debug
-                                await signOut(auth);
-                                app.ui.showToast('Please verify your email address before logging in. Check your inbox for a verification link.', 'error');
-                                return;
+                                console.log('Email not verified, checking for recent verification...'); // Debug
+                                
+                                // Use helper function to check verification status
+                                const isVerified = await this.checkEmailVerificationStatus(user);
+                                
+                                if (!isVerified) {
+                                    console.log('Email still not verified after check'); // Debug
+                                    await signOut(auth);
+                                    app.ui.showToast('Please verify your email address before logging in. Check your inbox for a verification link.', 'error');
+                                    return;
+                                } else {
+                                    console.log('Email verification confirmed, continuing...'); // Debug
+                                }
                             }
                             
-                            // Update emailVerified status in Firestore
-                            await updateDoc(doc(db, "users", user.uid), {
-                                emailVerified: true,
-                                lastLogin: serverTimestamp()
-                            });
+                            // Note: emailVerified status is now updated in checkEmailVerificationStatus helper function
                             
                             console.log('Login completed, auth state listener will handle UI update'); // Debug
                             // onAuthStateChanged will handle navigation
