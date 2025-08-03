@@ -8767,13 +8767,7 @@ Provide the response in this exact JSON format:
                     window.addEventListener('load', () => {
                         this.metrics.loadTime = performance.now();
                         
-                        // Report to analytics
-                        if (window.gtag) {
-                            gtag('event', 'timing_complete', {
-                                name: 'load',
-                                value: Math.round(this.metrics.loadTime)
-                            });
-                        }
+                        // Analytics tracking removed for performance
                     });
 
                     // Measure paint times
@@ -9292,17 +9286,7 @@ Provide the response in this exact JSON format:
                         ...context
                     };
                     
-                    // Send to monitoring service
-                    if (typeof gtag !== 'undefined') {
-                        gtag('event', 'exception', {
-                            description: errorData.message,
-                            fatal: false,
-                            custom_map: {
-                                error_type: context.type || 'unknown',
-                                user_id: errorData.userId
-                            }
-                        });
-                    }
+                    // Analytics tracking removed for performance
                     
                     // Store locally for debugging
                     this.storeError(errorData);
@@ -9337,13 +9321,7 @@ Provide the response in this exact JSON format:
                 },
                 
                 reportWebVital(metric, value) {
-                    if (typeof gtag !== 'undefined') {
-                        gtag('event', 'web_vitals', {
-                            metric_name: metric,
-                            value: value,
-                            event_category: 'performance'
-                        });
-                    }
+                    // Analytics tracking removed for performance
                 }
             };
 
