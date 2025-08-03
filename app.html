@@ -20,7 +20,7 @@
     <!-- tsParticles for enhanced effects -->
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" crossorigin="anonymous"></script>
     <!-- Date-fns for date manipulation -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js" crossorigin="anonymous"></script>
     <style>
         /* Immediate background fix to prevent white flash */
         html, body {
@@ -3173,7 +3173,7 @@
                             console.error("Firebase env initialization failed:", envError);
                             
                             // Fallback: Local mock authentication for MVP
-                            if (!import.meta.env.VITE_FIREBASE_API_KEY) {
+                            if (!import.meta.env?.VITE_FIREBASE_API_KEY && !process.env?.VITE_FIREBASE_API_KEY) {
                                 console.warn('Firebase down—using local mock');
                                 
                                 // Mock auth functions
@@ -3417,9 +3417,9 @@
                         // Test 3: Check environment variables
                         console.log('\n3. Testing Environment Variables:');
                         const envVars = {
-                            apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? 'SET' : 'MISSING',
-                            authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? 'SET' : 'MISSING',
-                            projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ? 'SET' : 'MISSING'
+                            apiKey: (import.meta.env?.VITE_FIREBASE_API_KEY || process.env?.VITE_FIREBASE_API_KEY) ? 'SET' : 'MISSING',
+                            authDomain: (import.meta.env?.VITE_FIREBASE_AUTH_DOMAIN || process.env?.VITE_FIREBASE_AUTH_DOMAIN) ? 'SET' : 'MISSING',
+                            projectId: (import.meta.env?.VITE_FIREBASE_PROJECT_ID || process.env?.VITE_FIREBASE_PROJECT_ID) ? 'SET' : 'MISSING'
                         };
                         console.log('Environment variables:', envVars);
                         
@@ -4944,7 +4944,9 @@
                         });
                         
                         this.applyTimeOfDayTheme();
-
+                    },
+                    
+                    initParticles() {
                         try {
                             tsParticles.load("tsparticles", {
                                 fpsLimit: 15, // Ultra-low for maximum performance
@@ -7057,7 +7059,7 @@ Provide the response in this exact JSON format:
                             console.log('Login form submitted for:', email); // Debug
                             
                             // Check if Firebase is available
-                            if (!import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY === 'undefined') {
+                            if (!import.meta.env?.VITE_FIREBASE_API_KEY && !process.env?.VITE_FIREBASE_API_KEY) {
                                 console.log('Firebase not available, using mock auth'); // Debug
                                 // Use mock authentication
                                 if (window.mockSignIn) {
@@ -10503,9 +10505,9 @@ Provide the response in this exact JSON format:
                 // Test 3: Check environment variables
                 console.log('\n3. Testing Environment Variables:');
                 const envVars = {
-                    apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? 'SET' : 'MISSING',
-                    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? 'SET' : 'MISSING',
-                    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ? 'SET' : 'MISSING'
+                    apiKey: (import.meta.env?.VITE_FIREBASE_API_KEY || process.env?.VITE_FIREBASE_API_KEY) ? 'SET' : 'MISSING',
+                    authDomain: (import.meta.env?.VITE_FIREBASE_AUTH_DOMAIN || process.env?.VITE_FIREBASE_AUTH_DOMAIN) ? 'SET' : 'MISSING',
+                    projectId: (import.meta.env?.VITE_FIREBASE_PROJECT_ID || process.env?.VITE_FIREBASE_PROJECT_ID) ? 'SET' : 'MISSING'
                 };
                 console.log('Environment variables:', envVars);
                 
