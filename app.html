@@ -417,7 +417,8 @@
         @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 9999; display: flex; flex-direction: column;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            z-index: 9999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; transition: opacity 0.5s;
         }
         
@@ -426,17 +427,90 @@
             display: none !important;
             opacity: 0 !important;
         }
-        .spinner {
-            width: 50px; height: 50px; border: 5px solid var(--border-glass);
-            border-radius: 50%; animation: spin 1s linear infinite, color-pulse 2s ease-in-out infinite;
+        
+        .loading-content {
+            text-align: center;
+            max-width: 400px;
+            padding: 2rem;
         }
+        
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+            animation: logo-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes logo-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(249, 115, 22, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(249, 115, 22, 0.5); }
+        }
+        
+        .spinner {
+            width: 60px; height: 60px; border: 4px solid var(--border-glass);
+            border-radius: 50%; animation: spin 1s linear infinite, color-pulse 2s ease-in-out infinite;
+            margin: 0 auto 1.5rem;
+        }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes color-pulse {
             0% { border-top-color: var(--accent-color); }
-            50% { border-top-color: var(--secondary-color); }
+            25% { border-right-color: var(--secondary-color); }
+            50% { border-bottom-color: var(--info-color); }
+            75% { border-left-color: var(--energy-color); }
             100% { border-top-color: var(--accent-color); }
         }
-        #loading-overlay p { margin-top: 1rem; font-weight: 500; animation: fadeIn 1s ease-in; }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            animation: text-fade 2s ease-in-out infinite;
+        }
+        
+        @keyframes text-fade {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .loading-progress {
+            width: 100%;
+            height: 4px;
+            background: var(--border-glass);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            border-radius: 2px;
+            animation: progress-fill 3s ease-in-out infinite;
+        }
+        
+        @keyframes progress-fill {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        
+        .loading-steps {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted-color);
+            animation: fadeIn 1s ease-in;
+        }
+        
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* --- AUTH VIEW --- */
@@ -1149,9 +1223,20 @@
     </style>
 </head>
 <body>
-    <div id="loading-overlay"><div class="spinner"></div><p>Initializing Operator Uplift...</p></div>
+    <div id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-logo">OU</div>
+            <div class="spinner"></div>
+            <div class="loading-text">Initializing Operator Uplift...</div>
+            <div class="loading-progress">
+                <div class="loading-progress-bar"></div>
+            </div>
+            <div class="loading-steps">Loading components • Connecting services • Preparing your experience</div>
+        </div>
+    </div>
     <div id="tsparticles"></div>
-    <canvas id="matrix-rain-canvas"></canvas>
+            <!-- Matrix rain canvas - temporarily disabled -->
+        <!-- <canvas id="matrix-rain-canvas"></canvas> -->
     <div id="celebration-container"></div>
     <div class="app-wrapper">
         <div id="app-container">
@@ -2967,24 +3052,60 @@
                         return;
                     }
 
-                    // Optimized initialization sequence for better performance
-                    this.ui.initTheme();
-                    this.router.init();
-                    this.eventListeners.init();
+                                    // Enhanced initialization sequence with loading feedback
+                const loadingSteps = [
+                    { name: 'Initializing theme...', action: () => this.ui.initTheme() },
+                    { name: 'Setting up navigation...', action: () => this.router.init() },
+                    { name: 'Configuring event listeners...', action: () => this.eventListeners.init() },
+                    { name: 'Preparing audio system...', action: () => this.audio.init() },
+                    { name: 'Loading interactive elements...', action: () => this.ui.initLuckyWheel() }
+                ];
+                
+                let currentStep = 0;
+                const totalSteps = loadingSteps.length;
+                
+                const updateLoadingProgress = (stepName) => {
+                    const loadingText = document.querySelector('.loading-text');
+                    const progressBar = document.querySelector('.loading-progress-bar');
+                    const stepsText = document.querySelector('.loading-steps');
                     
-                    // Defer heavy operations
-                    setTimeout(() => {
-                        this.ui.initLuckyWheel();
-                        this.audio.init();
-                    }, 100);
+                    if (loadingText) loadingText.textContent = stepName;
+                    if (progressBar) {
+                        const progress = ((currentStep + 1) / totalSteps) * 100;
+                        progressBar.style.width = `${progress}%`;
+                    }
+                    if (stepsText) {
+                        const completedSteps = loadingSteps.slice(0, currentStep + 1).map(s => s.name.replace('...', ' ✓'));
+                        const remainingSteps = loadingSteps.slice(currentStep + 1).map(s => s.name);
+                        stepsText.textContent = [...completedSteps, ...remainingSteps].join(' • ');
+                    }
+                };
+                
+                const executeStep = async () => {
+                    if (currentStep >= totalSteps) {
+                        // All steps completed, proceed to auth
+                        this.auth.listenForAuthState();
+                        return;
+                    }
                     
-                    // Defer matrix rain to avoid blocking initial render
-                    setTimeout(() => {
-                        this.ui.initMatrixRain();
-                    }, 500);
-
-                    // The main entry point is now the auth state listener
-                    this.auth.listenForAuthState();
+                    const step = loadingSteps[currentStep];
+                    updateLoadingProgress(step.name);
+                    
+                    try {
+                        await step.action();
+                        currentStep++;
+                        
+                        // Small delay for visual feedback
+                        setTimeout(executeStep, 200);
+                    } catch (error) {
+                        console.error(`Error in step ${currentStep}:`, error);
+                        currentStep++;
+                        setTimeout(executeStep, 200);
+                    }
+                };
+                
+                // Start the step-by-step initialization
+                executeStep();
                 },
                 
                 // --- RESOURCE CLEANUP ---
@@ -9985,8 +10106,8 @@ Provide the response in this exact JSON format:
         });
     </script>
 
-    <!-- Footer -->
-    <footer class="w-full px-6 text-center py-10 border-t border-zinc-800 fade-in">
+    <!-- Footer - Hidden on login page -->
+    <footer class="w-full px-6 text-center py-10 border-t border-zinc-800 fade-in" id="main-footer" style="display: none;">
         <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
             <p class="text-slate-500">&copy; 2025 Operator Uplift. All rights reserved.</p>
             <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-4">
@@ -10032,8 +10153,8 @@ Provide the response in this exact JSON format:
         </div>
     </div>
     
-    <!-- Scroll to top button -->
-    <button class="scroll-to-top" aria-label="Scroll to top" style="z-index: 50;">
+    <!-- Scroll to top button - Hidden on login page -->
+    <button class="scroll-to-top" aria-label="Scroll to top" style="z-index: 50; display: none;" id="scroll-to-top-btn">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
         </svg>
@@ -10075,6 +10196,35 @@ Provide the response in this exact JSON format:
             } else {
                 scrollToTopBtn.classList.remove('visible');
             }
+        });
+        
+        // Show/hide footer and scroll-to-top based on current view
+        function updateFooterVisibility() {
+            const currentView = document.querySelector('#view-container > div:not(.hidden)');
+            const footer = document.getElementById('main-footer');
+            const scrollBtn = document.getElementById('scroll-to-top-btn');
+            
+            if (currentView && currentView.id === 'auth-view') {
+                // Hide footer and scroll button on login page
+                if (footer) footer.style.display = 'none';
+                if (scrollBtn) scrollBtn.style.display = 'none';
+            } else {
+                // Show footer and scroll button on other pages
+                if (footer) footer.style.display = 'block';
+                if (scrollBtn) scrollBtn.style.display = 'block';
+            }
+        }
+        
+        // Call on page load and view changes
+        document.addEventListener('DOMContentLoaded', updateFooterVisibility);
+        
+        // Monitor for view changes
+        const observer = new MutationObserver(updateFooterVisibility);
+        observer.observe(document.getElementById('view-container'), {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class']
         });
         
         scrollToTopBtn.addEventListener('click', () => {
