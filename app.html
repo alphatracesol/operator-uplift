@@ -385,6 +385,12 @@
             background: var(--bg-color); z-index: 9999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; transition: opacity 0.5s;
         }
+        
+        /* Emergency override for stuck loading overlay */
+        #loading-overlay.force-hide {
+            display: none !important;
+            opacity: 0 !important;
+        }
         .spinner {
             width: 50px; height: 50px; border: 5px solid var(--border-glass);
             border-radius: 50%; animation: spin 1s linear infinite, color-pulse 2s ease-in-out infinite;
@@ -2680,6 +2686,28 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Add timeout to prevent loading overlay from getting stuck
+            setTimeout(() => {
+                const loadingOverlay = document.getElementById('loading-overlay');
+                if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+                    console.warn('Loading overlay timeout - forcing hide');
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => loadingOverlay.style.display = 'none', 500);
+                    app.ui.showToast('Loading timeout. Please refresh if issues persist.', 'warning');
+                }
+            }, 10000); // 10 second timeout
+            
+            // Add keyboard shortcut to force hide loading overlay (Ctrl+Shift+L)
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+                    const loadingOverlay = document.getElementById('loading-overlay');
+                    if (loadingOverlay) {
+                        loadingOverlay.classList.add('force-hide');
+                        console.log('Loading overlay force-hidden via keyboard shortcut');
+                        app.ui.showToast('Loading overlay force-hidden. If issues persist, please refresh.', 'info');
+                    }
+                }
+            });
             // Make app object global so other parts of the code can access it
             window.app = {
                 // --- STATE MANAGEMENT ---
@@ -2909,48 +2937,72 @@
                     // Enhanced auth state listener with security checks
                     listenForAuthState() {
                         onAuthStateChanged(auth, async (user) => {
-                            if (user) {
-                                // Verify email is verified
-                                if (!user.emailVerified) {
-                                    app.ui.showToast('Please verify your email address before continuing.', 'error');
-                                    await signOut(auth);
-                                    return;
-                                }
-                                
-                                // Check for suspicious activity
-                                const lastLogin = localStorage.getItem(`lastLogin_${user.uid}`);
-                                const now = new Date().getTime();
-                                
-                                if (lastLogin) {
-                                    const timeDiff = now - parseInt(lastLogin);
-                                    const maxTimeDiff = 24 * 60 * 60 * 1000; // 24 hours
-                                    
-                                    if (timeDiff > maxTimeDiff) {
-                                        // Force re-authentication for security
-                                        app.ui.showToast('Session expired. Please log in again.', 'warning');
+                            try {
+                                if (user) {
+                                    // Verify email is verified
+                                    if (!user.emailVerified) {
+                                        app.ui.showToast('Please verify your email address before continuing.', 'error');
                                         await signOut(auth);
                                         return;
                                     }
+                                    
+                                    // Check for suspicious activity
+                                    const lastLogin = localStorage.getItem(`lastLogin_${user.uid}`);
+                                    const now = new Date().getTime();
+                                    
+                                    if (lastLogin) {
+                                        const timeDiff = now - parseInt(lastLogin);
+                                        const maxTimeDiff = 24 * 60 * 60 * 1000; // 24 hours
+                                        
+                                        if (timeDiff > maxTimeDiff) {
+                                            // Force re-authentication for security
+                                            app.ui.showToast('Session expired. Please log in again.', 'warning');
+                                            await signOut(auth);
+                                            return;
+                                        }
+                                    }
+                                    
+                                    // Update last login time
+                                    localStorage.setItem(`lastLogin_${user.uid}`, now.toString());
+                                    
+                                    // User is signed in
+                                    app.state.currentUser = user;
+                                    
+                                    // Initialize secure data listeners
+                                    await this.initializeSecureDataListeners(user.uid);
+                                    
+                                    // Start security monitoring
+                                    this.startSecurityMonitoring();
+                                    
+                                    // Hide loading overlay
+                                    const loadingOverlay = document.getElementById('loading-overlay');
+                                    if (loadingOverlay) {
+                                        loadingOverlay.style.opacity = '0';
+                                        setTimeout(() => loadingOverlay.style.display = 'none', 500);
+                                    }
+                                    
+                                } else {
+                                    // User is signed out
+                                    app.cleanup();
+                                    app.router.navigateTo('auth');
+                                    
+                                    // Hide loading overlay
+                                    const loadingOverlay = document.getElementById('loading-overlay');
+                                    if (loadingOverlay) {
+                                        loadingOverlay.style.opacity = '0';
+                                        setTimeout(() => loadingOverlay.style.display = 'none', 500);
+                                    }
                                 }
+                            } catch (error) {
+                                console.error('Auth state change error:', error);
+                                app.ui.showToast('Authentication error. Please refresh the page.', 'error');
                                 
-                                // Update last login time
-                                localStorage.setItem(`lastLogin_${user.uid}`, now.toString());
-                                
-                                // User is signed in
-                                app.state.currentUser = user;
-                                
-                                // Initialize secure data listeners
-                                await this.initializeSecureDataListeners(user.uid);
-                                
-                                // Start security monitoring
-                                this.startSecurityMonitoring();
-                                
-                            } else {
-                                // User is signed out
-                                app.cleanup();
-                                app.router.navigateTo('auth');
-                                document.getElementById('loading-overlay').style.opacity = '0';
-                                setTimeout(() => document.getElementById('loading-overlay').style.display = 'none', 500);
+                                // Hide loading overlay on error
+                                const loadingOverlay = document.getElementById('loading-overlay');
+                                if (loadingOverlay) {
+                                    loadingOverlay.style.opacity = '0';
+                                    setTimeout(() => loadingOverlay.style.display = 'none', 500);
+                                }
                             }
                         });
                     },
@@ -2958,13 +3010,20 @@
                     async initializeSecureDataListeners(uid) {
                         try {
                             // Initialize all data listeners with error handling
-                            await Promise.allSettled([
+                            const results = await Promise.allSettled([
                                 app.firestore.listenForUserData(uid),
                                 app.firestore.listenForGoals(uid),
                                 app.firestore.listenForCommunityTemplates(),
                                 app.firestore.listenForLeaderboard(),
                                 app.firestore.listenForChallenges()
                             ]);
+                            
+                            // Check for any failed listeners
+                            const failedListeners = results.filter(result => result.status === 'rejected');
+                            if (failedListeners.length > 0) {
+                                console.warn('Some data listeners failed:', failedListeners);
+                                app.ui.showToast('Some data may not be fully loaded. Please refresh if needed.', 'warning');
+                            }
                             
                             app.ui.restartBackgroundEffects();
                         } catch (error) {

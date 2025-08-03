@@ -8,6 +8,7 @@
     "dev": "live-server --port=3000 --open=/",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
+    "build:netlify": "npm install && echo 'Build completed for Netlify'",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
