@@ -9,12 +9,6 @@
   external_node_modules = ["firebase-admin"]
 
 [[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-  headers = {X-Frame-Options = "DENY", X-XSS-Protection = "1; mode=block"}
-
-[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
@@ -56,3 +50,6 @@
 [context.branch-deploy.environment]
   NODE_ENV = "development"
   ALLOWED_ORIGIN = "https://your-branch-domain.netlify.app" 
+
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
