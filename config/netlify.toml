@@ -1,18 +1,12 @@
 [build]
   publish = "."
   functions = "netlify/functions"
-  command = "echo 'Build completed'"
+  command = "npm run build:netlify"
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
   external_node_modules = ["firebase-admin"]
-
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-  headers = {X-Frame-Options = "DENY", X-XSS-Protection = "1; mode=block"}
 
 [[redirects]]
   from = "/*"
