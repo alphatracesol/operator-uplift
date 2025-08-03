@@ -53,7 +53,6 @@
     "firebase": "^10.7.0",
     "firebase-admin": "^13.4.0",
     "gsap": "^3.12.2",
-    "huggingface_hub": "^0.19.4",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.0",
     "tone": "^14.7.77",
