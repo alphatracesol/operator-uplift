@@ -22,6 +22,12 @@
     <!-- Date-fns for date manipulation -->
     <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js" crossorigin="anonymous"></script>
     <style>
+        /* Immediate background fix to prevent white flash */
+        html, body {
+            background-color: #0a0a0a !important;
+            background: linear-gradient(135deg, #111827, #0a0a0a) !important;
+        }
+        
         /* --- GLOBAL STYLES & CSS VARIABLES --- */
         :root {
             --accent-color: #f97316;
@@ -70,8 +76,8 @@
         html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-family);
-            background-color: var(--bg-color);
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            background-color: #0a0a0a;
+            background: linear-gradient(135deg, #111827, #0a0a0a);
             color: var(--text-color);
             transition: background 1s, color 0.3s;
             -webkit-font-smoothing: antialiased;
@@ -417,8 +423,8 @@
         @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            z-index: 9999; display: flex; flex-direction: column;
+            background: linear-gradient(135deg, #111827, #0a0a0a);
+            z-index: 99999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; transition: opacity 0.5s;
         }
         
@@ -439,7 +445,7 @@
             height: 80px;
             margin: 0 auto 2rem;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            background: linear-gradient(45deg, #f97316, #f97316);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -455,18 +461,18 @@
         }
         
         .spinner {
-            width: 60px; height: 60px; border: 4px solid var(--border-glass);
+            width: 60px; height: 60px; border: 4px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%; animation: spin 1s linear infinite, color-pulse 2s ease-in-out infinite;
             margin: 0 auto 1.5rem;
         }
         
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes color-pulse {
-            0% { border-top-color: var(--accent-color); }
-            25% { border-right-color: var(--secondary-color); }
-            50% { border-bottom-color: var(--info-color); }
-            75% { border-left-color: var(--energy-color); }
-            100% { border-top-color: var(--accent-color); }
+            0% { border-top-color: #f97316; }
+            25% { border-right-color: #f97316; }
+            50% { border-bottom-color: #f97316; }
+            75% { border-left-color: #f97316; }
+            100% { border-top-color: #f97316; }
         }
         
         .loading-text {
@@ -493,7 +499,7 @@
         
         .loading-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            background: linear-gradient(90deg, #f97316, #f97316);
             border-radius: 2px;
             animation: progress-fill 3s ease-in-out infinite;
         }
@@ -505,8 +511,12 @@
         }
         
         .loading-steps {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted-color);
+            line-height: 1.5;
+            max-width: 300px;
+            text-align: center;
             color: var(--text-muted-color);
             animation: fadeIn 1s ease-in;
         }
@@ -3065,9 +3075,15 @@
                         progressBar.style.width = `${progress}%`;
                     }
                     if (stepsText) {
-                        const completedSteps = loadingSteps.slice(0, currentStep + 1).map(s => s.name.replace('...', ' ✓'));
-                        const remainingSteps = loadingSteps.slice(currentStep + 1).map(s => s.name);
-                        stepsText.textContent = [...completedSteps, ...remainingSteps].join(' • ');
+                        // Show only current step and next step to prevent text overflow
+                        const currentStepName = loadingSteps[currentStep]?.name || '';
+                        const nextStepName = loadingSteps[currentStep + 1]?.name || '';
+                        
+                        if (nextStepName) {
+                            stepsText.textContent = `${currentStepName} • ${nextStepName}`;
+                        } else {
+                            stepsText.textContent = currentStepName;
+                        }
                     }
                 };
                 
@@ -3094,8 +3110,10 @@
                     }
                 };
                 
-                // Start the step-by-step initialization
-                executeStep();
+                // Start the step-by-step initialization with a small delay to ensure DOM is ready
+                setTimeout(() => {
+                    executeStep();
+                }, 100);
                 },
                 
                 // --- RESOURCE CLEANUP ---
