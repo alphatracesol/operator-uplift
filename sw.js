@@ -28,21 +28,26 @@ const urlsToCache = [
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
+    console.log('🚀 Service Worker installing...');
     event.waitUntil(
         caches.open(STATIC_CACHE)
             .then(cache => {
+                console.log('📦 Caching static assets');
                 return cache.addAll(urlsToCache);
             })
             .then(() => {
+                console.log('✅ Static assets cached successfully');
                 return self.skipWaiting();
             })
             .catch(error => {
-                })
+                console.error('❌ Cache installation failed:', error);
+            })
     );
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
+    console.log('🔄 Service Worker activating...');
     event.waitUntil(
         caches.keys()
             .then(cacheNames => {
@@ -51,12 +56,14 @@ self.addEventListener('activate', (event) => {
                         if (cacheName !== STATIC_CACHE && 
                             cacheName !== DYNAMIC_CACHE && 
                             cacheName !== API_CACHE) {
+                            console.log('🗑️ Deleting old cache:', cacheName);
                             return caches.delete(cacheName);
                         }
                     })
                 );
             })
             .then(() => {
+                console.log('✅ Service Worker activated');
                 return self.clients.claim();
             })
     );
@@ -66,6 +73,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     // CRITICAL: Never cache POST requests - handle them immediately
     if (event.request.method === 'POST') {
+        console.log(`🚫 POST request detected, bypassing cache: ${event.request.url}`);
         event.respondWith(fetch(event.request));
         return;
     }
@@ -94,11 +102,13 @@ self.addEventListener('fetch', (event) => {
 async function cacheFirst(request) {
     // CRITICAL: Never cache POST requests - multiple safety checks
     if (request.method === 'POST') {
+        console.log('🚫 POST request detected in cacheFirst, bypassing cache:', request.url);
         return fetch(request);
     }
     
     // Skip caching for chrome-extension URLs
     if (request.url.startsWith('chrome-extension://')) {
+        console.log('🚫 Chrome extension request detected, bypassing cache:', request.url);
         return fetch(request);
     }
     
@@ -106,6 +116,7 @@ async function cacheFirst(request) {
     const cachedResponse = await cache.match(request);
     
     if (cachedResponse) {
+        console.log('📦 Serving from cache:', request.url);
         return cachedResponse;
     }
     
@@ -117,6 +128,7 @@ async function cacheFirst(request) {
         }
         return networkResponse;
     } catch (error) {
+        console.error('❌ Network failed for cache-first:', error);
         return new Response('Offline content not available', { status: 503 });
     }
 }
@@ -124,11 +136,13 @@ async function cacheFirst(request) {
 async function networkFirst(request) {
     // CRITICAL: Never cache POST requests - multiple safety checks
     if (request.method === 'POST') {
+        console.log('🚫 POST request detected in networkFirst, bypassing cache:', request.url);
         return fetch(request);
     }
     
     // Skip caching for chrome-extension URLs
     if (request.url.startsWith('chrome-extension://')) {
+        console.log('🚫 Chrome extension request detected, bypassing cache:', request.url);
         return fetch(request);
     }
     
@@ -142,9 +156,11 @@ async function networkFirst(request) {
         }
         return networkResponse;
     } catch (error) {
+        console.log('🌐 Network failed, trying cache:', error);
         const cachedResponse = await cache.match(request);
         
         if (cachedResponse) {
+            console.log('📦 Serving API from cache:', request.url);
             return cachedResponse;
         }
         
@@ -155,11 +171,13 @@ async function networkFirst(request) {
 async function staleWhileRevalidate(request) {
     // CRITICAL: Never cache POST requests - multiple safety checks
     if (request.method === 'POST') {
+        console.log('🚫 POST request detected in staleWhileRevalidate, bypassing cache:', request.url);
         return fetch(request);
     }
     
     // Skip caching for chrome-extension URLs
     if (request.url.startsWith('chrome-extension://')) {
+        console.log('🚫 Chrome extension request detected, bypassing cache:', request.url);
         return fetch(request);
     }
     
@@ -173,7 +191,8 @@ async function staleWhileRevalidate(request) {
         }
         return networkResponse;
     }).catch(error => {
-        });
+        console.error('❌ Network failed for stale-while-revalidate:', error);
+    });
     
     return cachedResponse || fetchPromise;
 }
@@ -182,6 +201,7 @@ async function networkOnly(request) {
     try {
         return await fetch(request);
     } catch (error) {
+        console.error('❌ Network failed:', error);
         return new Response('Offline', { status: 503 });
     }
 }
@@ -225,6 +245,8 @@ function getCacheStrategy(url) {
 
 // Background sync for offline actions
 self.addEventListener('sync', (event) => {
+    console.log('🔄 Background sync triggered:', event.tag);
+    
     if (event.tag === 'background-sync') {
         event.waitUntil(doBackgroundSync());
     }
@@ -239,11 +261,14 @@ async function doBackgroundSync() {
             try {
                 await syncOfflineAction(data);
             } catch (error) {
-                }
+                console.error('❌ Failed to sync offline action:', error);
+            }
         }
         
-        } catch (error) {
-        }
+        console.log('✅ Background sync completed');
+    } catch (error) {
+        console.error('❌ Background sync failed:', error);
+    }
 }
 
 // Get offline data from IndexedDB
@@ -255,10 +280,13 @@ async function getOfflineData() {
 // Sync offline action to server
 async function syncOfflineAction(data) {
     // Implementation would depend on the specific action type
-    }
+    console.log('🔄 Syncing offline action:', data);
+}
 
 // Push notification handling
 self.addEventListener('push', (event) => {
+    console.log('📱 Push notification received');
+    
     const options = {
         body: event.data ? event.data.text() : 'New notification from Operator Uplift',
         icon: '/icon-192x192.png',
@@ -289,6 +317,8 @@ self.addEventListener('push', (event) => {
 
 // Notification click handling
 self.addEventListener('notificationclick', (event) => {
+    console.log('👆 Notification clicked:', event.action);
+    
     event.notification.close();
     
     if (event.action === 'explore') {
@@ -300,6 +330,8 @@ self.addEventListener('notificationclick', (event) => {
 
 // Message handling from main thread
 self.addEventListener('message', (event) => {
+    console.log('💬 Message received in SW:', event.data);
+    
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
@@ -314,9 +346,12 @@ self.addEventListener('message', (event) => {
 
 // Error handling
 self.addEventListener('error', (event) => {
-    });
+    console.error('❌ Service Worker error:', event.error);
+});
 
 // Unhandled rejection handling
 self.addEventListener('unhandledrejection', (event) => {
-    });
+    console.error('❌ Service Worker unhandled rejection:', event.reason);
+});
 
+console.log('🚀 Enhanced Service Worker loaded successfully!'); 

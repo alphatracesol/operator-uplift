@@ -693,12 +693,11 @@
             top: 0;
             left: 0;
             width: 0%;
-            height: 6px;
+            height: 4px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
             z-index: 1001;
             transition: width 0.3s ease;
-            box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
-            border-radius: 0 0 3px 0;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
         }
 
                             /* Enhanced Navigation */
@@ -1256,7 +1255,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.2), transparent);
             transition: left 0.6s ease;
             z-index: 1;
         }
@@ -1266,8 +1265,8 @@
         }
 
         .trust-badge:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.5);
             transform: translateY(-1px);
         }
 
@@ -1300,20 +1299,6 @@
             transform: translateY(-3px) translateZ(0);
         }
 
-        /* Trust badges should not have orange outline */
-        .trust-badge.glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Bottom trust badges should never have orange outline */
-        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .trust-badge,
-        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .trust-badge:hover,
-        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .trust-badge::before {
-            border: none !important;
-            background: transparent !important;
-            box-shadow: none !important;
-        }
-
         /* Additional button hover effects */
         .nav-links a {
             position: relative;
@@ -1331,8 +1316,8 @@
         }
 
         .trust-badge:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.5);
             transform: translateY(-1px);
         }
 
@@ -1345,65 +1330,11 @@
             padding: 0.5rem 1rem !important;
             font-size: 0.8rem !important;
             transform: scale(0.9) !important;
-            border: none !important;
-            background: transparent !important;
-        }
-
-        .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex:hover {
-            border: none !important;
-            background: transparent !important;
-            transform: scale(0.9) !important;
-            box-shadow: none !important;
         }
 
         .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex svg {
             width: 1.125rem !important;
             height: 1.125rem !important;
-        }
-
-        /* Responsive scaling for bottom trust badges */
-        @media (max-width: 768px) {
-            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
-                gap: 0.25rem !important;
-            }
-
-            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex {
-                padding: 0.25rem 0.5rem !important;
-                font-size: 0.7rem !important;
-                transform: scale(0.8) !important;
-            }
-
-            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex svg {
-                width: 1rem !important;
-                height: 1rem !important;
-            }
-
-            /* Keep logo size consistent */
-            .logo {
-                font-size: 1.5rem !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 {
-                gap: 0.125rem !important;
-            }
-
-            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex {
-                padding: 0.125rem 0.25rem !important;
-                font-size: 0.6rem !important;
-                transform: scale(0.7) !important;
-            }
-
-            .hero-content .flex.flex-wrap.justify-center.items-center.gap-6 .flex svg {
-                width: 0.875rem !important;
-                height: 0.875rem !important;
-            }
-
-            /* Keep logo size consistent */
-            .logo {
-                font-size: 1.5rem !important;
-            }
         }
 
         /* Animations */
@@ -1978,9 +1909,11 @@
                 justify-content: center;
                 gap: 1rem;
             }
-            /* --- LEGAL PAGES STYLING --- */
-            .overlay-page {
-                position: fixed;
+        }
+
+        /* --- LEGAL PAGES STYLING --- */
+        .overlay-page {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -2264,11 +2197,11 @@
             .hero-buttons .cta-button,
             .hero-buttons .btn-secondary {
                 width: 100% !important;
-                padding: 0.75rem 1rem !important;
-                font-size: 0.875rem !important;
+                padding: 1rem 1.5rem !important;
+                font-size: 1rem !important;
                 text-align: center !important;
                 margin: 0 !important;
-                min-height: 40px !important;
+                min-height: 48px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
@@ -2313,40 +2246,6 @@
 
             .mobile-menu-toggle {
                 display: block !important;
-            }
-        }
-
-        /* Extra small screens */
-        @media (max-width: 480px) {
-            .hero-buttons {
-                max-width: 250px !important;
-            }
-            
-            .hero-buttons .cta-button,
-            .hero-buttons .btn-secondary {
-                padding: 0.5rem 0.75rem !important;
-                font-size: 0.75rem !important;
-                min-height: 36px !important;
-            }
-        }
-
-        /* Hide nav links when they wrap and show mobile menu */
-        @media (max-width: 1024px) {
-            .nav-links {
-                display: none !important;
-            }
-            
-            .cta-button.desktop-only {
-                display: none !important;
-            }
-            
-            .mobile-menu-toggle {
-                display: block !important;
-            }
-
-            /* Keep logo size consistent */
-            .logo {
-                font-size: 1.5rem !important;
             }
 
             /* Container improvements */
@@ -2731,7 +2630,27 @@
                     <a href="#features" class="btn-secondary" id="learn-more-btn">Learn More</a>
                 </div>
                 
-
+                <!-- Trust Badges -->
+                <div class="flex flex-wrap justify-center items-center gap-6 mb-4">
+                    <div class="flex items-center gap-2 text-sm text-slate-400 trust-badge">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>10,000+ Operators</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-400 trust-badge">
+                        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Proven Results</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-400 trust-badge">
+                        <svg class="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Secure & Private</span>
+                    </div>
+                </div>
             </div>
             <div class="scene">
                 <div class="cube" id="cube">
@@ -3109,26 +3028,12 @@
 
         // Custom cursor removed for performance optimization
 
-        // Progress Bar - Animated based on element visibility
+        // Progress Bar - Throttled
         const updateProgressBar = throttle(() => {
-            const progressBar = document.querySelector('.progress-bar');
-            if (!progressBar) return;
-            
-            const sections = document.querySelectorAll('section, .glass-card, .feature-card');
-            let visibleSections = 0;
-            let totalSections = sections.length;
-            
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-                if (isVisible) {
-                    visibleSections++;
-                }
-            });
-            
-            const progressPercent = Math.max(0, Math.min(100, (visibleSections / totalSections) * 100));
-            progressBar.style.width = progressPercent + '%';
-            progressBar.style.transition = 'width 0.3s ease';
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.querySelector('.progress-bar').style.width = scrollPercent + '%';
         }, 16);
 
         // Navbar Scroll Effect - Throttled
@@ -3145,11 +3050,6 @@
         window.addEventListener('scroll', () => {
             updateProgressBar();
             updateNavbar();
-        });
-
-        // Initialize progress bar on page load
-        window.addEventListener('load', () => {
-            updateProgressBar();
         });
 
         // Initialize Particles - Ultra-optimized for performance
@@ -4227,23 +4127,6 @@
             document.body.addEventListener('mousedown', () => document.body.dataset.input = 'mouse');
             document.body.addEventListener('keydown', () => document.body.dataset.input = 'keyboard');
 
-            // --- Icon animations on load ---
-            document.addEventListener('DOMContentLoaded', () => {
-                const icons = document.querySelectorAll('.feature-icon, .faq-icon');
-                icons.forEach((icon, index) => {
-                    setTimeout(() => {
-                        icon.style.opacity = '0';
-                        icon.style.transform = 'scale(0.5)';
-                        icon.style.transition = 'all 0.5s ease';
-                        
-                        setTimeout(() => {
-                            icon.style.opacity = '1';
-                            icon.style.transform = 'scale(1)';
-                        }, 100);
-                    }, index * 100);
-                });
-            });
-
             // --- Performance monitoring ---
         if ('PerformanceObserver' in window) {
             const observer = new PerformanceObserver((list) => {
@@ -4290,34 +4173,6 @@
         .cta-button, .btn-secondary {
             position: relative;
             overflow: hidden;
-        }
-
-        /* Icon animations */
-        .feature-icon {
-            transition: all 0.3s ease;
-        }
-
-        .feature-icon:hover {
-            transform: scale(1.1) rotate(5deg);
-            filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.5));
-        }
-
-        .faq-icon {
-            transition: transform 0.3s ease;
-        }
-
-        .faq-icon:hover {
-            transform: rotate(180deg);
-        }
-
-        /* Animate icons on load */
-        @keyframes iconFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .icon-float {
-            animation: iconFloat 3s ease-in-out infinite;
         }
     </style>
 </body>

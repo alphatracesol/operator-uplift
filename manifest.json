@@ -1,273 +1,99 @@
 {
-  "name": "Operator Uplift - AI-Powered Self-Progression",
-  "short_name": "Operator Uplift",
-  "description": "Transform your ambitions into epic quests with AI-powered goal deconstruction and gamified productivity",
-  "version": "1.0.0",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait-primary",
-  "theme_color": "#f97316",
-  "background_color": "#0a0a0a",
-  "scope": "/",
-  "lang": "en-US",
-  "dir": "ltr",
-  "categories": ["productivity", "lifestyle", "education"],
-  "icons": [
-    {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Launch App",
-      "short_name": "Launch",
-      "description": "Open the main application",
-      "url": "/app.html",
-      "icons": [
+    "name": "Operator Uplift - AI-Powered Self-Progression",
+    "short_name": "Operator Uplift",
+    "description": "Transform your ambitions into epic quests with AI-powered goal setting and gamified productivity",
+    "start_url": "/Operator_Uplift_Complete.html",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#f97316",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "en",
+    "categories": ["productivity", "lifestyle", "education"],
+    "icons": [
         {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "Press Release",
-      "short_name": "Press",
-      "description": "View the latest press release",
-      "url": "/press-release.html",
-      "icons": [
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
         {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "MVP Launch",
-      "short_name": "MVP",
-      "description": "Access the MVP launch page",
-      "url": "/MVP Launch Page.html",
-      "icons": [
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
         {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/desktop-1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Operator Uplift Desktop Dashboard"
-    },
-    {
-      "src": "/screenshots/mobile-1.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Operator Uplift Mobile Interface"
-    }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "protocol_handlers": [
-    {
-      "protocol": "web+operatoruplift",
-      "url": "/app.html?action=%s"
-    }
-  ],
-  "file_handlers": [
-    {
-      "action": "/app.html",
-      "accept": {
-        "text/plain": [".txt"],
-        "application/json": [".json"]
-      }
-    }
-  ],
-  "share_target": {
-    "action": "/app.html",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url",
-      "files": [
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any"
+        },
         {
-          "name": "files",
-          "accept": ["image/*", "text/*"]
+            "src": "/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png",
+            "purpose": "any"
         }
-      ]
-    }
-  },
-  "handle_links": "preferred",
-  "capture_links": "existing-client-navigate",
-  "permissions": [
-    "notifications",
-    "storage"
-  ],
-  "optional_permissions": [
-    "background-sync",
-    "periodic-background-sync"
-  ],
-  "background": {
-    "service_worker": "/sw.js",
-    "type": "module"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["/icons/*", "/images/*"],
-      "matches": ["<all_urls>"]
-    }
-  ],
-  "externally_connectable": {
-    "matches": ["https://*.operatoruplift.com/*"]
-  },
-  "minimum_chrome_version": "88",
-  "author": {
-    "name": "Operator Uplift Team",
-    "email": "support@operatoruplift.com",
-    "url": "https://operatoruplift.com"
-  },
-  "homepage_url": "https://operatoruplift.com",
-  "developer": {
-    "name": "Operator Uplift",
-    "url": "https://operatoruplift.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/operatoruplift/webapp"
-  },
-  "bugs": {
-    "url": "https://github.com/operatoruplift/webapp/issues"
-  },
-  "support": {
-    "url": "https://operatoruplift.com/support",
-    "email": "support@operatoruplift.com"
-  },
-  "privacy_policy": "https://operatoruplift.com/privacy",
-  "terms_of_service": "https://operatoruplift.com/terms",
-  "data_usage": {
-    "analytics": true,
-    "personalization": true,
-    "third_party": false
-  },
-  "security": {
-    "csp": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://images.pexels.com https://www.facebook.com; connect-src 'self' https://www.google-analytics.com https://api.openai.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://connect.facebook.net; frame-src 'self' https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'",
-    "hsts": true,
-    "xss_protection": true,
-    "content_type_options": true,
-    "frame_options": "DENY",
-    "referrer_policy": "strict-origin-when-cross-origin"
-  },
-  "performance": {
-    "preload": [
-      "/app.html",
-      "/press-release.html",
-      "/MVP Launch Page.html"
     ],
-    "prefetch": [
-      "/images/hero-bg.jpg",
-      "/images/logo.svg"
+    "shortcuts": [
+        {
+            "name": "Dashboard",
+            "short_name": "Dashboard",
+            "description": "View your progress and goals",
+            "url": "/Operator_Uplift_Complete.html?view=dashboard",
+            "icons": [
+                {
+                    "src": "/android-chrome-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Add Goal",
+            "short_name": "Add Goal",
+            "description": "Create a new goal",
+            "url": "/Operator_Uplift_Complete.html?view=goals&action=add",
+            "icons": [
+                {
+                    "src": "/android-chrome-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "AI Chat",
+            "short_name": "AI Chat",
+            "description": "Chat with your AI mentor",
+            "url": "/Operator_Uplift_Complete.html?view=ai-chat",
+            "icons": [
+                {
+                    "src": "/android-chrome-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "edge_side_panel": {
+        "preferred_width": 400
+    },
+    "launch_handler": {
+        "client_mode": "navigate-existing"
+    },
+    "handle_links": "preferred",
+    "protocol_handlers": [
+        {
+            "protocol": "web+operatoruplift",
+            "url": "/Operator_Uplift_Complete.html?action=%s"
+        }
     ]
-  },
-  "accessibility": {
-    "wcag_level": "AA",
-    "screen_reader_support": true,
-    "keyboard_navigation": true,
-    "high_contrast": true,
-    "font_scaling": true
-  },
-  "localization": {
-    "default_locale": "en",
-    "supported_locales": ["en", "es", "fr", "de", "pt", "it", "nl", "sv", "no", "da", "fi", "pl", "ru", "ja", "ko", "zh", "ar", "hi", "th", "vi"],
-    "fallback_locale": "en"
-  },
-  "analytics": {
-    "google_analytics": "G-EWV7VG9M61",
-    "facebook_pixel": "1462196764930097"
-  },
-  "monetization": {
-    "payment_methods": ["stripe", "paypal"],
-    "subscription_tiers": ["free", "pro", "enterprise"]
-  },
-  "compliance": {
-    "gdpr": true,
-    "ccpa": true,
-    "coppa": false,
-    "sox": false,
-    "hipaa": false,
-    "ferpa": false
-  },
-  "maintenance": {
-    "auto_update": true,
-    "backup_frequency": "daily",
-    "monitoring": true,
-    "alerting": true
-  },
-  "deployment": {
-    "environment": "production",
-    "region": "us-east-1",
-    "cdn": "cloudflare",
-    "ssl": "lets_encrypt",
-    "backup": "s3"
-  }
 } 

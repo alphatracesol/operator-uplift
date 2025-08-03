@@ -2,14 +2,14 @@
 
 ## 🚨 CRITICAL SECURITY ISSUE DETECTED
 
-Your Firebase API key has been exposed in the browser console. This is a **CRITICAL SECURITY VULNERABILITY** that needs **IMMEDIATE ACTION**.
+Your Firebase API key `AIzaSyCUVSEKUKC_suEIVuguflAus1zM7b0E3NY` has been exposed in the browser console. This is a **CRITICAL SECURITY VULNERABILITY** that needs **IMMEDIATE ACTION**.
 
 ## ⚡ IMMEDIATE ACTIONS REQUIRED (DO THIS NOW)
 
 ### 1. 🔑 REGENERATE FIREBASE API KEY (URGENT - 5 MINUTES)
 
 1. **Go to Firebase Console**: https://console.firebase.google.com/
-2. **Select your project**: `your_project_id`
+2. **Select your project**: `operatoruplift-12b92`
 3. **Navigate to**: Project Settings → General → Your apps
 4. **Find your web app** and click the gear icon
 5. **Click "Regenerate key"** for the API key
@@ -18,7 +18,7 @@ Your Firebase API key has been exposed in the browser console. This is a **CRITI
 ### 2. 🔄 UPDATE NETLIFY ENVIRONMENT VARIABLES (URGENT)
 
 1. **Go to Netlify Dashboard**: https://app.netlify.com/
-2. **Select your site**: `your_netlify_site_name`
+2. **Select your site**: `operatorupliftos`
 3. **Navigate to**: Site settings → Environment variables
 4. **Update the following variable**:
    - `VITE_FIREBASE_API_KEY` = [Your new API key from step 1]
@@ -30,7 +30,7 @@ Your Firebase API key has been exposed in the browser console. This is a **CRITI
 3. **Navigate to**: APIs & Services → Credentials
 4. **Find your API key** and click on it
 5. **Application restrictions**: Set to "HTTP referrers (web sites)"
-6. **Add your domain**: `https://your-site-name.netlify.app/*`
+6. **Add your domain**: `https://operatorupliftos.netlify.app/*`
 7. **API restrictions**: Restrict to Firebase APIs only
 
 ## 🔧 SERVICE WORKER FIXES

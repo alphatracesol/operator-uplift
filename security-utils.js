@@ -261,6 +261,7 @@ const SecurityUtils = {
             localStorage.setItem(key, encrypted);
             return true;
         } catch (error) {
+            console.error('Secure storage error:', error);
             return false;
         }
     },
@@ -271,6 +272,7 @@ const SecurityUtils = {
             if (!encrypted) return null;
             return JSON.parse(atob(encrypted));
         } catch (error) {
+            console.error('Secure retrieval error:', error);
             return null;
         }
     }

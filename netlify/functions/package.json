@@ -1,25 +1,24 @@
 {
-  "name": "operator-uplift-ai-proxy",
-  "version": "1.0.0",
-  "description": "AI Proxy Functions for Operator Uplift - Multiple AI Provider Support",
+  "name": "operator-uplift-functions",
+  "version": "2.0.0",
+  "description": "Netlify functions for Operator Uplift application",
   "main": "ai-proxy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^1.6.0"
+    "firebase-admin": "^12.0.0",
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "keywords": [
-    "ai",
-    "proxy",
     "netlify",
     "functions",
-    "gemini",
-    "claude",
-    "perplexity",
-    "deepseek",
-    "xai",
-    "gpt"
+    "ai",
+    "firebase",
+    "security"
   ],
   "author": "Operator Uplift Team",
   "license": "MIT"
