@@ -55,3 +55,6 @@
 [context.branch-deploy.environment]
   NODE_ENV = "development"
   ALLOWED_ORIGIN = "https://your-branch-domain.netlify.app" 
+
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
