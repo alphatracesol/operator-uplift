@@ -20,7 +20,7 @@
     <!-- tsParticles for enhanced effects -->
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" crossorigin="anonymous"></script>
     <!-- Date-fns for date manipulation -->
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js" crossorigin="anonymous"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js" crossorigin="anonymous"></script>
     <style>
         /* Immediate background fix to prevent white flash */
         html, body {
@@ -3132,12 +3132,12 @@
                         // Fallback: Try to use import.meta.env for Vite build system
                         try {
                             const firebaseConfig = {
-                                apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-                                authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-                                projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-                                storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-                                messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-                                appId: import.meta.env.VITE_FIREBASE_APP_ID
+                                apiKey: import.meta.env?.VITE_FIREBASE_API_KEY || process.env?.VITE_FIREBASE_API_KEY,
+                                authDomain: import.meta.env?.VITE_FIREBASE_AUTH_DOMAIN || process.env?.VITE_FIREBASE_AUTH_DOMAIN,
+                                projectId: import.meta.env?.VITE_FIREBASE_PROJECT_ID || process.env?.VITE_FIREBASE_PROJECT_ID,
+                                storageBucket: import.meta.env?.VITE_FIREBASE_STORAGE_BUCKET || process.env?.VITE_FIREBASE_STORAGE_BUCKET,
+                                messagingSenderId: import.meta.env?.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env?.VITE_FIREBASE_MESSAGING_SENDER_ID,
+                                appId: import.meta.env?.VITE_FIREBASE_APP_ID || process.env?.VITE_FIREBASE_APP_ID
                             };
                             
                             console.log('Firebase Config Loaded:', !!firebaseConfig.apiKey);
@@ -3150,7 +3150,12 @@
                                 appId: firebaseConfig.appId ? 'SET' : 'MISSING'
                             });
                             
-                            if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'undefined') {
+                            if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'undefined' || firebaseConfig.apiKey === 'null') {
+                                console.error('Firebase environment variables not available:', {
+                                    apiKey: firebaseConfig.apiKey,
+                                    authDomain: firebaseConfig.authDomain,
+                                    projectId: firebaseConfig.projectId
+                                });
                                 throw new Error('Firebase environment variables not available');
                             }
                             
@@ -7506,32 +7511,57 @@ Provide the response in this exact JSON format:
                         });
                         
                         let draggedItem = null;
-                        document.getElementById('goal-list').addEventListener('dragstart', e => { if (e.target.classList.contains('task-item')) { draggedItem = e.target; setTimeout(() => e.target.classList.add('dragging'), 0); } });
-                        document.getElementById('goal-list').addEventListener('dragend', () => { if (draggedItem) { draggedItem.classList.remove('dragging'); const goalId = draggedItem.closest('.goal-item').dataset.id; const taskList = draggedItem.parentElement; const orderedTaskIds = [...taskList.querySelectorAll('.task-item')].map(item => item.dataset.id); app.goals.updateTaskOrder(goalId, orderedTaskIds); draggedItem = null; } });
-                        document.getElementById('goal-list').addEventListener('dragover', e => { e.preventDefault(); const taskList = e.target.closest('.task-list'); if (taskList && draggedItem) { const afterElement = this.getDragAfterElement(taskList, e.clientY); if (afterElement == null) { taskList.appendChild(draggedItem); } else { taskList.insertBefore(draggedItem, afterElement); } } });
+                        
+                        // Add null checks for all event listeners
+                        const goalList = document.getElementById('goal-list');
+                        if (goalList) {
+                            goalList.addEventListener('dragstart', e => { if (e.target.classList.contains('task-item')) { draggedItem = e.target; setTimeout(() => e.target.classList.add('dragging'), 0); } });
+                            goalList.addEventListener('dragend', () => { if (draggedItem) { draggedItem.classList.remove('dragging'); const goalId = draggedItem.closest('.goal-item').dataset.id; const taskList = draggedItem.parentElement; const orderedTaskIds = [...taskList.querySelectorAll('.task-item')].map(item => item.dataset.id); app.goals.updateTaskOrder(goalId, orderedTaskIds); draggedItem = null; } });
+                            goalList.addEventListener('dragover', e => { e.preventDefault(); const taskList = e.target.closest('.task-list'); if (taskList && draggedItem) { const afterElement = this.getDragAfterElement(taskList, e.clientY); if (afterElement == null) { taskList.appendChild(draggedItem); } else { taskList.insertBefore(draggedItem, afterElement); } } });
+                        }
 
-                        // Onboarding Listeners
-                        document.getElementById('tutorial-close-btn').addEventListener('click', () => document.getElementById('tutorial-modal').classList.remove('active'));
-                        document.getElementById('profile-analysis-form').addEventListener('submit', async (e) => {
-                            e.preventDefault();
-                            const formData = new FormData(e.target);
-                            await app.ui.analyzeProfile(formData);
-                            e.target.classList.add('hidden');
-                        });
-                        document.getElementById('add-task-form').addEventListener('submit', e => {
-                            e.preventDefault();
-                            const goalId = document.getElementById('add-task-goal-id').value;
-                            const description = document.getElementById('add-task-description-input').value;
-                            const dueDate = document.getElementById('add-task-due-date-input').value;
-                            app.goals.addTask(goalId, description, dueDate);
-                            e.target.reset();
-                            document.getElementById('add-task-modal').classList.remove('active');
-                        });
+                        // Onboarding Listeners with null checks
+                        const tutorialCloseBtn = document.getElementById('tutorial-close-btn');
+                        if (tutorialCloseBtn) {
+                            tutorialCloseBtn.addEventListener('click', () => {
+                                const tutorialModal = document.getElementById('tutorial-modal');
+                                if (tutorialModal) tutorialModal.classList.remove('active');
+                            });
+                        }
+                        
+                        const profileAnalysisForm = document.getElementById('profile-analysis-form');
+                        if (profileAnalysisForm) {
+                            profileAnalysisForm.addEventListener('submit', async (e) => {
+                                e.preventDefault();
+                                const formData = new FormData(e.target);
+                                await app.ui.analyzeProfile(formData);
+                                e.target.classList.add('hidden');
+                            });
+                        }
+                        
+                        const addTaskForm = document.getElementById('add-task-form');
+                        if (addTaskForm) {
+                            addTaskForm.addEventListener('submit', e => {
+                                e.preventDefault();
+                                const goalId = document.getElementById('add-task-goal-id')?.value;
+                                const description = document.getElementById('add-task-description-input')?.value;
+                                const dueDate = document.getElementById('add-task-due-date-input')?.value;
+                                if (goalId && description) {
+                                    app.goals.addTask(goalId, description, dueDate);
+                                    e.target.reset();
+                                    const addTaskModal = document.getElementById('add-task-modal');
+                                    if (addTaskModal) addTaskModal.classList.remove('active');
+                                }
+                            });
+                        }
 
-                        // Theme toggle button
-                        document.getElementById('theme-toggle-btn').addEventListener('click', () => {
-                            app.ui.toggleTheme();
-                        });
+                        // Theme toggle button with null check
+                        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+                        if (themeToggleBtn) {
+                            themeToggleBtn.addEventListener('click', () => {
+                                app.ui.toggleTheme();
+                            });
+                        }
 
                         // Goals search functionality
                         const goalsSearchInput = document.getElementById('goals-search');

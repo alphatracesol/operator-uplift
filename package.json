@@ -4,8 +4,8 @@
   "description": "AI-Powered Self-Progression Platform - Transform your goals into epic quests with gamified productivity",
   "main": "index.html",
   "scripts": {
-    "start": "live-server --port=3000 --open=/",
-    "dev": "live-server --port=3000 --open=/",
+    "start": "live-server --port=8080 --open=/",
+    "dev": "live-server --port=8080 --open=/",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "build:netlify": "npm install && npm run copy-files && echo 'Build completed for Netlify'",
@@ -20,7 +20,7 @@
     "deploy:preview": "netlify deploy",
     "analyze": "webpack-bundle-analyzer build/js/stats.json",
     "security:audit": "npm audit",
-    "performance:audit": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json",
+    "performance:audit": "lighthouse http://localhost:8080 --output=json --output-path=./lighthouse-report.json",
     "clean": "rimraf build dist",
     "serve": "http-server build -p 8080 -o"
   },
@@ -32,7 +32,9 @@
     "self-improvement",
     "pwa",
     "firebase",
-    "netlify"
+    "netlify",
+    "deepseek",
+    "huggingface"
   ],
   "author": "Operator Uplift Team",
   "license": "MIT",
@@ -51,6 +53,7 @@
     "firebase": "^10.7.0",
     "firebase-admin": "^13.4.0",
     "gsap": "^3.12.2",
+    "huggingface_hub": "^0.19.4",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.0",
     "tone": "^14.7.77",
