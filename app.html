@@ -3033,8 +3033,19 @@
                         // Firebase initialized successfully
                         console.log('Firebase initialized successfully');
                         console.log('Firebase Config Loaded:', !!config.firebaseConfig.apiKey);
+                        console.log('Firebase Config Debug:', {
+                            apiKey: config.firebaseConfig.apiKey ? 'SET' : 'MISSING',
+                            authDomain: config.firebaseConfig.authDomain ? 'SET' : 'MISSING',
+                            projectId: config.firebaseConfig.projectId ? 'SET' : 'MISSING',
+                            storageBucket: config.firebaseConfig.storageBucket ? 'SET' : 'MISSING',
+                            messagingSenderId: config.firebaseConfig.messagingSenderId ? 'SET' : 'MISSING',
+                            appId: config.firebaseConfig.appId ? 'SET' : 'MISSING'
+                        });
                         
                         this.state.firebaseReady = true;
+                        
+                        // Test Firebase configuration
+                        await this.auth.testFirebaseConfig();
 
                     } catch (error) {
                         console.error("Firebase initialization failed:", error);
@@ -3051,6 +3062,14 @@
                             };
                             
                             console.log('Firebase Config Loaded:', !!firebaseConfig.apiKey);
+                            console.log('Firebase Config Debug (import.meta.env):', {
+                                apiKey: firebaseConfig.apiKey ? 'SET' : 'MISSING',
+                                authDomain: firebaseConfig.authDomain ? 'SET' : 'MISSING',
+                                projectId: firebaseConfig.projectId ? 'SET' : 'MISSING',
+                                storageBucket: firebaseConfig.storageBucket ? 'SET' : 'MISSING',
+                                messagingSenderId: firebaseConfig.messagingSenderId ? 'SET' : 'MISSING',
+                                appId: firebaseConfig.appId ? 'SET' : 'MISSING'
+                            });
                             
                             if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'undefined') {
                                 throw new Error('Firebase environment variables not available');
@@ -3062,6 +3081,9 @@
                             
                             console.log('Firebase initialized with import.meta.env');
                             this.state.firebaseReady = true;
+                            
+                            // Test Firebase configuration
+                            await this.auth.testFirebaseConfig();
                             
                         } catch (envError) {
                             console.error("Firebase env initialization failed:", envError);
@@ -3224,6 +3246,84 @@
 
                 // --- AUTHENTICATION (NOW WITH FIREBASE) ---
                 auth: {
+                    // Test Firebase configuration
+                    async testFirebaseConfig() {
+                        try {
+                            console.log('Testing Firebase configuration...');
+                            
+                            // Test auth object
+                            if (auth) {
+                                console.log('✅ Auth object initialized');
+                            } else {
+                                console.log('❌ Auth object not initialized');
+                            }
+                            
+                            // Test database object
+                            if (db) {
+                                console.log('✅ Database object initialized');
+                            } else {
+                                console.log('❌ Database object not initialized');
+                            }
+                            
+                            // Test current user
+                            const currentUser = auth?.currentUser;
+                            if (currentUser) {
+                                console.log('✅ Current user found:', currentUser.uid);
+                            } else {
+                                console.log('ℹ️ No current user (expected if not logged in)');
+                            }
+                            
+                            console.log('Firebase configuration test completed');
+                        } catch (error) {
+                            console.error('Firebase configuration test failed:', error);
+                        }
+                    },
+                    
+                    // Comprehensive test function for debugging
+                    async runAuthTests() {
+                        console.log('=== FIREBASE AUTHENTICATION DEBUG TESTS ===');
+                        
+                        // Test 1: Check Firebase configuration
+                        console.log('\n1. Testing Firebase Configuration:');
+                        await this.testFirebaseConfig();
+                        
+                        // Test 2: Check auth state
+                        console.log('\n2. Testing Auth State:');
+                        const currentUser = auth?.currentUser;
+                        if (currentUser) {
+                            console.log('✅ User is logged in:', currentUser.uid);
+                            console.log('Email:', currentUser.email);
+                            console.log('Email verified:', currentUser.emailVerified);
+                        } else {
+                            console.log('ℹ️ No user logged in');
+                        }
+                        
+                        // Test 3: Check environment variables
+                        console.log('\n3. Testing Environment Variables:');
+                        const envVars = {
+                            apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? 'SET' : 'MISSING',
+                            authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? 'SET' : 'MISSING',
+                            projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ? 'SET' : 'MISSING'
+                        };
+                        console.log('Environment variables:', envVars);
+                        
+                        // Test 4: Check UI elements
+                        console.log('\n4. Testing UI Elements:');
+                        const elements = {
+                            loginForm: !!document.getElementById('login-form-element'),
+                            authView: !!document.getElementById('auth-view-wrapper'),
+                            appHeader: !!document.getElementById('app-header'),
+                            sidebar: !!document.getElementById('sidebar'),
+                            dashboard: !!document.getElementById('dashboard-view')
+                        };
+                        console.log('UI elements found:', elements);
+                        
+                        console.log('\n=== DEBUG TESTS COMPLETED ===');
+                        console.log('To test login, try: app.auth.login("test@example.com", "password")');
+                        console.log('To test registration, try: app.auth.register("Test User", "test@example.com", "password")');
+                        console.log('To test logout, try: app.auth.logout()');
+                    },
+                    
                     // Security token management
                     async getAuthToken() {
                         if (!app.state.currentUser) return null;
@@ -3237,10 +3337,13 @@
 
                     // Enhanced auth state listener with security checks
                     listenForAuthState() {
+                        console.log('Setting up auth state listener...'); // Debug
                         onAuthStateChanged(auth, async (user) => {
                             try {
                                 if (user) {
                                     console.log('User logged in:', user.uid); // Debug
+                                    console.log('User email:', user.email); // Debug
+                                    console.log('Email verified:', user.emailVerified); // Debug
                                     
                                     // Verify email is verified
                                     if (!user.emailVerified) {
@@ -3426,8 +3529,10 @@
                     },
                     async register(name, email, password) {
                         try {
+                            console.log('Attempting registration for:', email); // Debug
                             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                             const user = userCredential.user;
+                            console.log('Registration success, user UID:', user.uid); // Debug
 
                             // Send email verification
                             await sendEmailVerification(user);
@@ -3456,12 +3561,15 @@
                     },
                     async login(email, password) {
                         try {
+                            console.log('Attempting login for:', email); // Debug
                             const userCredential = await signInWithEmailAndPassword(auth, email, password);
                             const user = userCredential.user;
                             console.log('Login success'); // Debug
+                            console.log('User UID:', user.uid); // Debug
                             
                             // Check if email is verified
                             if (!user.emailVerified) {
+                                console.log('Email not verified, signing out...'); // Debug
                                 await signOut(auth);
                                 app.ui.showToast('Please verify your email address before logging in. Check your inbox for a verification link.', 'error');
                                 return;
@@ -3473,8 +3581,14 @@
                                 lastLogin: serverTimestamp()
                             });
                             
+                            console.log('Login completed, auth state listener will handle UI update'); // Debug
                             // onAuthStateChanged will handle navigation
                         } catch (error) {
+                            console.error('Login error details:', {
+                                code: error.code,
+                                message: error.message,
+                                email: email
+                            }); // Debug
                             handleFirebaseError(error, 'login');
                         }
                     },
@@ -3527,9 +3641,12 @@
                     },
                     async logout() {
                         try {
+                            console.log('Attempting logout...'); // Debug
                             await signOut(auth);
+                            console.log('Logout successful'); // Debug
                             app.ui.showToast('You have been logged out.', 'info');
                         } catch (error) {
+                            console.error('Logout error:', error); // Debug
                             handleFirebaseError(error, 'logout');
                         }
                     },
@@ -6745,8 +6862,11 @@ Provide the response in this exact JSON format:
                             const email = document.getElementById('login-email').value;
                             const password = document.getElementById('login-password').value;
                             
+                            console.log('Login form submitted for:', email); // Debug
+                            
                             // Check if Firebase is available
                             if (!import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY === 'undefined') {
+                                console.log('Firebase not available, using mock auth'); // Debug
                                 // Use mock authentication
                                 if (window.mockSignIn) {
                                     window.mockSignIn(email, password);
@@ -6757,11 +6877,38 @@ Provide the response in this exact JSON format:
                             }
                             
                             try {
+                                console.log('Calling app.auth.login...'); // Debug
                                 await app.auth.login(email, password);
-                                console.log('Login success'); // Listener should handle UI
+                                console.log('Login form handler completed'); // Debug
+                                // Auth state listener will handle UI update
                             } catch (error) {
-                                console.error('Login error:', error);
-                                alert(handleFirebaseError(error, 'login'));
+                                console.error('Login form error:', error);
+                                console.error('Error code:', error.code); // Debug
+                                console.error('Error message:', error.message); // Debug
+                                
+                                // Handle specific Firebase auth errors
+                                let errorMessage = 'Login failed. Please try again.';
+                                switch (error.code) {
+                                    case 'auth/invalid-email':
+                                        errorMessage = 'Invalid email address.';
+                                        break;
+                                    case 'auth/user-not-found':
+                                        errorMessage = 'No account found with this email address.';
+                                        break;
+                                    case 'auth/wrong-password':
+                                        errorMessage = 'Incorrect password.';
+                                        break;
+                                    case 'auth/too-many-requests':
+                                        errorMessage = 'Too many failed attempts. Please try again later.';
+                                        break;
+                                    case 'auth/network-request-failed':
+                                        errorMessage = 'Network error. Please check your connection.';
+                                        break;
+                                    default:
+                                        errorMessage = error.message || 'Login failed. Please try again.';
+                                }
+                                
+                                alert(errorMessage);
                             }
                         });
                         document.getElementById('register-form-element').addEventListener('submit', e => { 
@@ -10176,6 +10323,51 @@ Provide the response in this exact JSON format:
             app.enhancedFinance.init();
             app.loadingManager.updateUI();
 
+            // Global debug function for Firebase authentication testing
+            window.debugFirebase = async function() {
+                console.log('=== FIREBASE AUTHENTICATION DEBUG TESTS ===');
+                
+                // Test 1: Check Firebase configuration
+                console.log('\n1. Testing Firebase Configuration:');
+                await app.auth.testFirebaseConfig();
+                
+                // Test 2: Check auth state
+                console.log('\n2. Testing Auth State:');
+                const currentUser = auth?.currentUser;
+                if (currentUser) {
+                    console.log('✅ User is logged in:', currentUser.uid);
+                    console.log('Email:', currentUser.email);
+                    console.log('Email verified:', currentUser.emailVerified);
+                } else {
+                    console.log('ℹ️ No user logged in');
+                }
+                
+                // Test 3: Check environment variables
+                console.log('\n3. Testing Environment Variables:');
+                const envVars = {
+                    apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? 'SET' : 'MISSING',
+                    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? 'SET' : 'MISSING',
+                    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ? 'SET' : 'MISSING'
+                };
+                console.log('Environment variables:', envVars);
+                
+                // Test 4: Check UI elements
+                console.log('\n4. Testing UI Elements:');
+                const elements = {
+                    loginForm: !!document.getElementById('login-form-element'),
+                    authView: !!document.getElementById('auth-view-wrapper'),
+                    appHeader: !!document.getElementById('app-header'),
+                    sidebar: !!document.getElementById('sidebar'),
+                    dashboard: !!document.getElementById('dashboard-view')
+                };
+                console.log('UI elements found:', elements);
+                
+                console.log('\n=== DEBUG TESTS COMPLETED ===');
+                console.log('To test login, try: app.auth.login("test@example.com", "password")');
+                console.log('To test registration, try: app.auth.register("Test User", "test@example.com", "password")');
+                console.log('To test logout, try: app.auth.logout()');
+            };
+            
             // Kick off the application
             app.init();
             
