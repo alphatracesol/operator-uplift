@@ -165,6 +165,41 @@
         input:checked + .slider { background-color: var(--accent-color); }
         input:checked + .slider:before { transform: translateX(18px); }
         
+        /* --- TERMS CHECKBOX STYLES --- */
+        .terms-checkbox-group {
+            margin-bottom: 1rem;
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border-glass);
+            border-radius: 0.5rem;
+            background-color: var(--input-bg);
+            transition: var(--transition-fast);
+        }
+        
+        .checkbox-wrapper:hover {
+            border-color: var(--accent-color);
+        }
+        
+        .checkbox-wrapper input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            margin-top: 0.125rem;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-wrapper label {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-color);
+            flex-grow: 1;
+        }
+        
         /* --- SIDEBAR & NAVIGATION --- */
         .logo { display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; color: var(--text-color); }
         .nav-menu { list-style: none; }
@@ -1147,7 +1182,6 @@
                             <div class="card">
                                 <div class="auth-header">
                                     <h2>Welcome to Operator Uplift</h2>
-                                    <p>Deconstruct Your Ambition. Engineer Your Ascent.</p>
                                 </div>
                                 <div id="login-form">
                                     <form id="login-form-element">
@@ -1165,11 +1199,13 @@
                                         <div class="form-group"><label for="register-name">Display Name</label><input type="text" id="register-name" required></div>
                                         <div class="form-group"><label for="register-email">Email</label><input type="email" id="register-email" required></div>
                                         <div class="form-group"><label for="register-password">Password (min. 6 characters)</label><input type="password" id="register-password" minlength="6" required></div>
-                                                <div class="form-group" style="display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 1rem;">
-            <input type="checkbox" id="terms-privacy-checkbox" required style="margin-top: 0.25rem;">
-            <label for="terms-privacy-checkbox" style="font-size: 0.9rem; line-height: 1.4;">
-                I agree to the <a href="#" onclick="document.getElementById('terms-modal').classList.add('active'); return false;" style="color: var(--accent-color);">Terms of Service</a> and <a href="#" onclick="document.getElementById('privacy-modal').classList.add('active'); return false;" style="color: var(--accent-color);">Privacy Policy</a>
-            </label>
+                                                <div class="form-group terms-checkbox-group">
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="terms-privacy-checkbox" required>
+                <label for="terms-privacy-checkbox">
+                    I agree to the <a href="#" onclick="document.getElementById('terms-modal').classList.add('active'); return false;" style="color: var(--accent-color);">Terms of Service</a> and <a href="#" onclick="document.getElementById('privacy-modal').classList.add('active'); return false;" style="color: var(--accent-color);">Privacy Policy</a>
+                </label>
+            </div>
         </div>
                                         <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
                                     </form>
@@ -2869,11 +2905,16 @@
 
                 // --- INITIALIZATION ---
                 async init() {
-                    // Fetch Firebase config from Netlify function
+                    // Try to fetch Firebase config from Netlify function
                     try {
                         const response = await fetch('/.netlify/functions/config');
                         if (!response.ok) throw new Error('Failed to fetch Firebase config');
                         const config = await response.json();
+                        
+                        // Check if config has valid values
+                        if (config.firebaseConfig.apiKey === 'MISSING_API_KEY') {
+                            throw new Error('Firebase environment variables not configured');
+                        }
                         
                         // Initialize Firebase
                         const firebaseApp = initializeApp(config.firebaseConfig);
@@ -2887,16 +2928,36 @@
 
                     } catch (error) {
                         console.error("Firebase initialization failed:", error);
-                        document.getElementById('loading-overlay').innerHTML = `<p style="color:red;">Error: Could not connect to services. Please refresh.</p>`;
+                        
+                        // Show user-friendly error message
+                        const loadingOverlay = document.getElementById('loading-overlay');
+                        if (loadingOverlay) {
+                            loadingOverlay.innerHTML = `
+                                <div style="text-align: center; padding: 2rem;">
+                                    <h3 style="color: #f97316; margin-bottom: 1rem;">Service Temporarily Unavailable</h3>
+                                    <p style="color: #9ca3af; margin-bottom: 1rem;">Firebase authentication is not configured. Please contact support.</p>
+                                    <button onclick="window.location.reload()" style="background: #f97316; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">Retry</button>
+                                </div>
+                            `;
+                        }
                         return;
                     }
 
+                    // Optimized initialization sequence for better performance
                     this.ui.initTheme();
                     this.router.init();
                     this.eventListeners.init();
-                    this.ui.initLuckyWheel();
-                    this.audio.init();
-                    this.ui.initMatrixRain();
+                    
+                    // Defer heavy operations
+                    setTimeout(() => {
+                        this.ui.initLuckyWheel();
+                        this.audio.init();
+                    }, 100);
+                    
+                    // Defer matrix rain to avoid blocking initial render
+                    setTimeout(() => {
+                        this.ui.initMatrixRain();
+                    }, 500);
 
                     // The main entry point is now the auth state listener
                     this.auth.listenForAuthState();
@@ -4589,16 +4650,42 @@
                         const hour = new Date().getHours();
                         const theme = document.documentElement.getAttribute('data-theme');
                         let start, end;
+                        
+                        // Match landing page scheme with orange accent
                         if (theme === 'dark') {
-                            if (hour >= 5 && hour < 8) { start = '#1e3a8a'; end = '#312e81'; } // Dawn
-                            else if (hour >= 8 && hour < 17) { start = '#0c4a6e'; end = '#1e3a8a'; } // Day
-                            else if (hour >= 17 && hour < 20) { start = '#4c1d95'; end = '#1e1b4b'; } // Dusk
-                            else { start = '#111827'; end = '#0a0a0a'; } // Night
+                            if (hour >= 5 && hour < 8) { 
+                                start = '#0a0a0a'; end = '#1a1a1a'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.1) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 30%)';
+                            } // Dawn
+                            else if (hour >= 8 && hour < 17) { 
+                                start = '#0a0a0a'; end = '#1a1a1a'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.03) 0%, transparent 30%)';
+                            } // Day
+                            else if (hour >= 17 && hour < 20) { 
+                                start = '#0a0a0a'; end = '#1a1a1a'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.12) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.06) 0%, transparent 30%)';
+                            } // Dusk
+                            else { 
+                                start = '#0a0a0a'; end = '#0a0a0a'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.02) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.01) 0%, transparent 30%)';
+                            } // Night
                         } else {
-                            if (hour >= 5 && hour < 8) { start = '#a5b4fc'; end = '#fbcfe8'; } // Dawn
-                            else if (hour >= 8 && hour < 17) { start = '#bfdbfe'; end = '#a5f3fc'; } // Day
-                            else if (hour >= 17 && hour < 20) { start = '#f5d0fe'; end = '#fecaca'; } // Dusk
-                            else { start = '#f8fbff'; end = '#fafcff'; } // Night
+                            if (hour >= 5 && hour < 8) { 
+                                start = '#ffffff'; end = '#f8fafc'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.05) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.02) 0%, transparent 30%)';
+                            } // Dawn
+                            else if (hour >= 8 && hour < 17) { 
+                                start = '#ffffff'; end = '#f8fafc'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.03) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.01) 0%, transparent 30%)';
+                            } // Day
+                            else if (hour >= 17 && hour < 20) { 
+                                start = '#ffffff'; end = '#f8fafc'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.06) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.03) 0%, transparent 30%)';
+                            } // Dusk
+                            else { 
+                                start = '#ffffff'; end = '#ffffff'; 
+                                document.body.style.background = 'radial-gradient(ellipse at 20% 20%, rgba(249, 115, 22, 0.01) 0%, transparent 30%), radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.005) 0%, transparent 30%)';
+                            } // Night
                         }
                         document.documentElement.style.setProperty('--bg-gradient-start', start);
                         document.documentElement.style.setProperty('--bg-gradient-end', end);

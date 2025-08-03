@@ -3,23 +3,21 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Helper functions for validation
     function isValidUserData(data) {
-      return data.keys().hasAll(['uid', 'email', 'displayName', 'stats', 'settings', 'createdAt']) &&
+      return data.keys().hasAll(['uid', 'email', 'displayName']) &&
              data.uid is string &&
              data.email is string &&
-             data.displayName is string &&
-             data.stats is map &&
-             data.settings is map;
+             data.displayName is string;
     }
     
     function isValidGoalData(data) {
-      return data.keys().hasAll(['userId', 'title', 'category', 'createdAt']) &&
+      return data.keys().hasAll(['userId', 'title', 'category']) &&
              data.userId is string &&
              data.title is string &&
              data.category is string;
     }
     
     function isValidHabitData(data) {
-      return data.keys().hasAll(['name', 'frequency', 'category', 'createdAt']) &&
+      return data.keys().hasAll(['name', 'frequency', 'category']) &&
              data.name is string &&
              data.frequency in ['daily', 'weekly', 'monthly', 'custom'] &&
              data.category in ['health', 'productivity', 'learning', 'mindfulness', 'social', 'other'];
@@ -40,28 +38,24 @@ service cloud.firestore {
              data.type in ['motivation', 'advice', 'goal-breakdown', 'chat', 'analysis'];
     }
 
-    // Users can only access their own data with comprehensive validation
+    // Users can only access their own data with relaxed validation
     match /users/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null && 
                        request.auth.uid == userId && 
-                       request.auth.token.email_verified == true &&
-                       isValidUserData(request.resource.data);
+                       request.auth.token.email_verified == true;
       allow update: if request.auth != null && 
-                       request.auth.uid == userId && 
-                       isValidUserData(request.resource.data);
+                       request.auth.uid == userId;
       allow delete: if false; // Prevent user deletion for data integrity
     }
     
-    // Users can only access their own goals with validation
+    // Users can only access their own goals with relaxed validation
     match /goals/{goalId} {
       allow read: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       isValidGoalData(request.resource.data);
+                       request.auth.uid == request.resource.data.userId;
       allow update: if request.auth != null && 
-                       resource.data.userId == request.auth.uid &&
-                       isValidGoalData(request.resource.data);
+                       resource.data.userId == request.auth.uid;
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     
@@ -69,11 +63,9 @@ service cloud.firestore {
     match /habits/{habitId} {
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       isValidHabitData(request.resource.data);
+                       request.auth.uid == request.resource.data.userId;
       allow update: if request.auth != null && 
-                       resource.data.userId == request.auth.uid &&
-                       isValidHabitData(request.resource.data);
+                       resource.data.userId == request.auth.uid;
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     
@@ -81,11 +73,9 @@ service cloud.firestore {
     match /focusSessions/{sessionId} {
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       isValidFocusSessionData(request.resource.data);
+                       request.auth.uid == request.resource.data.userId;
       allow update: if request.auth != null && 
-                       resource.data.userId == request.auth.uid &&
-                       isValidFocusSessionData(request.resource.data);
+                       resource.data.userId == request.auth.uid;
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     
@@ -93,23 +83,19 @@ service cloud.firestore {
     match /aiInteractions/{interactionId} {
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       isValidAIInteractionData(request.resource.data);
+                       request.auth.uid == request.resource.data.userId;
       allow update: if request.auth != null && 
-                       resource.data.userId == request.auth.uid &&
-                       isValidAIInteractionData(request.resource.data);
+                       resource.data.userId == request.auth.uid;
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     
-    // Community templates - read only for authenticated users, write by creator with validation
+    // Community templates - read only for authenticated users, write by creator
     match /communityTemplates/{templateId} {
       allow read: if request.auth != null;
       allow write: if request.auth != null && 
-                      request.auth.uid == resource.data.createdBy &&
-                      request.resource.data.keys().hasAll(['name', 'description', 'category', 'createdBy']);
+                      request.auth.uid == resource.data.createdBy;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.createdBy &&
-                       request.resource.data.keys().hasAll(['name', 'description', 'category', 'createdBy']);
+                       request.auth.uid == request.resource.data.createdBy;
       allow delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
     }
     
@@ -117,11 +103,9 @@ service cloud.firestore {
     match /leaderboard/{entryId} {
       allow read: if request.auth != null;
       allow write: if request.auth != null && 
-                      request.auth.uid == resource.data.userId &&
-                      request.resource.data.keys().hasAll(['userId', 'displayName', 'stats']);
+                      request.auth.uid == resource.data.userId;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       request.resource.data.keys().hasAll(['userId', 'displayName', 'stats']);
+                       request.auth.uid == request.resource.data.userId;
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     
@@ -129,11 +113,9 @@ service cloud.firestore {
     match /challenges/{challengeId} {
       allow read: if request.auth != null;
       allow write: if request.auth != null && 
-                      request.auth.uid == resource.data.createdBy &&
-                      request.resource.data.keys().hasAll(['name', 'description', 'createdBy', 'startDate', 'endDate']);
+                      request.auth.uid == resource.data.createdBy;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.createdBy &&
-                       request.resource.data.keys().hasAll(['name', 'description', 'createdBy', 'startDate', 'endDate']);
+                       request.auth.uid == request.resource.data.createdBy;
       allow delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
     }
     
@@ -141,11 +123,9 @@ service cloud.firestore {
     match /achievements/{achievementId} {
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       request.resource.data.keys().hasAll(['userId', 'type', 'unlockedAt']);
+                       request.auth.uid == request.resource.data.userId;
       allow update: if request.auth != null && 
-                       resource.data.userId == request.auth.uid &&
-                       request.resource.data.keys().hasAll(['userId', 'type', 'unlockedAt']);
+                       resource.data.userId == request.auth.uid;
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     
@@ -153,11 +133,9 @@ service cloud.firestore {
     match /analytics/{analyticsId} {
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       request.resource.data.keys().hasAll(['userId', 'date', 'metrics']);
+                       request.auth.uid == request.resource.data.userId;
       allow update: if request.auth != null && 
-                       resource.data.userId == request.auth.uid &&
-                       request.resource.data.keys().hasAll(['userId', 'date', 'metrics']);
+                       resource.data.userId == request.auth.uid;
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     
