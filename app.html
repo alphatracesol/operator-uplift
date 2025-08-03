@@ -7213,17 +7213,27 @@ Provide the response in this exact JSON format:
                 },
 
                 bindEvents() {
-                    document.getElementById('personality-assessment-btn').addEventListener('click', () => {
-                        this.startAssessment();
-                    });
+                    const personalityBtn = document.getElementById('personality-assessment-btn');
+                    const retakeBtn = document.getElementById('retake-assessment');
+                    const saveBtn = document.getElementById('save-assessment');
+                    
+                    if (personalityBtn) {
+                        personalityBtn.addEventListener('click', () => {
+                            this.startAssessment();
+                        });
+                    }
 
-                    document.getElementById('retake-assessment').addEventListener('click', () => {
-                        this.startAssessment();
-                    });
+                    if (retakeBtn) {
+                        retakeBtn.addEventListener('click', () => {
+                            this.startAssessment();
+                        });
+                    }
 
-                    document.getElementById('save-assessment').addEventListener('click', () => {
-                        this.saveResults();
-                    });
+                    if (saveBtn) {
+                        saveBtn.addEventListener('click', () => {
+                            this.saveResults();
+                        });
+                    }
                 },
 
                 startAssessment() {
