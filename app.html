@@ -2725,6 +2725,7 @@
                     particlesInstance: null, 
                     energyInterval: null, 
                     matrixInterval: null,
+                    matrixResizeListener: null,
                     calendarDate: new Date(),
                     achievements: {
                         // Bronze Tier
@@ -4393,39 +4394,147 @@
                         }
                     },
                     initMatrixRain() {
-                        if (app.state.matrixInterval) clearInterval(app.state.matrixInterval);
+                        // Prevent multiple initializations
+                        if (app.state.matrixInterval) {
+                            console.log('Matrix rain already running, stopping first');
+                            this.stopMatrixRain();
+                        }
+
+                        // Get canvas element
                         const canvas = document.getElementById('matrix-rain-canvas');
+                        if (!canvas) {
+                            console.warn('Matrix rain canvas not found');
+                            return;
+                        }
+
+                        // Get canvas context with error handling
                         const ctx = canvas.getContext('2d');
+                        if (!ctx) {
+                            console.error('Failed to get canvas context for matrix rain');
+                            return;
+                        }
+
+                        // Set canvas dimensions
                         canvas.width = window.innerWidth;
                         canvas.height = window.innerHeight;
 
+                        // Matrix rain configuration
                         const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
                         const fontSize = 16;
-                        const columns = canvas.width / fontSize;
+                        const columns = Math.floor(canvas.width / fontSize);
                         const rainDrops = Array.from({ length: columns }).map(() => 1);
 
-                        const draw = () => {
-                            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                            ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--matrix-rain-color').trim();
-                            ctx.font = fontSize + 'px monospace';
+                        // Remove existing resize listener if any
+                        if (app.state.matrixResizeListener) {
+                            window.removeEventListener('resize', app.state.matrixResizeListener);
+                        }
 
-                            for (let i = 0; i < rainDrops.length; i++) {
-                                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                                    rainDrops[i] = 0;
+                        // Draw function with error handling
+                        const draw = () => {
+                            try {
+                                // Check if canvas is still valid
+                                if (!canvas || !ctx) {
+                                    console.warn('Canvas or context lost, stopping matrix rain');
+                                    if (app.state.matrixInterval) {
+                                        clearInterval(app.state.matrixInterval);
+                                        app.state.matrixInterval = null;
+                                    }
+                                    return;
                                 }
-                                rainDrops[i]++;
+
+                                // Clear canvas with fade effect
+                                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                                // Get matrix rain color with fallback
+                                let matrixColor;
+                                try {
+                                    matrixColor = getComputedStyle(document.documentElement).getPropertyValue('--matrix-rain-color').trim();
+                                    if (!matrixColor || matrixColor === '') {
+                                        matrixColor = 'rgba(0, 255, 0, 0.5)'; // Fallback green
+                                    }
+                                } catch (e) {
+                                    matrixColor = 'rgba(0, 255, 0, 0.5)'; // Fallback green
+                                }
+
+                                ctx.fillStyle = matrixColor;
+                                ctx.font = fontSize + 'px monospace';
+
+                                // Draw matrix characters
+                                for (let i = 0; i < rainDrops.length; i++) {
+                                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                                    const x = i * fontSize;
+                                    const y = rainDrops[i] * fontSize;
+                                    
+                                    // Only draw if within canvas bounds
+                                    if (x < canvas.width && y < canvas.height) {
+                                        ctx.fillText(text, x, y);
+                                    }
+                                    
+                                    // Reset drop when it goes off screen
+                                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                                        rainDrops[i] = 0;
+                                    }
+                                    rainDrops[i]++;
+                                }
+                            } catch (error) {
+                                console.error('Matrix rain draw error:', error);
+                                // Stop the animation on error
+                                if (app.state.matrixInterval) {
+                                    clearInterval(app.state.matrixInterval);
+                                    app.state.matrixInterval = null;
+                                }
                             }
                         };
-                        app.state.matrixInterval = setInterval(draw, 50);
-                        window.addEventListener('resize', () => {
-                            canvas.width = window.innerWidth;
-                            canvas.height = window.innerHeight;
-                        });
+
+                        // Start animation with adaptive interval
+                        const interval = window.innerWidth < 768 ? 100 : 50; // Slower on mobile
+                        app.state.matrixInterval = setInterval(draw, interval);
+
+                        // Resize handler with debouncing
+                        let resizeTimeout;
+                        app.state.matrixResizeListener = () => {
+                            clearTimeout(resizeTimeout);
+                            resizeTimeout = setTimeout(() => {
+                                try {
+                                    if (canvas && ctx) {
+                                        canvas.width = window.innerWidth;
+                                        canvas.height = window.innerHeight;
+                                        // Recalculate columns for new width
+                                        const newColumns = Math.floor(canvas.width / fontSize);
+                                        if (newColumns !== rainDrops.length) {
+                                            rainDrops.length = newColumns;
+                                            for (let i = 0; i < newColumns; i++) {
+                                                if (rainDrops[i] === undefined) {
+                                                    rainDrops[i] = 1;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (error) {
+                                    console.error('Matrix rain resize error:', error);
+                                }
+                            }, 250); // Debounce resize events
+                        };
+
+                        window.addEventListener('resize', app.state.matrixResizeListener);
+                        
+                        console.log('Matrix rain initialized successfully');
+                    },
+                    
+                    stopMatrixRain() {
+                        if (app.state.matrixInterval) {
+                            clearInterval(app.state.matrixInterval);
+                            app.state.matrixInterval = null;
+                            console.log('Matrix rain stopped');
+                        }
+                        if (app.state.matrixResizeListener) {
+                            window.removeEventListener('resize', app.state.matrixResizeListener);
+                            app.state.matrixResizeListener = null;
+                        }
                     },
                     restartBackgroundEffects() {
+                        this.stopMatrixRain();
                         this.initMatrixRain();
                         if (app.state.particlesInstance) {
                             app.state.particlesInstance.start();
@@ -6741,6 +6850,10 @@ Provide the response in this exact JSON format:
                     clearInterval(app.state.matrixInterval);
                     app.state.matrixInterval = null;
                 }
+                if (app.state.matrixResizeListener) {
+                    window.removeEventListener('resize', app.state.matrixResizeListener);
+                    app.state.matrixResizeListener = null;
+                }
                 // Pause GSAP animations
                 gsap.globalTimeline.pause();
             } else {
@@ -8808,6 +8921,11 @@ Provide the response in this exact JSON format:
                     }
                     if (app.state.matrixInterval) {
                         clearInterval(app.state.matrixInterval);
+                        app.state.matrixInterval = null;
+                    }
+                    if (app.state.matrixResizeListener) {
+                        window.removeEventListener('resize', app.state.matrixResizeListener);
+                        app.state.matrixResizeListener = null;
                     }
                     
                     // Clear particles
